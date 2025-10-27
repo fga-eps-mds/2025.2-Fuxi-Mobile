@@ -1,6 +1,6 @@
-# Projeto PesquisaUNB - Mobile (Grupo Fuxi 2025.2) 
+# Projeto Vitra - Mobile (Grupo Fuxi 2025.2) 
 
-Este repositório contém o código-fonte do aplicativo mobile (React Native com Expo) do projeto PesquisaUNB.
+Este repositório contém o código-fonte do aplicativo mobile (React Native com Expo) do projeto Vitra.
 
 ## 🔗 Links
 - **Repositório da Documentação:** [2025.2-Fuxi-Docs](https://github.com/fga-eps-mds/2025.2-Fuxi-Docs)
