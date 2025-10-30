@@ -36,7 +36,8 @@ const styles = StyleSheet.create({
     borderColor: "rgba(17, 16, 17, 0.2)",
     backgroundColor: "#f9f9f9",
     justifyContent: "center",
-    marginLeft: 12
+    marginLeft: 12,
+    marginRight: 15
   },
 
   input: {
