@@ -1,0 +1,48 @@
+import React from "react";
+import { TextInput, StyleSheet, TextInputProps, View } from "react-native";
+
+interface TextInputFieldProps extends TextInputProps {
+  placeholder?: string;
+}
+
+export function TextInputField({ placeholder, ...props }: TextInputFieldProps) {
+  return (
+    <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        placeholder={placeholder}
+        placeholderTextColor="#989898"
+        {...props}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+
+  wrapper: {
+    flex: 1,
+    justifyContent: "center", 
+    alignItems: "center",    
+    backgroundColor: "#ffffffff",
+  },
+
+  container: {
+    flexDirection: "column",
+    width: 350,
+    height: 45,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "rgba(17, 16, 17, 0.2)",
+    backgroundColor: "#f9f9f9",
+    justifyContent: "center",
+    marginLeft: 12
+  },
+
+  input: {
+    fontSize: 16,
+    color: "#1D1D1D",
+    paddingHorizontal: 12,
+    fontFamily: "Roboto",
+  },
+});
