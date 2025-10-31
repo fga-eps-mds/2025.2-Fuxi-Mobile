@@ -30,6 +30,11 @@ export default function RootLayout() {
         name="auth/register-collaborator"
         options={{ title: "Cadastro de Colaborador" }}
       />
+
+      <Stack.Screen
+        name="auth/login"
+        options={{ title: "Login" }}
+      />
     </Stack>
     );
 }
