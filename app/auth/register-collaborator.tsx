@@ -2,9 +2,10 @@ import { View, Text, StyleSheet, ScrollView, Alert, KeyboardAvoidingView, Platfo
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { AppText } from "@/components/appText";
-import { TextInputField } from "@/components/textInputField";
-import { DropdownSelect } from "@/components/dropdownSelect";
+import { AppText } from "@/components/AppText";
+import { TextInputField } from "@/components/TextInputField";
+import { DropdownSelect } from "@/components/DropdownSelect";
+import { AuthContainer } from "@/components/AuthContainer";
 import { validateBirthDate } from "@/utils/validateBirthDate";
 import { validatePassword } from "@/utils/validatePassword";
 import { validateEmail } from "@/utils/validateEmail";
@@ -57,7 +58,7 @@ export default function RegisterResearcher() {
       keyboardVerticalOffset={1}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView contentContainerStyle={styles.container}>
+        <AuthContainer>
           <AppText>Nome</AppText>
           <TextInputField
             placeholder="Seu nome"
@@ -109,17 +110,9 @@ export default function RegisterResearcher() {
           />
 
           <PrimaryButton title="Confirmar" onPress={handleSubmit} />
-        </ScrollView>
+        </AuthContainer>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    paddingBottom: 80,
-    backgroundColor: "#ffffff",
-    alignItems: "center",
-  },
-});

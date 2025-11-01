@@ -1,10 +1,11 @@
 import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, Text, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { AppText } from "@/components/appText";
-import { TextInputField } from "@/components/textInputField";
-import { DropdownSelect } from "@/components/dropdownSelect";
+import { AppText } from "@/components/AppText";
+import { TextInputField } from "@/components/TextInputField";
+import { DropdownSelect } from "@/components/DropdownSelect";
 import { useState } from "react";
+import { AuthContainer } from "@/components/AuthContainer";
 import { validatePassword } from "@/utils/validatePassword";
 import { validateCNPJ } from "@/utils/validateCNPJ";
 import { validateEmail } from "@/utils/validateEmail";
@@ -66,7 +67,7 @@ export default function RegisterCompany() {
         
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
-        <ScrollView contentContainerStyle={styles.container}>
+        <AuthContainer>
      
         <AppText>Nome Fantasia</AppText>
         <TextInputField
@@ -112,17 +113,9 @@ export default function RegisterCompany() {
         />
 
         <PrimaryButton title="Confirmar" onPress={handleSubmit} />
-        </ScrollView>
+        </AuthContainer>
         </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
     );
 }
 
-const styles = StyleSheet.create({
- container: {
-  padding: 16,
-  paddingBottom: 80,
-  backgroundColor: "#ffffff",
-  alignItems: "center",
- }
-});

@@ -1,6 +1,6 @@
 import { StyleSheet, View, TouchableOpacity, TextInputProps } from "react-native";
 import { useState} from "react";
-import { TextInputField } from "@/components/textInputField";
+import { TextInputField } from "@/components/TextInputField";
 
 // Import necessary icon library
 import { Feather } from "@expo/vector-icons";
@@ -47,14 +47,10 @@ const styles = StyleSheet.create({
         position: "relative",
         width: '100%',
     },
-    input: {
-        paddingRight: 40,
-    },
     eyeButton: {
         position: "absolute",
         right: 12,
-        top: "50%",
-        padding: 4,
+        top: 9,
     },
 });
 

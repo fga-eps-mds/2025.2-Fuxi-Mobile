@@ -19,16 +19,16 @@ export function PrimaryButton({ title, color = "#003366", onPress }: PrimaryButt
 
 const styles = StyleSheet.create({
     button: {
-        width: "80%",
-        paddingVertical: 14,
-        borderRadius: 12,
+        width: "100%",
         alignItems: "center",
-        marginVertical: 6
+        borderRadius: 12,
+        paddingVertical: 14,
+        marginVertical: 6,
     },
 
     text: {
         color: "#fff",
         fontWeight: "600",
-        fontSize: 16
+        fontSize: 17
     }
 })

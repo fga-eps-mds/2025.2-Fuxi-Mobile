@@ -45,7 +45,7 @@ export function DropdownSelect({
 
 const styles = StyleSheet.create({
   container: {
-    width: 350,
+    width: "100%",
     marginBottom: 12,
   },
   dropdown: {

@@ -20,28 +20,21 @@ export function TextInputField({ placeholder, ...props }: TextInputFieldProps) {
 
 const styles = StyleSheet.create({
 
-  wrapper: {
-    flex: 1,
-    justifyContent: "center", 
-    alignItems: "center",    
-    backgroundColor: "#ffffffff",
-  },
-
   container: {
     flexDirection: "column",
-    width: 350,
+    width: "100%",
     height: 45,
     borderRadius: 12,
     borderWidth: 1,
     borderColor: "rgba(17, 16, 17, 0.2)",
-    backgroundColor: "#f9f9f9",
+    backgroundColor: "#F5F8FF",
     justifyContent: "center"
   },
 
   input: {
-    fontSize: 16,
+    fontFamily: "Roboto",
+    fontSize: 17,
     color: "#1D1D1D",
     paddingHorizontal: 12,
-    fontFamily: "Roboto",
   },
 });

@@ -2,10 +2,11 @@ import { View, Text, StyleSheet, ScrollView, Alert, KeyboardAvoidingView, Platfo
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { AppText } from "@/components/appText";
-import { TextInputField } from "@/components/textInputField";
+import { AppText } from "@/components/AppText";
+import { TextInputField } from "@/components/TextInputField";
 import { Link } from "@react-navigation/native";
-import { PasswordInputField } from "@/components/passwordInputField";
+import { PasswordInputField } from "@/components/PasswordInputField";
+import { AuthContainer } from "@/components/AuthContainer";
 
 
 import { Feather } from "@expo/vector-icons";
@@ -39,7 +40,7 @@ export default function Login() {
         >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 
-                <ScrollView contentContainerStyle={styles.container}>
+                <AuthContainer >
 
                     <View>
                         <Text style={styles.title}>Comece agora!</Text>
@@ -61,12 +62,12 @@ export default function Login() {
                         onChangeText={(text) => setForm({ ...form, senha: text })}                
                     />
 
-                    {/*<Text style={styles.forgotPassword} onPress={handleForgotPassword}>Esqueceu a sua senha? Clique <Link to={{ screen: "/reset-password" }}>aqui</Link></Text>
-                     */}                       
+                    {/*Text style={styles.forgotPassword} onPress={handleForgotPassword}>Esqueceu a sua senha? Clique <Link to="/reset-password">aqui</Link></Text>*/}
+                                           
                     <PrimaryButton title="Entrar" onPress={handleLogin} />
 
 
-                </ScrollView>
+                </AuthContainer>
             </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
     );

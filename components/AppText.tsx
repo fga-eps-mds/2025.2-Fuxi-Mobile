@@ -17,16 +17,10 @@ export function AppText({ children, style, ...rest }: AppTextProps) {
 
 const styles = StyleSheet.create({
   container: {
-    display: "flex",
-    height: 14,
     flexDirection: "column",
-    justifyContent: "center",
-    alignSelf: "stretch",
-    marginBottom: 10,
-    marginTop: 10,
-    marginLeft: 13
-    
+    // justifyContent: "center",
   },
+
   text: {
     color: "#1d1d1d",
     fontFamily: "Roboto", 
