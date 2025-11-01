@@ -7,6 +7,7 @@ import { TextInputField } from "@/components/textInputField";
 import { DropdownSelect } from "@/components/dropdownSelect";
 import { validateBirthDate } from "@/utils/validateBirthDate";
 import { validatePassword } from "@/utils/validatePassword";
+import { formatDate } from "@/utils/formatDate";
 
 export default function RegisterResearcher() {
   const router = useRouter();
@@ -83,8 +84,12 @@ export default function RegisterResearcher() {
           <AppText>Data de nascimento</AppText>
           <TextInputField
             placeholder="DD/MM/AAAA"
+            keyboardType="numeric"
             value={form.dataNascimento}
-            onChangeText={(text) => setForm({ ...form, dataNascimento: text })}
+            onChangeText={(text) => {
+              const formatted = formatDate(text);
+              setForm({ ...form, dataNascimento: formatted });
+            }}
           />
 
           <AppText>Senha</AppText>

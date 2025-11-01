@@ -8,6 +8,7 @@ import { useState } from "react";
 import { validatePassword } from "@/utils/validatePassword";
 import { validateCNPJ } from "@/utils/validateCNPJ";
 import { validateEmail } from "@/utils/validateEmail";
+import { formatCNPJ } from "@/utils/formatCNPJ";
 
 export default function RegisterCompany() {
     const router = useRouter();
@@ -76,10 +77,13 @@ export default function RegisterCompany() {
 
         <AppText>CNPJ</AppText>
         <TextInputField
-        placeholder="00.000.000/0000-00"
-        keyboardType="numeric"
-        value={form.cnpj}
-        onChangeText={(text) => setForm({ ...form, cnpj: text })}
+          placeholder="00.000.000/0000-00"
+          keyboardType="numeric"
+          value={form.cnpj}
+          onChangeText={(text) => {
+            const formatted = formatCNPJ(text);
+            setForm({ ...form, cnpj: formatted });
+          }}
         />
 
         <AppText>Email</AppText>

@@ -1,80 +1,79 @@
-// components/dropdownSelect.tsx
 import React from "react";
-import RNPickerSelect from "react-native-picker-select";
-import { View, StyleSheet, ViewStyle, Platform } from "react-native";
+import { View, StyleSheet } from "react-native";
+import { Dropdown } from "react-native-element-dropdown";
 
-interface Option { label: string; value: string; }
+interface Option {
+  label: string;
+  value: string;
+}
 
 interface DropdownSelectProps {
-
   options: Option[];
   value: string | null;
   onSelect: (value: string) => void;
   placeholder?: string;
-  style?: ViewStyle;
-
 }
 
 export function DropdownSelect({
-
   options,
   value,
   onSelect,
   placeholder = "Selecione uma opção",
-  style,
-
 }: DropdownSelectProps) {
-
   return (
-    <View style={[styles.container, style]}>
-
-      <RNPickerSelect
-
-        onValueChange={onSelect}
-        items={options}
-        value={value ?? null}
-        placeholder={{ label: placeholder, value: null, color: "#989898" }}
-        useNativeAndroidPickerStyle={false} 
-        style={{
-
-          inputAndroid: styles.input,
-          inputIOS: styles.input,
-          placeholder: { color: "#989898" },
-          
-        }}
-    
+    <View style={styles.container}>
+      <Dropdown
+        data={options}
+        labelField="label"
+        valueField="value"
+        placeholder={placeholder}
+        value={value}
+        onChange={(item) => onSelect(item.value)}
+        style={styles.dropdown}
+        placeholderStyle={styles.placeholder}
+        selectedTextStyle={styles.selectedText}
+        itemTextStyle={styles.itemText}
+        iconStyle={styles.icon}
+        containerStyle={styles.dropdownContainer}
+        activeColor="#f0f0f0"
+        renderRightIcon={() => null} // remove ícone padrão
+        dropdownPosition="bottom" // abre pra baixo
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-
   container: {
-
-    flexDirection: "column",
     width: 350,
-    minHeight: 45,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "rgba(17, 16, 17, 0.2)",
-    backgroundColor: "#f9f9f9",
-    justifyContent: "center",
-    marginLeft: 12,
     marginBottom: 12,
-    zIndex: 100,    
-    elevation: 6,   
-    marginRight: 15
-
   },
-  input: {
-
+  dropdown: {
+    height: 45,
+    borderColor: "rgba(17, 16, 17, 0.2)",
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    backgroundColor: "#f9f9f9",
+  },
+  placeholder: {
+    color: "#989898",
+    fontSize: 16,
+  },
+  selectedText: {
+    color: "#1D1D1D",
+    fontSize: 16,
+  },
+  itemText: {
     fontSize: 16,
     color: "#1D1D1D",
-    paddingHorizontal: 12,
-    fontFamily: "Roboto",
-    height: 45,
-    justifyContent: "center",
-
+  },
+  dropdownContainer: {
+    borderRadius: 12,
+    borderColor: "#ccc",
+  },
+  icon: {
+    width: 20,
+    height: 20,
   },
 });
