@@ -60,57 +60,65 @@ export default function RegisterResearcher() {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <AuthContainer>
-          <AppText>Nome</AppText>
-          <TextInputField
-            placeholder="Seu nome"
-            value={form.nome}
-            onChangeText={(text) => setForm({ ...form, nome: text })}
-          />
+          <InputContainer label="Nome">
+              <TextInputField
+                placeholder="Seu nome"
+                value={form.nome}
+                onChangeText={(text) => setForm({ ...form, nome: text })}
+              />
+          </InputContainer>
 
 
+          <InputContainer label="Sobrenome">
+              <TextInputField
+                placeholder="Seu sobrenome"
+                value={form.sobrenome}
+                onChangeText={(text) => setForm({ ...form, sobrenome: text })}
+              />
+          </InputContainer>
 
-          <AppText>Sobrenome</AppText>
-          <TextInputField
-            placeholder="Seu sobrenome"
-            value={form.sobrenome}
-            onChangeText={(text) => setForm({ ...form, sobrenome: text })}
-          />
 
-          <AppText>Email institucional</AppText>
-          <TextInputField
-            placeholder="exemplo@unb.br"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            value={form.email}
-            onChangeText={(text) => setForm({ ...form, email: text })}
-          />
+          <InputContainer label="Email institucional">
+              <TextInputField
+                placeholder="exemplo@unb.br"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                value={form.email}
+                onChangeText={(text) => setForm({ ...form, email: text })}
+              />
+          </InputContainer>
 
-          <AppText>Data de nascimento</AppText>
-          <TextInputField
-            placeholder="DD/MM/AAAA"
-            keyboardType="numeric"
-            value={form.dataNascimento}
-            onChangeText={(text) => {
-              const formatted = formatDate(text);
-              setForm({ ...form, dataNascimento: formatted });
-            }}
-          />
+          <InputContainer label="Senha">
+              <TextInputField
+                placeholder="Mínimo 8 caracteres"
+                secureTextEntry
+                value={form.senha}
+                onChangeText={(text) => setForm({ ...form, senha: text })}
+              />
+          </InputContainer>
 
-          <AppText>Senha</AppText>
-          <TextInputField
-            placeholder="Mínimo 8 caracteres"
-            secureTextEntry
-            value={form.senha}
-            onChangeText={(text) => setForm({ ...form, senha: text })}
-          />
+          <InputContainer label="Data de nascimento">
+              <TextInputField
+                placeholder="DD/MM/AAAA"
+                keyboardType="numeric"
+                value={form.dataNascimento}
+                onChangeText={(text) => {
+                  const formatted = formatDate(text);
+                  setForm({ ...form, dataNascimento: formatted });
+                }}
+              />
+          </InputContainer>
 
-          <AppText>Câmpus</AppText>
-          <DropdownSelect
-            options={campusOptions}
-            placeholder="Selecione seu câmpus"
-            value={form.campus}
-            onSelect={(value) => setForm({ ...form, campus: value })}
-          />
+
+          <InputContainer label="Câmpus">
+              <DropdownSelect
+                options={campusOptions}
+                placeholder="Selecione seu câmpus"
+                value={form.campus}
+                onSelect={(value) => setForm({ ...form, campus: value })}
+              />
+          </InputContainer>
+          
 
           <PrimaryButton title="Confirmar" onPress={handleSubmit} />
         </AuthContainer>
@@ -119,5 +127,3 @@ export default function RegisterResearcher() {
   );
 }
 
-
-            

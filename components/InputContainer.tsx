@@ -1,19 +1,16 @@
 import React from "react"
-import { ScrollView, View, ViewProps, Text, StyleSheet } from "react-native"
-import { DropdownSelect } from "@/components/DropdownSelect"
-import { TextInputField } from "@/components/TextInputField"
-import { PasswordInputField } from "@/components/PasswordInputField"
+import { View, ViewProps, Text, StyleSheet } from "react-native"
 import { AppText } from "@/components/AppText"
 
-
-
 interface InputContainerProps extends ViewProps {
+    label?: string,
     children: React.ReactNode
 }
 
-export function InputContainer({children, style, ...rest}: InputContainerProps) {
+export function InputContainer({label, children, style, ...rest}: InputContainerProps) {
     return (
       <View style={styles.container}>
+          {label && <AppText style={styles.label}>{label}</AppText>}
           {children}
       </View>
     )
@@ -22,6 +19,10 @@ export function InputContainer({children, style, ...rest}: InputContainerProps) 
 
 const styles = StyleSheet.create({
     container:{
-        width: "100%"
+        width: "100%",
+        marginBottom: 10,
+    },
+    label:{
+        marginBottom: 8
     }
 })

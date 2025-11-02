@@ -6,6 +6,7 @@ import { AppText } from "@/components/AppText";
 import { TextInputField } from "@/components/TextInputField";
 import { DropdownSelect } from "@/components/DropdownSelect";
 import { AuthContainer } from "@/components/AuthContainer";
+import { InputContainer } from "@/components/InputContainer";
 import { validateBirthDate } from "@/utils/validateBirthDate";
 import { validatePassword } from "@/utils/validatePassword";
 import { validateEmail } from "@/utils/validateEmail";
@@ -59,55 +60,63 @@ export default function RegisterResearcher() {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <AuthContainer>
-          <AppText>Nome</AppText>
-          <TextInputField
-            placeholder="Seu nome"
-            value={form.nome}
-            onChangeText={(text) => setForm({ ...form, nome: text })}
-          />
+          <InputContainer label="Nome">
+              <TextInputField
+                placeholder="Seu nome"
+                value={form.nome}
+                onChangeText={(text) => setForm({ ...form, nome: text })}
+              />
+          </InputContainer>
 
-          <AppText>Sobrenome</AppText>
-          <TextInputField
-            placeholder="Seu sobrenome"
-            value={form.sobrenome}
-            onChangeText={(text) => setForm({ ...form, sobrenome: text })}
-          />
 
-          <AppText>Email</AppText>
-          <TextInputField
-            placeholder="exemplo@dominio.br"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            value={form.email}
-            onChangeText={(text) => setForm({ ...form, email: text })}
-          />
+          <InputContainer label="Sobrenome">
+              <TextInputField
+                placeholder="Seu sobrenome"
+                value={form.sobrenome}
+                onChangeText={(text) => setForm({ ...form, sobrenome: text })}
+              />
+          </InputContainer>
 
-          <AppText>Senha</AppText>
-          <TextInputField
-            placeholder="Mínimo 8 caracteres"
-            secureTextEntry
-            value={form.senha}
-            onChangeText={(text) => setForm({ ...form, senha: text })}
-          />
+          
+          <InputContainer label="Email">
+              <TextInputField
+                placeholder="exemplo@dominio.br"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                value={form.email}
+                onChangeText={(text) => setForm({ ...form, email: text })}
+              />
+          </InputContainer>
 
-          <AppText>Data de nascimento</AppText>
-          <TextInputField
-            placeholder="DD/MM/AAAA"
-            keyboardType="numeric"
-            value={form.dataNascimento}
-            onChangeText={(text) => {
-              const formatted = formatDate(text);
-              setForm({ ...form, dataNascimento: formatted });
-            }}
-          />
+          <InputContainer label="Senha">
+              <TextInputField
+                placeholder="Mínimo 8 caracteres"
+                secureTextEntry
+                value={form.senha}
+                onChangeText={(text) => setForm({ ...form, senha: text })}
+              />
+          </InputContainer>
 
-          <AppText>Categoria</AppText>
-          <DropdownSelect
-            options={categoriaOptions}
-            placeholder="Selecione sua categoria"
-            value={form.categoria}
-            onSelect={(value) => setForm({ ...form, categoria: value })}
-          />
+          <InputContainer label="Data de nascimento">
+              <TextInputField
+                placeholder="DD/MM/AAAA"
+                keyboardType="numeric"
+                value={form.dataNascimento}
+                onChangeText={(text) => {
+                  const formatted = formatDate(text);
+                  setForm({ ...form, dataNascimento: formatted });
+                }}
+              />
+          </InputContainer>
+
+          <InputContainer label="Categoria">
+              <DropdownSelect
+                options={categoriaOptions}
+                placeholder="Selecione sua categoria"
+                value={form.categoria}
+                onSelect={(value) => setForm({ ...form, categoria: value })}
+              />
+          </InputContainer>
 
           <PrimaryButton title="Confirmar" onPress={handleSubmit} />
         </AuthContainer>

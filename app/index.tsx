@@ -2,7 +2,7 @@ import { Text, View, Image, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { StatusBar } from "react-native";
-import { AppText } from "@/components/appText";
+import { AppText } from "@/components/AppText";
 
 export default function Index() {
   const router = useRouter()

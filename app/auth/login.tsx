@@ -7,6 +7,7 @@ import { TextInputField } from "@/components/TextInputField";
 import { Link } from "@react-navigation/native";
 import { PasswordInputField } from "@/components/PasswordInputField";
 import { AuthContainer } from "@/components/AuthContainer";
+import { InputContainer } from "@/components/InputContainer";
 
 
 import { Feather } from "@expo/vector-icons";
@@ -47,20 +48,23 @@ export default function Login() {
                         <Text style={styles.subtitle}>Informe seus dados para entrar na sua conta.</Text>
                     </View>
 
-                    <AppText>E-mail</AppText>
-                    <TextInputField
-                        placeholder="exemplo@dominio.com"
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                        value={form.email}
-                        onChangeText={(text) => setForm({ ...form, email: text })}
-                    />
+                    <InputContainer label="Email">
+                        <TextInputField
+                            placeholder="exemplo@dominio.br"
+                            keyboardType="email-address"
+                            autoCapitalize="none"
+                            value={form.email}
+                            onChangeText={(text) => setForm({ ...form, email: text })}
+                        />
+                    </InputContainer>
 
-                    <AppText>Senha</AppText>
-                    <PasswordInputField
-                        value={form.senha}
-                        onChangeText={(text) => setForm({ ...form, senha: text })}                
-                    />
+                    <InputContainer label="Senha">
+                        <PasswordInputField
+                            value={form.senha}
+                            onChangeText={(text) => setForm({ ...form, senha: text })}                
+                        />
+                    </InputContainer>
+
 
                     {/*Text style={styles.forgotPassword} onPress={handleForgotPassword}>Esqueceu a sua senha? Clique <Link to="/reset-password">aqui</Link></Text>*/}
                                            

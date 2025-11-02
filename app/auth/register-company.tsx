@@ -10,6 +10,7 @@ import { validatePassword } from "@/utils/validatePassword";
 import { validateCNPJ } from "@/utils/validateCNPJ";
 import { validateEmail } from "@/utils/validateEmail";
 import { formatCNPJ } from "@/utils/formatCNPJ";
+import { InputContainer } from "@/components/InputContainer";
 
 export default function RegisterCompany() {
     const router = useRouter();
@@ -69,48 +70,55 @@ export default function RegisterCompany() {
 
         <AuthContainer>
      
-        <AppText>Nome Fantasia</AppText>
-        <TextInputField
-        placeholder="Nome da Empresa"
-        value={form.nomeFantasia}
-        onChangeText={(text) => setForm({ ...form, nomeFantasia: text })}
-        />
+        <InputContainer label="Nome Fantasia">
+            <TextInputField
+                placeholder="Nome da Empresa"
+                value={form.nomeFantasia}
+                onChangeText={(text) => setForm({ ...form, nomeFantasia: text })}
+            />
+        </InputContainer>
+        
 
-        <AppText>CNPJ</AppText>
-        <TextInputField
-          placeholder="00.000.000/0000-00"
-          keyboardType="numeric"
-          value={form.cnpj}
-          onChangeText={(text) => {
-            const formatted = formatCNPJ(text);
-            setForm({ ...form, cnpj: formatted });
-          }}
-        />
+        <InputContainer label="CNPJ">
+            <TextInputField
+                placeholder="00.000.000/0000-00"
+                keyboardType="numeric"
+                value={form.cnpj}
+                onChangeText={(text) => {
+                    const formatted = formatCNPJ(text);
+                    setForm({ ...form, cnpj: formatted });
+                }}
+            />
+        </InputContainer>
 
-        <AppText>Email</AppText>
-        <TextInputField
-        placeholder="contato@empresa.com"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        value={form.email}
-        onChangeText={(text) => setForm({ ...form, email: text })}
-        />
+        <InputContainer label="Email">
+            <TextInputField
+                placeholder="contato@empresa.com"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                value={form.email}
+                onChangeText={(text) => setForm({ ...form, email: text })}
+            />
+        </InputContainer>
 
-        <AppText>Senha</AppText>
-        <TextInputField
-        placeholder="Mínimo 8 caracteres"
-        secureTextEntry
-        value={form.senha}
-        onChangeText={(text) => setForm({ ...form, senha: text })}
-        />
-          
-        <AppText>Porte</AppText>
-        <DropdownSelect
-        options={porteOptions}
-        placeholder="Selecione o porte"
-        value={form.porte}
-        onSelect={(value) => setForm({ ...form, porte: value })}
-        />
+        <InputContainer label="Senha">
+            <TextInputField
+            placeholder="Mínimo 8 caracteres"
+            secureTextEntry
+            value={form.senha}
+            onChangeText={(text) => setForm({ ...form, senha: text })}
+            />
+        </InputContainer>
+
+        <InputContainer label="Porte">
+            <DropdownSelect
+                options={porteOptions}
+                placeholder="Selecione o porte"
+                value={form.porte}
+                onSelect={(value) => setForm({ ...form, porte: value })}
+            />
+        </InputContainer>
+        
 
         <PrimaryButton title="Confirmar" onPress={handleSubmit} />
         </AuthContainer>
