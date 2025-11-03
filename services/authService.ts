@@ -47,7 +47,7 @@ export async function registerUser(form: any, tipo: "researcher" | "collaborator
         payload.researcher_profile = {
             firstName: form.nome,
             surname: form.sobrenome,
-            birthDate: form.dataNascimento,
+            birthDate: form.dataNascimento.split("/").reverse().join("-"),
             campus: form.campus,
         }
     }
@@ -56,7 +56,7 @@ export async function registerUser(form: any, tipo: "researcher" | "collaborator
         payload.collaborator_profile = {
             firstName: form.nome,
             surname: form.sobrenome,
-            birthDate: form.dataNascimento,
+            birthDate: form.dataNascimento.split("/").reverse().join("-"),
             category: form.categotia,
         }
     }
