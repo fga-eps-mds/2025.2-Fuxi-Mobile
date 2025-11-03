@@ -2,7 +2,6 @@ import { View, Text, StyleSheet, ScrollView, Alert, KeyboardAvoidingView, Platfo
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { AppText } from "@/components/AppText";
 import { TextInputField } from "@/components/TextInputField";
 import { DropdownSelect } from "@/components/DropdownSelect";
 import { AuthContainer } from "@/components/AuthContainer";
@@ -10,6 +9,7 @@ import { InputContainer } from "@/components/InputContainer";
 import { validateBirthDate } from "@/utils/validateBirthDate";
 import { validatePassword } from "@/utils/validatePassword";
 import { formatDate } from "@/utils/formatDate";
+import { registerUser } from "@/services/authService";
 
 export default function RegisterResearcher() {
   const router = useRouter();
@@ -23,6 +23,8 @@ export default function RegisterResearcher() {
     campus: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const campusOptions = [
     { label: "UNB DARCY RIBEIRO", value: "darcy" },
     { label: "UNB GAMA: FCTE", value: "fga" },
@@ -30,8 +32,8 @@ export default function RegisterResearcher() {
     { label: "UNB CEILÂNDIA: FCE", value: "fce" },
   ];
 
-  function handleSubmit() {
-    if (!form.nome || !form.sobrenome || !form.email || !form.senha) {
+  async function handleSubmit() {
+    if (!form.nome || !form.sobrenome || !form.email || !form.senha || !form.campus) {
       Alert.alert("Preencha todos os campos obrigatórios.");
       return;
     }
@@ -49,7 +51,22 @@ export default function RegisterResearcher() {
     return;
   }
 
-    Alert.alert("Sucesso!", "Cadastro validado com sucesso.");
+    setLoading(true);
+    
+    try {
+        await registerUser(form, "researcher");
+        Alert.alert("Sucesso!", "Cadastro realizado com sucesso.");
+        
+        router.replace("/auth/login");
+    } catch (error: any) {
+        console.log(error);
+        const errorMsg = error.response?.data?.detail || "Não foi possível realizar o cadastro. Tente novamente mais tarde.";
+        
+        Alert.alert("Erro no cadastro", errorMsg);
+    
+    } finally {
+        setLoading(false);
+    }
   }
 
   return (
@@ -119,8 +136,12 @@ export default function RegisterResearcher() {
               />
           </InputContainer>
           
+          <PrimaryButton
+            title={loading ? "Confirmando..." : "Confirmar"}
+            onPress={handleSubmit}
+            disabled={loading}
+          />
 
-          <PrimaryButton title="Confirmar" onPress={handleSubmit} />
         </AuthContainer>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

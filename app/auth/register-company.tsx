@@ -1,7 +1,6 @@
 import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, Text, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { AppText } from "@/components/AppText";
 import { TextInputField } from "@/components/TextInputField";
 import { DropdownSelect } from "@/components/DropdownSelect";
 import { useState } from "react";
@@ -11,6 +10,7 @@ import { validateCNPJ } from "@/utils/validateCNPJ";
 import { validateEmail } from "@/utils/validateEmail";
 import { formatCNPJ } from "@/utils/formatCNPJ";
 import { InputContainer } from "@/components/InputContainer";
+import { registerUser } from "@/services/authService";
 
 export default function RegisterCompany() {
     const router = useRouter();
@@ -25,6 +25,8 @@ export default function RegisterCompany() {
 
     })
 
+    const [loading, setLoading] = useState(false);
+
     const porteOptions = [
 
         { label: "MICROEMPRESA (ME)", value: "me"},
@@ -35,27 +37,40 @@ export default function RegisterCompany() {
 
     ]
 
-    function handleSubmit() {
+    async function handleSubmit() {
 
-        if(!form.nomeFantasia || !form.cnpj || !form.senha || !form.porte) {
-            Alert.alert("Preencha todos os campos obrigatórios.");
-            return;
+        if(!form.nomeFantasia || !form.cnpj || !form.email || !form.senha || !form.porte) {
+            Alert.alert("Preencha todos os campos obrigatórios.")
+            return
 
         }
 
         if (!validateCNPJ(form.cnpj)) {
-            return;
+            return
         }
 
         if (!validateEmail(form.email)) {
-            return;
+            return
         }
 
         if (!validatePassword(form.senha)) {
-            return;
+            return
         }
 
-        Alert.alert("Sucesso!", "Cadastro validado com sucesso.");
+        setLoading(true);
+        try {
+            await registerUser(form, "company")
+
+            Alert.alert("Sucesso!", "Cadastro realizado com sucesso.");
+            router.replace("/auth/login");
+        } catch (error: any) {
+            console.error(error.response?.data)
+            
+            const errorMsg = error.response?.data?.detail || "Não foi possível realizar o cadastro. Tente novamente mais tarde."
+            Alert.alert("Erro no cadastro", errorMsg)
+        } finally {
+            setLoading(false)
+        }
 
     }
 
@@ -120,7 +135,12 @@ export default function RegisterCompany() {
         </InputContainer>
         
 
-        <PrimaryButton title="Confirmar" onPress={handleSubmit} />
+        <PrimaryButton
+            title={loading ? "Confirmando..." : "Confirmar"}
+            onPress={handleSubmit}
+            disabled={loading}
+          />
+
         </AuthContainer>
         </TouchableWithoutFeedback>
         </KeyboardAvoidingView>

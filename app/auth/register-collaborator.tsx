@@ -2,7 +2,6 @@ import { View, Text, StyleSheet, ScrollView, Alert, KeyboardAvoidingView, Platfo
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { AppText } from "@/components/AppText";
 import { TextInputField } from "@/components/TextInputField";
 import { DropdownSelect } from "@/components/DropdownSelect";
 import { AuthContainer } from "@/components/AuthContainer";
@@ -11,8 +10,9 @@ import { validateBirthDate } from "@/utils/validateBirthDate";
 import { validatePassword } from "@/utils/validatePassword";
 import { validateEmail } from "@/utils/validateEmail";
 import { formatDate } from "@/utils/formatDate";
+import {registerUser} from "@/services/authService";
 
-export default function RegisterResearcher() {
+export default function RegisterCollaborator() {
   const router = useRouter();
 
   const [form, setForm] = useState({
@@ -24,6 +24,8 @@ export default function RegisterResearcher() {
     categoria: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const categoriaOptions = [
     { label: "DISCENTE", value: "dis" },
     { label: "SERVIDOR", value: "serv" },
@@ -31,8 +33,8 @@ export default function RegisterResearcher() {
 
   ];
 
-  function handleSubmit() {
-    if (!form.nome || !form.sobrenome || !form.email || !form.senha || !form.categoria) {
+  async function handleSubmit() {
+    if (!form.nome || !form.sobrenome || !form.email || !form.dataNascimento || !form.senha || !form.categoria) {
       Alert.alert("Preencha todos os campos obrigatórios.");
       return;
     }
@@ -48,8 +50,20 @@ export default function RegisterResearcher() {
     if (!validatePassword(form.senha)) {
     return;
   }
+    setLoading(true);
+    try{ 
+        await registerUser(form, "collaborator")
 
-    Alert.alert("Sucesso!", "Cadastro validado com sucesso.");
+        Alert.alert("Sucesso!", "Cadastro realizado com sucesso.")
+        router.push("/auth/login")
+    } catch (error: any) {
+        console.error(error)
+        const errorMsg = error.response?.data?.detail || "Não foi possível realizar o cadastro. Tente novamente mais tarde."
+        Alert.alert("Erro no cadastro", errorMsg)
+    } finally {
+        setLoading(false);
+    }
+
   }
 
   return (
@@ -118,7 +132,12 @@ export default function RegisterResearcher() {
               />
           </InputContainer>
 
-          <PrimaryButton title="Confirmar" onPress={handleSubmit} />
+          <PrimaryButton
+            title={loading ? "Confirmando..." : "Confirmar"}
+            onPress={handleSubmit}
+            disabled={loading}
+          />
+          
         </AuthContainer>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>

@@ -8,6 +8,7 @@ import { Link } from "@react-navigation/native";
 import { PasswordInputField } from "@/components/PasswordInputField";
 import { AuthContainer } from "@/components/AuthContainer";
 import { InputContainer } from "@/components/InputContainer";
+import { loginUser } from "@/services/authService";
 
 
 import { Feather } from "@expo/vector-icons";
@@ -18,19 +19,31 @@ export default function Login() {
         email: "",
         senha: "",
     });
+    const [loading, setLoading] = useState(false)
     
-    function handleLogin() {
+    async function handleLogin() {
         if (!form.email || !form.senha) {
-            Alert.alert("Preencha todos os campos obrigatórios.");
-            return;
+            Alert.alert("Preencha todos os campos obrigatórios.")
+            return
         }
-
-        Alert.alert("Sucesso!", "Login realizado com sucesso.");
         
+        setLoading(true);
+
+        try {
+            await loginUser(form.email, form.senha)
+
+            router.replace("/home")
+        } catch (error: any) {
+            console.log(error)
+            const errorMsg = error.response?.data?.detail || "Não foi possível fazer o login. Verifique seu e-mail e senha."
+            Alert.alert("Erro no login", errorMsg)
+        } finally {
+            setLoading(false);
+        }
         }
 
         function handleForgotPassword() {
-            router.push("/reset-password");
+            router.push("/reset-password")
         }
         
     return (
@@ -65,11 +78,15 @@ export default function Login() {
                         />
                     </InputContainer>
 
+                    <PrimaryButton
+                        title={loading ? "Entrando..." : "Entrar"}
+                        onPress={handleLogin}
+                        disabled={loading}
+                    />
 
                     {/*Text style={styles.forgotPassword} onPress={handleForgotPassword}>Esqueceu a sua senha? Clique <Link to="/reset-password">aqui</Link></Text>*/}
                                            
-                    <PrimaryButton title="Entrar" onPress={handleLogin} />
-
+        
 
                 </AuthContainer>
             </TouchableWithoutFeedback>

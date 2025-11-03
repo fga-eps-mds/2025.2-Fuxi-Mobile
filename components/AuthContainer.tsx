@@ -15,6 +15,8 @@ export function AuthContainer({children, style, ...rest}: AppScrollViewProps) {
 
 const styles = StyleSheet.create({
   container:{
+    flex: 1,
+    position: "relative",
     width: "100%",
     height: "100%",
     paddingHorizontal: 20,
