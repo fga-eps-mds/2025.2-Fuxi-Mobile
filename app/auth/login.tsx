@@ -32,10 +32,13 @@ export default function Login() {
             switch (userData.user.user_type) {
                 case "researcher":
                     router.replace("/home/researcher")
+                    return
                 case "collaborator":
                     router.replace("/home/collaborator")
+                    return
                 case "company":
                     router.replace("/home/company")
+                    return
             }
 
         } catch (error: any) {
