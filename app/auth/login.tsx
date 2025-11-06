@@ -1,4 +1,4 @@
-import { AuthContainer } from "@/components/AuthContainer";
+import { ViewContainer } from "@/components/ViewContainer";
 import { InputContainer } from "@/components/InputContainer";
 import { PasswordInputField } from "@/components/PasswordInputField";
 import { PrimaryButton } from "@/components/PrimaryButton";
@@ -62,7 +62,7 @@ export default function Login() {
         >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 
-                <AuthContainer >
+                <ViewContainer >
 
                     <View>
                         <Text style={styles.title}>Comece agora!</Text>
@@ -96,7 +96,7 @@ export default function Login() {
                                            
         
 
-                </AuthContainer>
+                </ViewContainer>
             </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
     );

@@ -5,7 +5,7 @@ interface AppScrollViewProps extends ScrollViewProps{
   children: React.ReactNode
 }
 
-export function AuthContainer({children, style, ...rest}: AppScrollViewProps) {
+export function ViewContainer({children, style, ...rest}: AppScrollViewProps) {
     return (
       <ScrollView contentContainerStyle={styles.container}>
         {children}

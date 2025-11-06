@@ -4,7 +4,7 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { TextInputField } from "@/components/TextInputField";
 import { DropdownSelect } from "@/components/DropdownSelect";
 import { useState } from "react";
-import { AuthContainer } from "@/components/AuthContainer";
+import { ViewContainer } from "@/components/ViewContainer";
 import { validatePassword } from "@/utils/validatePassword";
 import { validateCNPJ } from "@/utils/validateCNPJ";
 import { validateEmail } from "@/utils/validateEmail";
@@ -83,7 +83,7 @@ export default function RegisterCompany() {
         
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
-        <AuthContainer>
+        <ViewContainer>
      
         <InputContainer label="Nome Fantasia">
             <TextInputField
@@ -141,7 +141,7 @@ export default function RegisterCompany() {
             disabled={loading}
           />
 
-        </AuthContainer>
+        </ViewContainer>
         </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
     );

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { TextInputField } from "@/components/TextInputField";
 import { DropdownSelect } from "@/components/DropdownSelect";
-import { AuthContainer } from "@/components/AuthContainer";
+import { ViewContainer } from "@/components/ViewContainer";
 import { InputContainer } from "@/components/InputContainer";
 import { validateBirthDate } from "@/utils/validateBirthDate";
 import { validatePassword } from "@/utils/validatePassword";
@@ -73,7 +73,7 @@ export default function RegisterCollaborator() {
       keyboardVerticalOffset={1}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <AuthContainer>
+        <ViewContainer>
           <InputContainer label="Nome">
               <TextInputField
                 placeholder="Seu nome"
@@ -138,7 +138,7 @@ export default function RegisterCollaborator() {
             disabled={loading}
           />
           
-        </AuthContainer>
+        </ViewContainer>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
