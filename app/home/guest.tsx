@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 
-import { TextInputField } from '@/components/TextInputField'; 
 import { AppText } from '@/components/AppText'; 
-import { ResearchCard } from '@/components/ResearchCard'; 
-import { Feather } from '@expo/vector-icons';
+import { ResearchCard } from '@/components/ResearchCard';
+import { SearchBar } from '@/components/SearchBar';
 
 interface Research {
   id: string;
@@ -115,10 +114,10 @@ export default function GuestHome() {
             </View>
             
             <View style={styles.searchContainer}>
-                <TextInputField
-                    placeholder="Explore projetos existentes..."
+                <SearchBar
                     value={searchText}
                     onChangeText={setSearchText}
+                    placeholder="Explore projetos existentes..."
                 />
             </View>
 

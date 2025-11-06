@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-
-import { TextInputField } from '@/components/TextInputField'; 
+ 
 import { AppText } from '@/components/AppText'; 
-import { ResearchCard } from '@/components/ResearchCard'; 
-
-import { Feather } from '@expo/vector-icons';
+import { ResearchCard } from '@/components/ResearchCard';
+import { SearchBar } from '@/components/SearchBar'; 
 
 interface Research {
   id: string;
@@ -143,14 +141,14 @@ export default function ResearcherHome() {
             <View style={styles.header}>
                 <Text style={styles.greeting}>Olá Pesquisador, {data.name}</Text>
                 <Text style={styles.subtitle}>{data.campus}</Text>
-                <Feather name="bell" color="#003366" size={24} />
+                {/* Ícone de notificação aqui. */}
             </View>
         
             <View style={styles.searchContainer}>
-                <TextInputField
-                    placeholder="Explore projetos existentes..."
+                <SearchBar
                     value={searchText}
                     onChangeText={setSearchText}
+                    placeholder="Explore projetos existentes..."
                 />
             </View>
 

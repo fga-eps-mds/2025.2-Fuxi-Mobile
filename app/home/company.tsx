@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-
-import { TextInputField } from '@/components/TextInputField'; 
+ 
 import { AppText } from '@/components/AppText'; 
-import { ResearchCard } from '@/components/ResearchCard'; 
-import { Feather } from '@expo/vector-icons';
-
+import { ResearchCard } from '@/components/ResearchCard';
+import { SearchBar } from '@/components/SearchBar'; 
+import { Bell } from 'lucide-react-native'; // Ícone de sino para notificação (alterar para o Feather)
 
 interface Research {
   id: string;
@@ -139,14 +138,15 @@ export default function CompanyHome() {
                     <Text style={styles.greeting}>Olá Empresa, {data.nomeFantasia}</Text>
                     <Text style={styles.subtitle}>{data.porte}</Text>
                 </View>
-                <Feather name="bell"  color="#003366" size={24} /> 
+                {/* Ícone de notificação */}
+                <Bell color="#003366" size={24} /> 
             </View>
             
             <View style={styles.searchContainer}>
-                <TextInputField
-                    placeholder="Explore projetos existentes..."
+                <SearchBar
                     value={searchText}
                     onChangeText={setSearchText}
+                    placeholder="Explore projetos existentes..."
                 />
             </View>
 
