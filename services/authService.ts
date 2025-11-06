@@ -57,7 +57,7 @@ export async function registerUser(form: any, tipo: "researcher" | "collaborator
             firstName: form.nome,
             surname: form.sobrenome,
             birthDate: form.dataNascimento.split("/").reverse().join("-"),
-            category: form.categotia,
+            category: form.categoria,
         }
     }
 
