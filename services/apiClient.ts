@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 //COLOQUEM O SEU IP LOCAL AQUI QUANDO FOR TESTAR
 //Winoows: use "ipconfig" no terminal e procure o seu IPV4
 //Mac/Linux: use "ifconfig" no terminal e procure algo como wlan0 e coloque o inet
-const IP_LOCAL = ""
+const IP_LOCAL = "http://localhost:8000"
 
 const apiClient = axios.create({
     baseURL: IP_LOCAL,
