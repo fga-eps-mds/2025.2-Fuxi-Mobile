@@ -1,17 +1,14 @@
-import { View, Text, StyleSheet, ScrollView, Alert, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from "react-native";
-import { useRouter } from "expo-router";
-import { useState } from "react";
-import { PrimaryButton } from "@/components/PrimaryButton";
-import { AppText } from "@/components/AppText";
-import { TextInputField } from "@/components/TextInputField";
-import { Link } from "@react-navigation/native";
-import { PasswordInputField } from "@/components/PasswordInputField";
 import { AuthContainer } from "@/components/AuthContainer";
 import { InputContainer } from "@/components/InputContainer";
+import { PasswordInputField } from "@/components/PasswordInputField";
+import { PrimaryButton } from "@/components/PrimaryButton";
+import { TextInputField } from "@/components/TextInputField";
 import { loginUser } from "@/services/authService";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Alert, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
 
 
-import { Feather } from "@expo/vector-icons";
 
 export default function Login() {
     const router = useRouter();
@@ -30,21 +27,29 @@ export default function Login() {
         setLoading(true);
 
         try {
-            await loginUser(form.email, form.senha)
+            const userData = await loginUser(form.email, form.senha)
 
-            router.replace("/home")
+            switch (userData.user.user_type) {
+                case "researcher":
+                    router.replace("/home/researcher")
+                case "collaborator":
+                    router.replace("/home/collaborator")
+                case "company":
+                    router.replace("/home/company")
+            }
+
         } catch (error: any) {
             console.log(error)
-            const errorMsg = error.response?.data?.detail || "Não foi possível fazer o login. Verifique seu e-mail e senha."
+            const errorMsg = error.response?.data?.non_field_errors || error.response?.data?.detail || "Não foi possível fazer o login. Verifique seu e-mail e senha."
             Alert.alert("Erro no login", errorMsg)
         } finally {
             setLoading(false);
         }
         }
 
-        function handleForgotPassword() {
-            router.push("/reset-password")
-        }
+        // function handleForgotPassword() {
+        //     router.push("/reset-password")
+        // }
         
     return (
         <KeyboardAvoidingView
