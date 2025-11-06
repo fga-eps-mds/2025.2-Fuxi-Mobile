@@ -6,6 +6,8 @@ import { TextInputField } from '@/components/TextInputField';
 import { AppText } from '@/components/AppText'; 
 import { ResearchCard } from '@/components/ResearchCard'; 
 
+import { Feather } from '@expo/vector-icons';
+
 interface Research {
   id: string;
   title: string;
@@ -141,7 +143,7 @@ export default function ResearcherHome() {
             <View style={styles.header}>
                 <Text style={styles.greeting}>Olá Pesquisador, {data.name}</Text>
                 <Text style={styles.subtitle}>{data.campus}</Text>
-                {/* Ícone de notificação aqui. */}
+                <Feather name="bell" color="#003366" size={24} />
             </View>
         
             <View style={styles.searchContainer}>

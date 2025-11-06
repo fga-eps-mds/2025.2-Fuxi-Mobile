@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import { TextInputField } from '@/components/TextInputField'; 
 import { AppText } from '@/components/AppText'; 
 import { ResearchCard } from '@/components/ResearchCard'; 
+import { Feather } from '@expo/vector-icons';
 
 interface Research {
   id: string;

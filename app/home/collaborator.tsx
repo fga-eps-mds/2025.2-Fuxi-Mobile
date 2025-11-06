@@ -5,7 +5,8 @@ import { useRouter } from 'expo-router';
 import { TextInputField } from '@/components/TextInputField'; 
 import { AppText } from '@/components/AppText'; 
 import { ResearchCard } from '@/components/ResearchCard'; 
-import { Bell } from 'lucide-react-native'; // Ícone de sino para notificação.
+
+import { Feather } from '@expo/vector-icons';
 
 interface Research {
   id: string;
@@ -140,7 +141,7 @@ export default function CollaboratorHome() {
                     <Text style={styles.subtitle}>{data.category}</Text>
                 </View>
                 {/* Ícone de notificação. */}
-                <Bell color="#003366" size={24} /> 
+                <Feather name="bell" color="#003366" size={24} /> 
             </View>
             
             <View style={styles.searchContainer}>

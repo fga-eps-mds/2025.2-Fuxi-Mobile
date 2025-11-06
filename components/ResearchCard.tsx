@@ -31,7 +31,7 @@ export const ResearchCard: React.FC<ResearchCardProps> = ({ research, onPress })
                 <Text style={styles.cardInfo}>Orçamento: R$ {research.budget}</Text>
             </View>
             
-            <Feather name='bell' color="#003366" size={24} style={styles.icon} /> 
+            <Feather name='chevron-right' color="#003366" size={24} style={styles.icon} /> 
         </TouchableOpacity>
     );
 };

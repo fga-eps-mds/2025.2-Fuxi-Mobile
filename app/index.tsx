@@ -35,7 +35,7 @@ export default function Index() {
       <PrimaryButton
         title="Apenas visualizar"
         color="#007A33"
-        onPress={() => router.push("/(home)/guest")}
+        onPress={() => router.push("/home/guest")}
       />
       
     </View>
