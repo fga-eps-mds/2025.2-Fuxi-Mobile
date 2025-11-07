@@ -30,7 +30,7 @@ export interface UserData {
 export interface ResearchData {
   id: number;
   researcher: number;
-  authors: string[]
+  members: string[]
   createdDate: string; // formato ISO (ex: "2025-11-07")
   title: string;
   description: string;
