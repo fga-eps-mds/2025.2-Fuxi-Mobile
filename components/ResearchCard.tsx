@@ -9,7 +9,7 @@ interface ResearchCardProps {
 }
 
 export const ResearchCard: React.FC<ResearchCardProps> = ({ research, onPress }) => {
-    const membersList = research.members.length > 1 ? `Autores: ${research.members[0]}, ${research.members[1]}, ...` : `Autor: ${research.members[0]}`;
+    const membersList = research.members.length > 1 ? `Membros: ${research.members[0]}, ${research.members[1]}, ...` : `Membro: ${research.members[0]}`;
 
     // Toda a área do card deve ser clicável.
     return (
