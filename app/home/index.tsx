@@ -147,9 +147,9 @@ export default function ResearcherHome() {
       case 'researcher':
         return userData.profile.campus;
       case 'company':
-        return userData.profile.category;
-      case 'collaborator':
         return userData.profile.size;
+      case 'collaborator':
+        return userData.profile.category;
       default:
         return 'Entre com a sua conta para ter acesso a mais funções';
     }};
@@ -157,7 +157,7 @@ export default function ResearcherHome() {
   const getName = () => {
     switch (userData?.user_type) {
       case 'company':
-        return userData.profile.category;
+        return userData.profile.fantasyName;
       case 'collaborator':
         return userData.profile.firstName;
       case 'researcher':
