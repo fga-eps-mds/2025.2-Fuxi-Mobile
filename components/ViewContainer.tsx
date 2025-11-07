@@ -7,7 +7,7 @@ interface AppScrollViewProps extends ScrollViewProps{
 
 export function ViewContainer({children, style, ...rest}: AppScrollViewProps) {
     return (
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.container}>
         {children}
       </ScrollView>
     )
@@ -15,10 +15,10 @@ export function ViewContainer({children, style, ...rest}: AppScrollViewProps) {
 
 const styles = StyleSheet.create({
   container:{
-    flex: 1,
+    flexGrow: 1,
     position: "relative",
-    width: "100%",
-    height: "100%",
+    // width: "100%",
+    // height: "100%",
     paddingHorizontal: 20,
     backgroundColor: "#ffffff",
     alignItems: "center",
