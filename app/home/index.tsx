@@ -30,7 +30,7 @@ export interface UserData {
 export interface ResearchData {
   id: number;
   researcher: number;
-  author: string
+  authors: string[]
   createdDate: string; // formato ISO (ex: "2025-11-07")
   title: string;
   description: string;
@@ -81,7 +81,7 @@ export default function ResearcherHome() {
     fetchUserData();
   }, []);
 
-  const handleCardPress = (id: string) => {
+  const handleCardPress = (id: number) => {
     // Redireciona para a tela de Detalhes
     // router.push(`/research/${id}`); 
   };
