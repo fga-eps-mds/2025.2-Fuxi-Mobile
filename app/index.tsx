@@ -1,11 +1,33 @@
-import { Text, View, Image, StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { StatusBar } from "react-native";
-import { AppText } from "@/components/AppText";
+import { getProfile, logoutUser } from '@/services/authService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from "expo-router";
+import React, { useEffect } from 'react';
+import { Image, StatusBar, StyleSheet, Text, View } from "react-native";
+import { UserData } from "./home";
 
 export default function Index() {
   const router = useRouter()
+
+  const fetchUserData = async () => {
+
+    try {
+        let user: UserData | null = null
+        const token = await AsyncStorage.getItem("authToken")
+        if (token) {
+           user = await getProfile()
+           if (user) router.push("/home")
+        }
+    } catch (e) {
+        logoutUser()
+        router.push("/")
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
 
   return (
     <View style = {styles.container}>
@@ -35,7 +57,7 @@ export default function Index() {
       <PrimaryButton
         title="Apenas visualizar"
         color="#007A33"
-        onPress={() => router.push("/home/guest")}
+        onPress={() => router.push("/home")}
       />
       
     </View>

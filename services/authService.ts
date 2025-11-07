@@ -1,9 +1,8 @@
-import apiClient from "./apiClient";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-export async function loginUser(email: string, password: string) {
+import apiClient from "./apiClient";
 
 //LOGIN
+export const loginUser = async (email: string, password: string) => {
     const response = await apiClient.post("/users/login/", { email, password })
     const data = response.data
 
@@ -13,29 +12,35 @@ export async function loginUser(email: string, password: string) {
 }
 
 //LOGOUT
-export async function logoutUser() {
+export const logoutUser = async () => {
     const token = await AsyncStorage.getItem("authToken")
     if (!token) return
 
     try {
         await apiClient.post("/users/logout/", {}, {
-            headers: { Authorization: 'Token ${token}' }
+            headers: { Authorization: `Token ${token}` }
         })
     } catch (error) {
         console.error("Erro ao fazer logout:", error)
+        AsyncStorage.removeItem("authToken")
     } finally {
         await AsyncStorage.removeItem("authToken")
     }
 }
 
 //PERFIL
-export async function getProfile() {
-    const response = await apiClient.get("/users/profile/")
+export const getProfile = async () => {
+    const token = await AsyncStorage.getItem("authToken")
+    if (!token) return
+
+    const response = await apiClient.get("/users/profile/", {
+            headers: { Authorization: `Token ${token}` }
+        })
     return response.data
 }
 
 //REGISTRO
-export async function registerUser(form: any, tipo: "researcher" | "collaborator" | "company") {
+export const registerUser = async (form: any, tipo: "researcher" | "collaborator" | "company") => {
     const payload: any = {
         email: form.email,
         user_type: tipo,

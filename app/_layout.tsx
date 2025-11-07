@@ -10,7 +10,7 @@ export default function RootLayout() {
       }} 
       >
 
-      <Stack.Screen name="index" options={{title: "Início" }} />
+      <Stack.Screen name="index"         options={{ title: "", headerBackVisible: false}}/>
       <Stack.Screen
         name="auth/register-type"
         options={{ title: "Seleção de Cadastro" }}
@@ -35,6 +35,12 @@ export default function RootLayout() {
         name="auth/login"
         options={{ title: "Login" }}
       />
+
+      <Stack.Screen
+        name="home/index"
+        options={{ title: "Início", headerBackVisible: false }}
+      />
+
     </Stack>
     );
 }

@@ -1,34 +1,26 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { ResearchData } from '@/app/home/teste';
 import Feather from '@expo/vector-icons/Feather';
-
-
-interface Research {
-  id: string;
-  title: string; 
-  researcherName: string;
-  description: string;
-  budget: string; 
-}
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface ResearchCardProps {
-    research: Research;
+    research: ResearchData;
     onPress: (id: string) => void;
 }
 
 export const ResearchCard: React.FC<ResearchCardProps> = ({ research, onPress }) => {
+
     // Toda a área do card deve ser clicável.
     return (
         <TouchableOpacity 
             style={styles.card} 
-            onPress={() => onPress(research.id)} 
+            onPress={() => onPress(research.id.toString())} 
             activeOpacity={0.7}
         >
             <View style={styles.cardContent}>
                 <Text style={styles.cardTitle}>{research.title}</Text>
                 <Text style={styles.cardDescription}>{research.description}</Text> 
-                <Text style={styles.cardInfo}>Autor: {research.researcherName}</Text>
-                <Text style={styles.cardInfo}>Orçamento: R$ {research.budget}</Text>
+                <Text style={styles.cardInfo}>Autor: {research.author}</Text>
             </View>
             
             <Feather name='chevron-right' color="#003366" size={24} style={styles.icon} /> 

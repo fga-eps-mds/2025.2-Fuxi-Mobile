@@ -1,5 +1,5 @@
 import React from "react"
-import { ScrollView, StyleSheet, TextProps, ScrollViewProps } from "react-native"
+import { ScrollView, ScrollViewProps, StyleSheet } from "react-native"
 
 interface AppScrollViewProps extends ScrollViewProps{
   children: React.ReactNode

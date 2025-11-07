@@ -1,8 +1,8 @@
-import { ViewContainer } from "@/components/ViewContainer";
 import { InputContainer } from "@/components/InputContainer";
 import { PasswordInputField } from "@/components/PasswordInputField";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { TextInputField } from "@/components/TextInputField";
+import { ViewContainer } from "@/components/ViewContainer";
 import { loginUser } from "@/services/authService";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -29,18 +29,8 @@ export default function Login() {
         try {
             const userData = await loginUser(form.email, form.senha)
 
-            switch (userData.user.user_type) {
-                case "researcher":
-                    router.replace("/home/researcher")
-                    return
-                case "collaborator":
-                    router.replace("/home/collaborator")
-                    return
-                case "company":
-                    router.replace("/home/company")
-                    return
-            }
-
+            router.replace("/home")
+            return
         } catch (error: any) {
             console.log(error)
             const errorMsg = error.response?.data?.non_field_errors || error.response?.data?.detail || "Não foi possível fazer o login. Verifique seu e-mail e senha."

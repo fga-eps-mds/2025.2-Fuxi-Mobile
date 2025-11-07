@@ -1,85 +1,92 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
- 
-import { AppText } from '@/components/AppText'; 
+import { AppText } from '@/components/AppText';
 import { ResearchCard } from '@/components/ResearchCard';
-import { SearchBar } from '@/components/SearchBar'; 
+import { getProfile, logoutUser } from '@/services/authService';
+import { getMyResearches, getResearches } from '@/services/researchService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-interface Research {
-  id: string;
+
+export interface UserData {
+  id: number;
+  email: string;
+  user_type: 'researcher' | 'collaborator' | 'company';
+  is_authenticated: boolean;
+  profile: {
+    id: number;
+    firstName?: string;
+    surname?: string;
+    birthDate?: string; // formato ISO (ex: "2000-01-01")
+    campus?: string;
+    category?: string;
+    cnpj?: string;
+    fantasyName?: string;
+    size?: string;
+  };
+  researches?: ResearchData[]
+}
+
+export interface ResearchData {
+  id: number;
+  researcher: number;
+  author: string
+  createdDate: string; // formato ISO (ex: "2025-11-07")
   title: string;
-  researcherName: string; 
   description: string;
-  budget: string;
+  status: string;
+  knowledge_area: string;
+  keywords: string[];
+  campus: string;
 }
-
-// Mock de dados
-const mockResearches: Research[] = [
-    { id: '', title: '', researcherName: '', description: 'Descrição da pesquisa 1', budget: '' },
-    { id: '', title: '', researcherName: '', description: 'Descrição da pesquisa 2', budget: '' },
-    { id: '', title: '', researcherName: '', description: 'Descrição da pesquisa 3', budget: '' },
-];
-
-interface ResearcherData {
-    favorites: Research[];
-    recents: Research[];
-    myProjects: Research[];
-    campus: string; 
-    name: string;
-}
-
 
 export default function ResearcherHome() {
   const router = useRouter();
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState<ResearcherData>({
-      favorites: [],
-      recents: [],
-      myProjects: [],
-      campus: 'Darcy Ribeiro', 
-      name: 'João Silva', 
-  });
-
+  const [userData, setUserData] = useState<UserData | null>(null)
+  const [researches, setResearches] = useState<ResearchData[]>([]);
   const [searchText, setSearchText] = useState('');
   
-  // Função que SIMULA a busca de pesquisas (MOCK) para todas as seções.
-  const fetchResearcherDataMock = async () => {
+  const fetchUserData = async () => {
     setLoading(true);
     setError(null);
 
     try {
-        await new Promise(resolve => setTimeout(resolve, 1500)); 
+        let user: UserData | null = null
+        const token = await AsyncStorage.getItem("authToken")
+        if (token) {
+           user = await getProfile()
+        }
+
+        const researches = await getResearches(); 
+
+        if (user && user.user_type === "researcher"){
+          user.researches = await getMyResearches();
+        }
         
-        setData({
-            favorites: mockResearches.slice(0, 2),
-            recents: mockResearches,
-            myProjects: mockResearches.slice(0, 1),
-            campus: 'Darcy Ribeiro',
-            name: 'João Silva',
-        });
+        setUserData(user);
+        setResearches(researches);
 
     } catch (e) {
         setError("Não foi possível carregar os dados. Tente novamente.");
-        setData(prev => ({ ...prev, favorites: [], recents: [], myProjects: [] }));
+        setResearches([]);
     } finally {
         setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchResearcherDataMock();
+    fetchUserData();
   }, []);
 
-//   const handleCardPress = (id: string) => {
-//     // Redireciona para a tela de Detalhes
-//     router.push(`/research/${id}`); 
-//   };
+  const handleCardPress = (id: string) => {
+    // Redireciona para a tela de Detalhes
+    // router.push(`/research/${id}`); 
+  };
   
-  // Componente para renderizar uma seção (Meus Favoritos, Mais Recentes, etc.)
-  const Section: React.FC<{ title: string; list: Research[] }> = ({ title, list }) => {
+  const Section: React.FC<{ title: string; list: ResearchData[] }> = ({ title, list }) => {
     if (list.length === 0) {
         return (
             <View style={styles.sectionContainer}>
@@ -117,7 +124,7 @@ export default function ResearcherHome() {
         return (
             <View style={styles.feedbackContainer}>
                 <Text style={styles.errorText}>{error}</Text>
-                <TouchableOpacity onPress={fetchResearcherDataMock} style={styles.retryButton}>
+                <TouchableOpacity onPress={fetchUserData} style={styles.retryButton}>
                      <Text style={styles.retryText}>Tentar Novamente</Text>
                 </TouchableOpacity>
             </View>
@@ -127,37 +134,72 @@ export default function ResearcherHome() {
     // Conteúdo do pesquisador: 3 seções.
     return (
         <>
-            <Section title="Meus favoritos" list={data.favorites} />
-            <Section title="Mais recentes" list={data.recents} />
-            <Section title="Meus projetos" list={data.myProjects} /> 
+            {/* <Section title="Meus favoritos" list={data.favorites} /> */}
+            <Section title="Mais recentes" list={researches} />
+            {userData?.user_type === 'researcher' && userData?.researches &&  <Section title="Meus projetos" list={userData.researches} /> }
+             
         </>
     );
   };
+
+  const getSubtitle = () => {
+    switch (userData?.user_type) {
+      case 'researcher':
+        return userData.profile.campus;
+      case 'company':
+        return userData.profile.category;
+      case 'collaborator':
+        return userData.profile.size;
+      default:
+        return 'Entre com a sua conta para ter acesso a mais funções';
+    }};
+
+  const getName = () => {
+    switch (userData?.user_type) {
+      case 'company':
+        return userData.profile.category;
+      case 'collaborator':
+        return userData.profile.firstName;
+      case 'researcher':
+        return userData.profile.firstName;
+      default:
+        return 'Convidado';
+    }};
+
+    const handleLogout = async () => {
+      await logoutUser();
+      router.replace("/");
+    };
 
 
   return (
     <View style={styles.safeArea}>
         <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.greeting}>Olá Pesquisador, {data.name}</Text>
-                <Text style={styles.subtitle}>{data.campus}</Text>
+                <Text style={styles.greeting}>Olá {getName()},</Text>
+                <Text style={styles.subtitle}>{getSubtitle()}</Text>
                 {/* Ícone de notificação aqui. */}
             </View>
         
-            <View style={styles.searchContainer}>
+            {/* <View style={styles.searchContainer}>
                 <SearchBar
                     value={searchText}
                     onChangeText={setSearchText}
                     placeholder="Explore projetos existentes..."
                 />
-            </View>
+            </View> */}
 
             <View style={styles.listArea}>
                  {renderContent()}
             </View>
+
+
+            <TouchableOpacity onPress={handleLogout} style={styles.retryButton}>
+                  <Text style={styles.retryText}>LOGOUT</Text>
+            </TouchableOpacity>
            
         </ScrollView>
-    </View>
+      </View>
   );
 }
 
