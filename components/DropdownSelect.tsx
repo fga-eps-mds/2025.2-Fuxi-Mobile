@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
 interface Option {
@@ -37,7 +37,7 @@ export function DropdownSelect({
         containerStyle={styles.dropdownContainer}
         activeColor="#f0f0f0"
         renderRightIcon={() => null} // remove ícone padrão
-        dropdownPosition="bottom" // abre pra baixo
+        dropdownPosition="top" // abre pra baixo
       />
     </View>
   );
@@ -46,7 +46,6 @@ export function DropdownSelect({
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    marginBottom: 12,
   },
   dropdown: {
     height: 45,

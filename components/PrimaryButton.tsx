@@ -1,6 +1,6 @@
-import React from "react";
-import { TouchableOpacity, Text, StyleSheet, GestureResponderEvent, TouchableOpacityProps, ViewStyle } from "react-native";
 import { usePathname } from "expo-router";
+import React from "react";
+import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
 
 interface PrimaryButtonProps {
     title: string
@@ -15,7 +15,7 @@ const authPaths = ["/auth/login", "/auth/register-company", "/auth/register-rese
 export function PrimaryButton({ title, disabled, color = "#003366", onPress, style }: PrimaryButtonProps) {
     const pathname = usePathname()
 
-    const authStyle = (authPaths.includes(pathname)) ? { position: "absolute", bottom: 30 } : {} as any
+    const authStyle = (authPaths.includes(pathname)) ? { marginTop: 20 } : {} as any
 
     return (
         <TouchableOpacity style = {[styles.button, {backgroundColor: color}, authStyle, style]} disabled={disabled} onPress={onPress}>

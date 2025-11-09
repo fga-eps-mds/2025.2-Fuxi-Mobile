@@ -1,15 +1,15 @@
-import { View, Text, StyleSheet, ScrollView, Alert, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from "react-native";
-import { useRouter } from "expo-router";
-import { useState } from "react";
+import { DropdownSelect } from "@/components/DropdownSelect";
+import { InputContainer } from "@/components/InputContainer";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { TextInputField } from "@/components/TextInputField";
-import { DropdownSelect } from "@/components/DropdownSelect";
 import { ViewContainer } from "@/components/ViewContainer";
-import { InputContainer } from "@/components/InputContainer";
+import { registerUser } from "@/services/authService";
+import { formatDate } from "@/utils/formatDate";
 import { validateBirthDate } from "@/utils/validateBirthDate";
 import { validatePassword } from "@/utils/validatePassword";
-import { formatDate } from "@/utils/formatDate";
-import { registerUser } from "@/services/authService";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Alert, Keyboard, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from "react-native";
 
 export default function RegisterResearcher() {
   const router = useRouter();
