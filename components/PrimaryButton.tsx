@@ -1,6 +1,7 @@
 import { usePathname } from "expo-router";
 import React from "react";
 import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
+import colors from "../theme/colors";
 
 interface PrimaryButtonProps {
     title: string
@@ -12,7 +13,7 @@ interface PrimaryButtonProps {
 
 const authPaths = ["/auth/login", "/auth/register-company", "/auth/register-researcher", "/auth/register-collaborator"]
 
-export function PrimaryButton({ title, disabled, color = "#003366", onPress, style }: PrimaryButtonProps) {
+export function PrimaryButton({ title, disabled, color = colors.primary, onPress, style }: PrimaryButtonProps) {
     const pathname = usePathname()
 
     const authStyle = (authPaths.includes(pathname)) ? { marginTop: 20 } : {} as any

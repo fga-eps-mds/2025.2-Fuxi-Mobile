@@ -8,6 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
+import colors from "../../theme/colors";
 
 
 
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 28,
         fontWeight: "700",
-        color: "#003366",
+        color: colors.primary,
         textAlign: "center",
     },
     subtitle: {
@@ -116,7 +117,7 @@ const styles = StyleSheet.create({
     },
     forgotPassword: {
         alignSelf: "flex-end",
-        color: "#003366",
+        color: colors.primary,
         marginBottom: 20,
     },
 });

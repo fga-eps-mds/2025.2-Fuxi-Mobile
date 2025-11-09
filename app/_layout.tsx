@@ -1,11 +1,12 @@
 import { Stack } from "expo-router";
+import colors from "../theme/colors";
 
 export default function RootLayout() {
   return (
     <Stack
       screenOptions={{
         headerTitleAlign: "center",
-        headerTintColor: "#003366",
+        headerTintColor: colors.primary,
         headerTitleStyle: { fontWeight: "700"},
       }} 
       >

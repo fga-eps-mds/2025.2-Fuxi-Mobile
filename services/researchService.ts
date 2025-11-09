@@ -1,3 +1,4 @@
+import { ResearchData } from '@/app/tabs/home';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import apiClient from "./apiClient";
 
@@ -16,3 +17,10 @@ export const getMyResearches = async () => {
     return response.data
 }
 
+export const createResearch = async (form: ResearchData) => {
+    const token = await AsyncStorage.getItem("authToken")
+    if (!token) return
+
+    const response = await apiClient.post("/research/", form)
+    return response.data
+}

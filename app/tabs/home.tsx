@@ -5,7 +5,8 @@ import { getMyResearches, getResearches } from '@/services/researchService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import colors from "../../theme/colors";
 
 
 export interface UserData {
@@ -31,7 +32,7 @@ export interface ResearchData {
   id: number;
   researcher: number;
   members: string[]
-  createdDate: string; // formato ISO (ex: "2025-11-07")
+  createdDate?: string; // formato ISO (ex: "2025-11-07")
   title: string;
   description: string;
   status: string;
@@ -42,7 +43,7 @@ export interface ResearchData {
 
 export default function Home() {
   const router = useRouter();
-  
+  const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null)
@@ -81,6 +82,13 @@ export default function Home() {
     fetchUserData();
   }, []);
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchUserData();
+    setRefreshing(false);
+  };
+
+
   const handleCardPress = (id: number) => {
     // Redireciona para a tela de Detalhes
     // router.push(`/research/${id}`); 
@@ -114,7 +122,7 @@ export default function Home() {
     if (loading) {
         return (
             <View style={styles.feedbackContainer}>
-                <ActivityIndicator size="large" color="#003366" />
+                <ActivityIndicator size="large" color={colors.primary} />
                 <Text style={{ marginTop: 10, color: '#666' }}>Carregando painel...</Text>
             </View>
         );
@@ -174,7 +182,9 @@ export default function Home() {
 
   return (
     <View style={styles.safeArea}>
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}       refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
             <View style={styles.header}>
                 <Text style={styles.greeting}>Olá {getName()},</Text>
                 <Text style={styles.subtitle}>{getSubtitle()}</Text>
@@ -219,7 +229,7 @@ const styles = StyleSheet.create({
     greeting: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: '#003366',
+        color: '#003A7A',
     },
     subtitle: {
         fontSize: 14,
@@ -237,7 +247,7 @@ const styles = StyleSheet.create({
     sectionTitle: {
         fontSize: 18,
         fontWeight: '600',
-        color: '#003366',
+        color: '#003A7A',
         marginBottom: 10,
     },
     feedbackContainer: {
@@ -262,7 +272,7 @@ const styles = StyleSheet.create({
     retryButton: {
         marginTop: 10,
         padding: 8,
-        backgroundColor: '#003366',
+        backgroundColor: '#003A7A',
         borderRadius: 5,
     },
     retryText: {

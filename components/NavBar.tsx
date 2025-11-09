@@ -4,6 +4,7 @@ import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { usePathname } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import colors from "../theme/colors";
 
 
 export function NavBar({ state, descriptors, navigation }: BottomTabBarProps) {
@@ -23,12 +24,12 @@ export function NavBar({ state, descriptors, navigation }: BottomTabBarProps) {
   let icon = {
       home: (props: any) => <Feather name="home" size={26} color="#1D1D1D" {...props} />,
       favorites: (props: any) => <Feather name="star" size={26} color="#1D1D1D" {...props} />,
-      "create-research": (props: any) => (
+      "create-project": (props: any) => (
         <Feather
           name="plus"
           size={26}
           style={{
-            backgroundColor: "#003366",
+            backgroundColor: colors.primary,
             color: "white",
             borderRadius: 50,
             padding: 5,
@@ -42,9 +43,9 @@ export function NavBar({ state, descriptors, navigation }: BottomTabBarProps) {
 
     const visibleRoutes = state.routes.filter((route) => {
     if (userType === "researcher") return true;
-    if (userType === "company") return route.name !== "create-research";
-    if (userType === "collaborator") return route.name !== "create-research";
-    if (userType === null) return route.name !== "create-research" && route.name !== "favorites";
+    if (userType === "company") return route.name !== "create-project";
+    if (userType === "collaborator") return route.name !== "create-project";
+    if (userType === null) return route.name !== "create-project" && route.name !== "favorites";
   });
 
 
@@ -62,6 +63,8 @@ export function NavBar({ state, descriptors, navigation }: BottomTabBarProps) {
         //       ? options.title
         //       : route.name;
 
+
+        console.log(route.name.includes(pathname.split("/")[2]));
         
 
         const isFocused = route.name.includes(pathname.split("/")[2]);
@@ -102,7 +105,7 @@ export function NavBar({ state, descriptors, navigation }: BottomTabBarProps) {
             onLongPress={onLongPress}
             style={styles.tabbarItem}
           >
-            {renderIcon({ color: isFocused ? "#003366" : "#80808080" })}
+            {renderIcon({ color: isFocused ? colors.primary : "#80808080" })}
           </TouchableOpacity>
         );
       })}
@@ -113,7 +116,8 @@ export function NavBar({ state, descriptors, navigation }: BottomTabBarProps) {
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
+    // position: "absolute",
+    position: "fixed",
     bottom: 0,
     width: "100%",
     height: 75,

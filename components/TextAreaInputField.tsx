@@ -1,17 +1,20 @@
 import React from "react";
 import { StyleSheet, TextInput, TextInputProps, View } from "react-native";
 
-interface TextInputFieldProps extends TextInputProps {
+interface TextAreaFieldProps extends TextInputProps {
   placeholder?: string;
 }
 
-export function TextInputField({ placeholder, ...props }: TextInputFieldProps) {
+export function TextAreaInputField({ placeholder, ...props }: TextAreaFieldProps) {
   return (
     <View style={styles.container}>
       <TextInput
-        style={styles.input}
+        style={[styles.input, props.style]} 
         placeholder={placeholder}
         placeholderTextColor="#989898"
+        multiline={true}          
+        numberOfLines={5}           
+        textAlignVertical="top"   
         {...props}
       />
     </View>
@@ -19,16 +22,13 @@ export function TextInputField({ placeholder, ...props }: TextInputFieldProps) {
 }
 
 const styles = StyleSheet.create({
-
   container: {
     flexDirection: "column",
     width: "100%",
-    height: 45,
     borderRadius: 12,
     borderWidth: 1,
     borderColor: "rgba(17, 16, 17, 0.2)",
     backgroundColor: "#F5F8FF",
-    justifyContent: "center"
   },
 
   input: {
@@ -36,5 +36,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: "#1D1D1D",
     paddingHorizontal: 12,
+    paddingVertical: 10,   
+    minHeight: 120,      
   },
 });

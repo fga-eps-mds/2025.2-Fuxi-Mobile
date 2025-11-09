@@ -1,16 +1,16 @@
-import { View, Text, StyleSheet, ScrollView, Alert, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from "react-native";
-import { useRouter } from "expo-router";
-import { useState } from "react";
+import { DropdownSelect } from "@/components/DropdownSelect";
+import { InputContainer } from "@/components/InputContainer";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { TextInputField } from "@/components/TextInputField";
-import { DropdownSelect } from "@/components/DropdownSelect";
 import { ViewContainer } from "@/components/ViewContainer";
-import { InputContainer } from "@/components/InputContainer";
-import { validateBirthDate } from "@/utils/validateBirthDate";
-import { validatePassword } from "@/utils/validatePassword";
-import { validateEmail } from "@/utils/validateEmail";
+import { registerUser } from "@/services/authService";
 import { formatDate } from "@/utils/formatDate";
-import {registerUser} from "@/services/authService";
+import { validateBirthDate } from "@/utils/validateBirthDate";
+import { validateEmail } from "@/utils/validateEmail";
+import { validatePassword } from "@/utils/validatePassword";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Alert, Keyboard, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from "react-native";
 
 export default function RegisterCollaborator() {
   const router = useRouter();
@@ -27,9 +27,9 @@ export default function RegisterCollaborator() {
   const [loading, setLoading] = useState(false);
 
   const categoriaOptions = [
-    { label: "DISCENTE", value: "dis" },
-    { label: "SERVIDOR", value: "serv" },
-    { label: "EXTERNO", value: "ext" },
+    { label: "DISCENTE", value: "DISCENTE" },
+    { label: "SERVIDOR", value: "SERVIDOR" },
+    { label: "EXTERNO", value: "EXTERNO" },
 
   ];
 

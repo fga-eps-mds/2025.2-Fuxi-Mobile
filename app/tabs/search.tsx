@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, Keyboard } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Feather, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from "react";
+import { FlatList, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import colors from "../../theme/colors";
 
 export default function SearchScreen() {
   const [searchText, setSearchText] = useState("");
@@ -51,7 +52,7 @@ export default function SearchScreen() {
     <View style={styles.container}>
       {/* Barra de pesquisa */}
       <View style={styles.searchContainer}>
-        <Ionicons name="search-outline" size={20} color="#999" style={{ marginLeft: 8 }} />
+        <Feather name="search" size={20} color="#808080" style={{ marginLeft: 8 }} />
         <TextInput
           style={styles.input}
           placeholder="Explore projetos existentes..."
@@ -62,15 +63,15 @@ export default function SearchScreen() {
           returnKeyType="search"
         />
         <TouchableOpacity style={styles.filterButton} onPress={() => alert("Abrir filtros avançados")}>
-          <Ionicons name="filter-outline" size={20} color="#444" />
+          <Feather name="filter" size={20} color="#808080" />
         </TouchableOpacity>
       </View>
 
       {/* Pesquisas recentes */}
-      {recentSearches.length > 0 && (
+
         <View style={styles.recentContainer}>
           <Text style={styles.title}>Pesquisas recentes:</Text>
-
+      {recentSearches.length > 0 && (
           <View style={styles.recentBox}>
             <FlatList
               data={recentSearches}
@@ -87,9 +88,11 @@ export default function SearchScreen() {
                 </View>
               )}
             />
+                 
           </View>
+           )}
         </View>
-      )}
+
     </View>
   );
 }
@@ -105,13 +108,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#fff",
-    borderRadius: 25,
+    borderRadius: 50,
     shadowColor: "#000",
     shadowOpacity: 0.05,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
     elevation: 3,
     paddingRight: 10,
+    paddingLeft: 10,
   },
   input: {
     flex: 1,
@@ -129,7 +133,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#003366",
+    color: colors.primary,
     marginBottom: 10,
   },
   recentBox: {

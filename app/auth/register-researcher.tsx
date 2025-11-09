@@ -26,10 +26,10 @@ export default function RegisterResearcher() {
   const [loading, setLoading] = useState(false);
 
   const campusOptions = [
-    { label: "UNB DARCY RIBEIRO", value: "darcy" },
-    { label: "UNB GAMA: FCTE", value: "fga" },
-    { label: "UNB PLANALTINA: FUP", value: "fup" },
-    { label: "UNB CEILÂNDIA: FCE", value: "fce" },
+    { label: "UNB DARCY RIBEIRO", value: "UNB DARCY RIBEIRO" },
+    { label: "UNB GAMA: FCTE", value: "UNB GAMA: FCTE" },
+    { label: "UNB PLANALTINA: FUP", value: "UNB PLANALTINA: FUP" },
+    { label: "UNB CEILÂNDIA: FCE", value: "UNB CEILÂNDIA: FCE" },
   ];
 
   async function handleSubmit() {

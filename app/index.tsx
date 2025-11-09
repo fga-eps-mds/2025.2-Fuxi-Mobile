@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from "expo-router";
 import React, { useEffect } from 'react';
 import { Image, StatusBar, StyleSheet, Text, View } from "react-native";
+import colors from "../theme/colors";
 import { UserData } from "./tabs/home";
 
 export default function Index() {
@@ -87,7 +88,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: "800",
-    color: "#003366",
+    color: colors.primary,
     fontFamily: "Roboto",
 
   },

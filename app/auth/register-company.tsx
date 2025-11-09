@@ -1,16 +1,16 @@
-import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, Text, Alert } from "react-native";
-import { useRouter } from "expo-router";
+import { DropdownSelect } from "@/components/DropdownSelect";
+import { InputContainer } from "@/components/InputContainer";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { TextInputField } from "@/components/TextInputField";
-import { DropdownSelect } from "@/components/DropdownSelect";
-import { useState } from "react";
 import { ViewContainer } from "@/components/ViewContainer";
-import { validatePassword } from "@/utils/validatePassword";
+import { registerUser } from "@/services/authService";
+import { formatCNPJ } from "@/utils/formatCNPJ";
 import { validateCNPJ } from "@/utils/validateCNPJ";
 import { validateEmail } from "@/utils/validateEmail";
-import { formatCNPJ } from "@/utils/formatCNPJ";
-import { InputContainer } from "@/components/InputContainer";
-import { registerUser } from "@/services/authService";
+import { validatePassword } from "@/utils/validatePassword";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Alert, Keyboard, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from "react-native";
 
 export default function RegisterCompany() {
     const router = useRouter();
@@ -29,11 +29,11 @@ export default function RegisterCompany() {
 
     const porteOptions = [
 
-        { label: "MICROEMPRESA (ME)", value: "me"},
-        { label: "MICROEMPREENDEDOR INDIVIDUAL", value: "me"},
-        { label: "EMPRESA DE PEQUENO PORTE (EPP)", value: "epp"},
-        { label: "EMPRESA DE MÉDIO PORTE", value: "grande"},
-        { label: "EMPRESA DE GRANDE PORTE", value: "me"},
+        { label: "MICROEMPRESA (ME)", value: "MICROEMPRESA (ME)"},
+        { label: "MICROEMPREENDEDOR INDIVIDUAL", value: "MICROEMPREENDEDOR INDIVIDUAL"},
+        { label: "EMPRESA DE PEQUENO PORTE (EPP)", value: "EMPRESA DE PEQUENO PORTE (EPP)"},
+        { label: "EMPRESA DE MÉDIO PORTE", value: "EMPRESA DE MÉDIO PORTE"},
+        { label: "EMPRESA DE GRANDE PORTE", value: "EMPRESA DE GRANDE PORTE"},
 
     ]
 

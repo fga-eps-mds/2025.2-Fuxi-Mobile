@@ -2,6 +2,7 @@ import { ResearchData } from '@/app/tabs/home';
 import Feather from '@expo/vector-icons/Feather';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import colors from "../theme/colors";
 
 interface ResearchCardProps {
     research: ResearchData;
@@ -24,7 +25,7 @@ export const ResearchCard: React.FC<ResearchCardProps> = ({ research, onPress })
                 <Text style={styles.cardInfo}>{membersList}</Text>
             </View>
             
-            <Feather name='chevron-right' color="#003366" size={24} style={styles.icon} /> 
+            <Feather name='chevron-right' color={colors.primary} size={24} style={styles.icon} /> 
         </TouchableOpacity>
     );
 };
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
     cardTitle: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: '#003366',
+        color: '#003A7A',
         marginBottom: 5,
     },
     cardDescription: {

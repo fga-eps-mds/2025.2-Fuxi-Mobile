@@ -1,6 +1,7 @@
-import { View, Text, Image, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { PrimaryButton } from "../../components/PrimaryButton";
+import colors from "../../theme/colors";
 
 export default function RegisterType () {
     const router = useRouter()
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 28,
         fontWeight: "700",
-        color: "#003366",
+        color: colors.primary,
   },
     subtitle: {
         fontSize: 14,
