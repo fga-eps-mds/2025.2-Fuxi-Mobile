@@ -73,7 +73,18 @@ export default function CreateResearch() {
           form.keywords = keywords
           const createResponse = await createResearch(form)
           console.log(createResponse);
-          
+
+          setForm({
+            title: "",
+            knowledge_area: "",
+            keywords: [],
+            status: "",
+            campus: "",
+            description: "",
+          })
+
+          setKeywords([])
+
   
           Alert.alert("Sucesso!", "Projeto criado com sucesso.")
           router.push("/tabs/home")
@@ -105,7 +116,14 @@ export default function CreateResearch() {
                 onChangeText={(text) => setForm({ ...form, title: text })}
               />
           </InputContainer>
-
+          
+          <InputContainer label="Descrição:">
+              <TextAreaInputField
+                placeholder="Descrição"
+                value={form.description}
+                onChangeText={(text) => setForm({ ...form, description: text })}
+              />
+          </InputContainer>
 
           <InputContainer label="Área de conhecimento:">
               <TextInputField
@@ -156,14 +174,6 @@ export default function CreateResearch() {
                 placeholder="Selecione um campus"
                 value={form.campus}
                 onSelect={(value) => setForm({ ...form, campus: value })}
-              />
-          </InputContainer>
-
-          <InputContainer label="Descrição:">
-              <TextAreaInputField
-                placeholder="Descrição"
-                value={form.description}
-                onChangeText={(text) => setForm({ ...form, description: text })}
               />
           </InputContainer>
 
