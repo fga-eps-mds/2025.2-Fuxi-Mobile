@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from "expo-router";
 import React, { useEffect } from 'react';
 import { Image, StatusBar, StyleSheet, Text, View } from "react-native";
-import { UserData } from "./home";
+import { UserData } from "./tabs/home";
 
 export default function Index() {
   const router = useRouter()
@@ -15,9 +15,12 @@ export default function Index() {
         let user: UserData | null = null
         const token = await AsyncStorage.getItem("authToken")
         if (token) {
-           user = await getProfile()
-           if (user) router.push("/home")
-        }
+           user = await getProfile() as UserData
+           AsyncStorage.setItem("userType", user.user_type)
+           if (user) router.push("/tabs/home")
+        }else{
+          await AsyncStorage.removeItem("userType")
+      }
     } catch (e) {
         logoutUser()
         router.push("/")
@@ -57,7 +60,7 @@ export default function Index() {
       <PrimaryButton
         title="Apenas visualizar"
         color="#007A33"
-        onPress={() => router.push("/home")}
+        onPress={() => router.push("/tabs/home")}
       />
       
     </View>

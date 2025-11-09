@@ -4,6 +4,7 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { TextInputField } from "@/components/TextInputField";
 import { ViewContainer } from "@/components/ViewContainer";
 import { loginUser } from "@/services/authService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
@@ -28,8 +29,8 @@ export default function Login() {
 
         try {
             const userData = await loginUser(form.email, form.senha)
-
-            router.replace("/home")
+            AsyncStorage.setItem("userType", userData.user.user_type)
+            router.replace("/tabs/home")
             return
         } catch (error: any) {
             console.log(error)

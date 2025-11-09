@@ -1,4 +1,4 @@
-import { ResearchData } from '@/app/home/';
+import { ResearchData } from '@/app/tabs/home';
 import Feather from '@expo/vector-icons/Feather';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
