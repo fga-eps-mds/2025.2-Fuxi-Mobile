@@ -1,10 +1,156 @@
-import React from 'react';
-import { Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
+import { AppText } from "@/components/AppText";
+import { PrimaryButton } from "@/components/PrimaryButton";
+import colors from "@/theme/colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getProfile } from "@/services/authService";
+import { useRouter } from "expo-router";
+import { ViewContainer } from "@/components/ViewContainer";
+
+interface UserData {
+  id: number;
+  email: string;
+  user_type: "researcher" | "collaborator" | "company";
+  profile: {
+    firstName?: string;
+    surname?: string;
+    campus?: string;
+    category?: string;
+    fantasyName?: string;
+    size?: string;
+  };
+}
 
 export default function Profile() {
+  const router = useRouter();
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [isGuest, setIsGuest] = useState(false);
+
+  const fetchUserData = async () => {
+    try {
+      const token = await AsyncStorage.getItem("authToken");
+      if (token) {
+        const data = await getProfile();
+        setUserData(data);
+      } else {
+        setIsGuest(true);
+      }
+    } catch (error) {
+      console.error("Erro ao carregar usuário:", error);
+      setIsGuest(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const getName = () => {
+    if (isGuest) return "Convidado";
+
+    switch (userData?.user_type) {
+      case "company":
+        return userData.profile.fantasyName;
+      case "collaborator":
+      case "researcher":
+        return userData.profile.firstName;
+      default:
+        return "Convidado";
+    }
+  };
+
+  const getSubtitle = () => {
+    switch (userData?.user_type) {
+      case "researcher":
+        return userData.profile.campus;
+      case "company":
+        return userData.profile.size;
+      case "collaborator":
+        return userData.profile.category;
+      default:
+        return "";
+    }
+  };
+
+  const getEmail = () => {
+    if (!userData) return "";
+    return userData.email;
+  };
+
   return (
-    <View>
-      <Text>Perfil</Text>
+    <View style={{ flex: 1, backgroundColor: "#fff" }}>
+      <ViewContainer>
+        {/* Loading */}
+        {loading ? (
+          <View style={[styles.box, { justifyContent: "center" }]}>
+            <ActivityIndicator size="small" color={colors.primary} />
+          </View>
+        ) : (
+          <>
+            {/* Visitante */}
+            {isGuest ? (
+              <View style={styles.box}>
+                <AppText style={styles.name}>Convidado</AppText>
+
+                <PrimaryButton
+                  title="Entrar"
+                  onPress={() => router.push("/auth/login")}
+                />
+
+                <PrimaryButton
+                  title="Cadastrar"
+                  color="#0055AA"
+                  onPress={() => router.push("/auth/register-type")}
+                />
+              </View>
+            ) : (
+              /* Usuário autenticado */
+              <View style={styles.box}>
+                <AppText style={styles.name}>{getName()}</AppText>
+                <AppText style={styles.email}>{getEmail()}</AppText>
+                <AppText style={styles.subtitle}>{getSubtitle()}</AppText>
+              </View>
+            )}
+          </>
+        )}
+      </ViewContainer>
     </View>
-  )
+  );
 }
+
+const styles = StyleSheet.create({
+  box: {
+    height: 187,
+    padding: 10,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 10,
+    flexShrink: 0,
+    alignSelf: "stretch",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "rgba(152, 152, 152, 0.10)",
+    backgroundColor: "#F5F8FF",
+    marginTop: 20,
+  },
+  name: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#003A7A",
+    paddingTop: 10,
+  },
+  email: {
+    fontSize: 14,
+    color: "#666",
+  },
+  subtitle: {
+    fontSize: 16,
+    fontWeight: "500",
+    color: "#003A7A",
+  },
+});
