@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, ActivityIndicator } from "react-native";
+import { View, StyleSheet, ActivityIndicator, TouchableOpacity, Text} from "react-native";
 import { AppText } from "@/components/AppText";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import colors from "@/theme/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getProfile } from "@/services/authService";
+import { getProfile, logoutUser } from "@/services/authService";
 import { useRouter } from "expo-router";
 import { ViewContainer } from "@/components/ViewContainer";
 
@@ -81,6 +81,11 @@ export default function Profile() {
     return userData.email;
   };
 
+  const handleLogout = async () => {
+    await logoutUser();
+    router.replace("/");
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
       <ViewContainer>
@@ -115,6 +120,10 @@ export default function Profile() {
                 <AppText style={styles.subtitle}>{getSubtitle()}</AppText>
               </View>
             )}
+
+            { !isGuest && (<TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+                              <Text style={styles.logoutText}>Sair da minha conta</Text>
+              </TouchableOpacity>)   }
           </>
         )}
       </ViewContainer>
@@ -152,5 +161,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
     color: "#003A7A",
+  },
+  logoutButton: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 25,
+    height: 45,
+    backgroundColor: '#FF0000',
+    borderRadius: 5,
+  },
+  logoutText: {
+      color: '#fff',
+      fontWeight: '600',
   },
 });

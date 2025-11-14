@@ -174,11 +174,6 @@ export default function Home() {
         return 'Convidado';
     }};
 
-    const handleLogout = async () => {
-      await logoutUser();
-      router.replace("/");
-    };
-
 
   return (
     <View style={styles.safeArea}>
@@ -202,11 +197,6 @@ export default function Home() {
             <View style={styles.listArea}>
                  {renderContent()}
             </View>
-
-
-            <TouchableOpacity onPress={handleLogout} style={styles.retryButton}>
-                  <Text style={styles.retryText}>LOGOUT</Text>
-            </TouchableOpacity>
            
         </ScrollView>
       </View>
