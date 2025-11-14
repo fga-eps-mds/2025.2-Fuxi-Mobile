@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, ActivityIndicator, TouchableOpacity, Text} from "react-native";
+import { View, StyleSheet, ActivityIndicator, TouchableOpacity, Text } from "react-native";
 import { AppText } from "@/components/AppText";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import colors from "@/theme/colors";
@@ -7,6 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getProfile, logoutUser } from "@/services/authService";
 import { useRouter } from "expo-router";
 import { ViewContainer } from "@/components/ViewContainer";
+import { ProfileActionCard } from "@/components/ProfileActionCard"; 
 
 interface UserData {
   id: number;
@@ -89,14 +90,12 @@ export default function Profile() {
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
       <ViewContainer>
-        {/* Loading */}
         {loading ? (
           <View style={[styles.box, { justifyContent: "center" }]}>
             <ActivityIndicator size="small" color={colors.primary} />
           </View>
         ) : (
           <>
-            {/* Visitante */}
             {isGuest ? (
               <View style={styles.box}>
                 <AppText style={styles.name}>Convidado</AppText>
@@ -113,7 +112,6 @@ export default function Profile() {
                 />
               </View>
             ) : (
-              /* Usuário autenticado */
               <View style={styles.box}>
                 <AppText style={styles.name}>{getName()}</AppText>
                 <AppText style={styles.email}>{getEmail()}</AppText>
@@ -121,9 +119,29 @@ export default function Profile() {
               </View>
             )}
 
-            { !isGuest && (<TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-                              <Text style={styles.logoutText}>Sair da minha conta</Text>
-              </TouchableOpacity>)   }
+
+            {!isGuest && (
+              <>
+                <ProfileActionCard
+                  title="Meus Projetos"
+                  description="Gerencie seus projetos existentes"
+                  onPress={() => router.push("/edit-project")}
+                />
+
+                <ProfileActionCard
+                  title="Meu Perfil"
+                  description="Atualize seus dados pessoais"
+                  onPress={() => router.push("/edit-profile")}
+                />
+              </>
+            )}
+
+            {/* Botão de logout no final */}
+            {!isGuest && (
+              <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+                <Text style={styles.logoutText}>Sair da minha conta</Text>
+              </TouchableOpacity>
+            )}
           </>
         )}
       </ViewContainer>
@@ -162,17 +180,19 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: "#003A7A",
   },
+
   logoutButton: {
+    marginTop: 25,
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 25,
     height: 45,
-    backgroundColor: '#FF0000',
+    backgroundColor: "#FF0000",
     borderRadius: 5,
   },
   logoutText: {
-      color: '#fff',
-      fontWeight: '600',
+    color: "#fff",
+    fontWeight: "600",
   },
 });
