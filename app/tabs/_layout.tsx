@@ -12,23 +12,23 @@ export default function TabsLayout () {
             }}  tabBar={props => <NavBar {...props} />}>
       <Tabs.Screen
         name="home"
-        options={{ title: "Home" }}
+        options={{ headerShown: false }}
       />
       <Tabs.Screen
         name="favorites"
-        options={{ title: "Favoritos" }}
+        options={{ headerShown: false }}
       />
       <Tabs.Screen
         name="create-project"
-        options={{ title: "Criar Projeto"}}
+        options={{ headerShown: false }}
       />
       <Tabs.Screen
         name="search"
-        options={{ title: "", headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Tabs.Screen
         name="profile"
-        options={{ title: "Detalhes" }}
+        options={{ headerShown: false }}
       />
     </Tabs>
   );

@@ -133,7 +133,7 @@ export default function Profile() {
                 <ProfileActionCard
                   title="Meu Perfil"
                   description="Atualize seus dados pessoais"
-                  onPress={() => router.push("/edit-profile")}
+                  onPress={() => router.push("/tabs/profile/edit-profile")}
                 />
               </>
             )}

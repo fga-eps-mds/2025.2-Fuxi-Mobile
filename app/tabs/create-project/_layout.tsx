@@ -1,7 +1,7 @@
 import colors from '@/theme/colors';
 import { Stack } from 'expo-router';
 
-export default function ProfileStackLayout() {
+export default function CreateProjectStackLayout() {
   return (
     <Stack screenOptions={{
             headerTitleAlign: "center",
@@ -10,13 +10,9 @@ export default function ProfileStackLayout() {
                 }} >
       <Stack.Screen 
         name="index" 
-        options={{ title: 'Configurações' }}
+        options={{ title: 'Criar Projeto' }}
       />
       
-      <Stack.Screen 
-      name="researcher-projects" 
-      options={{ title: 'Meus Projetos' }} 
-      />
 
     </Stack>
   );
