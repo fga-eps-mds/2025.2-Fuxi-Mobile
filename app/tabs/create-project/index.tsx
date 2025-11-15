@@ -10,7 +10,7 @@ import { Text } from '@react-navigation/elements';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
-import colors from "../../theme/colors";
+import colors from "@/theme/colors";
 
 
 

@@ -122,11 +122,13 @@ export default function Profile() {
 
             {!isGuest && (
               <>
-                <ProfileActionCard
-                  title="Meus Projetos"
-                  description="Gerencie seus projetos existentes"
-                  onPress={() => router.push("/edit-project")}
-                />
+                {userData?.user_type === "researcher" && (
+                  <ProfileActionCard
+                    title="Meus Projetos"
+                    description="Gerencie seus projetos existentes"
+                    onPress={() => router.push("/tabs/profile/researcher-projects")}
+                  />
+                )}
 
                 <ProfileActionCard
                   title="Meu Perfil"

@@ -9,7 +9,6 @@ import colors from "../theme/colors";
 
 export function NavBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const [userType, setUserType] = useState<string | null>(null);
-  const pathname = usePathname();
 
 
   useEffect(() => {
@@ -20,7 +19,6 @@ export function NavBar({ state, descriptors, navigation }: BottomTabBarProps) {
     fetchUserType();
   }, []);
 
-  // Ícones padrão (para evitar undefined)
   let icon = {
       home: (props: any) => <Feather name="home" size={26} color="#1D1D1D" {...props} />,
       favorites: (props: any) => <Feather name="star" size={26} color="#1D1D1D" {...props} />,
@@ -42,11 +40,42 @@ export function NavBar({ state, descriptors, navigation }: BottomTabBarProps) {
     };
 
     const visibleRoutes = state.routes.filter((route) => {
-    if (userType === "researcher") return true;
-    if (userType === "company") return route.name !== "create-project";
-    if (userType === "collaborator") return route.name !== "create-project";
-    if (userType === null) return route.name !== "create-project" && route.name !== "favorites";
-  });
+      const { options } = descriptors[route.key];
+      const href = (options as { href?: string | null }).href;
+
+      if (href === null) {
+        return false;
+      }
+
+      switch (userType) {
+        case 'company':
+        case 'collaborator':
+          if (route.name.startsWith('create-project')) {
+            return false;
+          }
+          break;
+        
+        case null: // Representa um usuário convidado (não logado)
+          if (route.name.startsWith('create-project') || route.name.startsWith('favorites')) {
+            return false;
+          }
+          break;
+
+        case 'researcher':
+          break;
+      }
+
+      return true;
+    });
+
+    // Força a ordem correta dos ícones, já que o Expo Router está reordenando
+    const desiredOrder = ['home', 'favorites', 'create-project', 'search', 'profile'];
+    visibleRoutes.sort((a, b) => {
+      const aName = a.name.split('/')[0];
+      const bName = b.name.split('/')[0];
+      return desiredOrder.indexOf(aName) - desiredOrder.indexOf(bName);
+    });
+
 
 
 
@@ -64,10 +93,7 @@ export function NavBar({ state, descriptors, navigation }: BottomTabBarProps) {
         //       : route.name;
 
 
-        console.log(route.name.includes(pathname.split("/")[2]));
-        
-
-        const isFocused = route.name.includes(pathname.split("/")[2]);
+        const isFocused = route.key === state.routes[state.index].key;
 
         const onPress = () => {
           const event = navigation.emit({
@@ -88,8 +114,9 @@ export function NavBar({ state, descriptors, navigation }: BottomTabBarProps) {
           });
         };
 
+        const iconName = route.name.split('/')[0];
         const renderIcon =
-          icon[route.name as keyof typeof icon] ||
+          icon[iconName as keyof typeof icon] ||
           ((props: any) => (
             <Feather name="alert-circle" size={26} color="red" {...props} />
           ));
@@ -120,7 +147,7 @@ const styles = StyleSheet.create({
     position: "fixed",
     bottom: 0,
     width: "100%",
-    height: 75,
+    height: 120, //75 o normal, aumentei pq o android corta um pouco - Pedro
     paddingVertical: 10,
     paddingHorizontal: 24,
     flexDirection: "row",

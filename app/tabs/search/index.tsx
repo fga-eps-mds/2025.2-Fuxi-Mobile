@@ -2,7 +2,7 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import { FlatList, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import colors from "../../theme/colors";
+import colors from "@/theme/colors";
 
 export default function SearchScreen() {
   const [searchText, setSearchText] = useState("");

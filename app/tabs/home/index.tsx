@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import colors from "../../theme/colors";
+import colors from "../../../theme/colors";
 
 
 export interface UserData {
@@ -177,7 +177,7 @@ export default function Home() {
 
   return (
     <View style={styles.safeArea}>
-        <ScrollView contentContainerStyle={styles.container}       refreshControl={
+        <ScrollView contentContainerStyle={styles.container}       refreshControl={    //Pensando em trocar para FlatList se ficar pesado - Pedro
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }>
             <View style={styles.header}>

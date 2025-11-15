@@ -9,7 +9,7 @@ export default function TabsLayout () {
         headerTitleAlign: "center",
         headerTintColor: colors.primary,
         headerTitleStyle: { fontWeight: "700"},
-      }}  tabBar={props => <NavBar {...props} />}>
+            }}  tabBar={props => <NavBar {...props} />}>
       <Tabs.Screen
         name="home"
         options={{ title: "Home" }}
