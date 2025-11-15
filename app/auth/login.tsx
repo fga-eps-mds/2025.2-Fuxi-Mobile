@@ -34,8 +34,7 @@ export default function Login() {
             router.replace("/tabs/home")
             return
         } catch (error: any) {
-            console.log(error)
-            const errorMsg = error.response?.data?.non_field_errors || error.response?.data?.detail || "Não foi possível fazer o login. Verifique seu e-mail e senha."
+            const errorMsg = error.response?.data?.non_field_errors[0] && "Não foi possível fazer o login. Verifique seu e-mail e senha."
             Alert.alert("Erro no login", errorMsg)
         } finally {
             setLoading(false);
