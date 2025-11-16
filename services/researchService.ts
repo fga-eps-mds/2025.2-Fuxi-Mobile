@@ -4,8 +4,8 @@ import apiClient from "./apiClient";
 
 export const getResearches = async () => {
     const response = await apiClient.get("/research/all/", {
-  headers: {}
-})
+        headers: {}
+    })
     return response.data
 }
 
@@ -22,5 +22,29 @@ export const createResearch = async (form: ResearchData) => {
     if (!token) return
 
     const response = await apiClient.post("/research/", form)
+    return response.data
+}
+
+export const deleteResearch = async (id: number) => {
+    const token = await AsyncStorage.getItem("authToken")
+    if (!token) return
+
+    const response = await apiClient.delete(`/research/${id}/`)
+    return response.data
+}
+
+export const updateResearch = async (id: number, form: ResearchData) => {
+    const token = await AsyncStorage.getItem("authToken")
+    if (!token) return
+
+    const response = await apiClient.put(`/research/${id}/`, form)
+    return response.data
+}
+
+export const getResearchById = async (id: number) => {
+    const token = await AsyncStorage.getItem("authToken")
+    if (!token) return
+
+    const response = await apiClient.get(`/research/${id}/`)
     return response.data
 }
