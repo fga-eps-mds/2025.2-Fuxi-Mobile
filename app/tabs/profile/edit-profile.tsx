@@ -11,7 +11,6 @@ import { getProfile } from '@/services/authService';
 import { formatDate } from '@/utils/formatDate';
 import { formatCNPJ } from '@/utils/formatCNPJ';
 import { editProfile } from '@/services/userService';
-import { validateBirthDate } from '@/utils/validateBirthDate';
 import { validatePassword } from '@/utils/validatePassword';
 import { validateEmail } from '@/utils/validateEmail';
 import { validateCNPJ } from '@/utils/validateCNPJ';
@@ -154,9 +153,6 @@ export default function EditProfile() {
           return;
         }
 
-        if (form.profile.birthDate && !validateBirthDate(form.profile.birthDate)) {
-          return;
-        }
         if (form.profile.cnpj && !validateCNPJ(form.profile.cnpj)) {
             return
         }
@@ -304,7 +300,7 @@ export default function EditProfile() {
 
         
             {
-              userData?.user_type === "researcher" &&
+              userData?.user_type !== "company" &&
               <InputContainer label="Data de nascimento:">
                   <TextInputField
                     placeholder="DD/MM/AAAA"
