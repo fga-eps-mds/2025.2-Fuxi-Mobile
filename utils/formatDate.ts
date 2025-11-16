@@ -1,4 +1,13 @@
+function isIsoDate(dateString: string) {
+  return dateString.includes("-") && dateString.split("-").length === 3;
+}
+
 export function formatDate(value: string): string {
+  if (isIsoDate(value)) {
+    if (!value) return "";
+    const [year, month, day] = value.split("-");
+    return `${day}/${month}/${year}`;
+  }
   // Remove tudo que não for número
   const cleaned = value.replace(/\D/g, "");
 

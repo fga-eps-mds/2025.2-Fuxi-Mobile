@@ -6,5 +6,10 @@ export const getUser = async (id: number) => {
     return response.data
 }
 
+export const editProfile = async (form: any) => {
+  const response = await apiClient.patch(`/users/${form.id}/`, form)
+  return response.data
+}
+
 
 

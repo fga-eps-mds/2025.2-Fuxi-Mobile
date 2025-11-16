@@ -18,6 +18,10 @@ export default function ProfileStackLayout() {
       options={{ title: 'Meus Projetos' }} 
       />
 
+      <Stack.Screen 
+      name="edit-profile" 
+      options={{ title: 'Meu Perfil' }} 
+      />
     </Stack>
   );
 }
