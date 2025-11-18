@@ -9,6 +9,11 @@ export const getResearches = async () => {
     return response.data
 }
 
+export const getFavorites = async () => {
+    const response = await apiClient.get("/favorites/")
+    return response.data.map((favorite: any)=>{return favorite.research})
+}
+
 export const getMyResearches = async () => {
     const token = await AsyncStorage.getItem("authToken")
     if (!token) return

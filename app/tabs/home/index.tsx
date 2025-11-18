@@ -183,16 +183,7 @@ export default function Home() {
             <View style={styles.header}>
                 <Text style={styles.greeting}>Olá {getName()},</Text>
                 <Text style={styles.subtitle}>{getSubtitle()}</Text>
-                {/* Ícone de notificação aqui. */}
             </View>
-        
-            {/* <View style={styles.searchContainer}>
-                <SearchBar
-                    value={searchText}
-                    onChangeText={setSearchText}
-                    placeholder="Explore projetos existentes..."
-                />
-            </View> */}
 
             <View style={styles.listArea}>
                  {renderContent()}
