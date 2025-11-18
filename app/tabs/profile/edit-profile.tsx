@@ -14,6 +14,7 @@ import { editProfile } from '@/services/userService';
 import { validatePassword } from '@/utils/validatePassword';
 import { validateEmail } from '@/utils/validateEmail';
 import { validateCNPJ } from '@/utils/validateCNPJ';
+import { validateBirthDate } from '@/utils/validateBirthDate';
 
 interface UserData {
   id?: number;
@@ -151,6 +152,10 @@ export default function EditProfile() {
         if (form.user_type === "researcher" && !form.email.endsWith("@unb.br")) {
           Alert.alert("Use um e-mail institucional @unb.br.");
           return;
+        }
+
+        if (form.profile.birthDate && !validateBirthDate(formatDate(form.profile.birthDate))) {
+            return
         }
 
         if (form.profile.cnpj && !validateCNPJ(form.profile.cnpj)) {
