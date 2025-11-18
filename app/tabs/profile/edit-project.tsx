@@ -21,12 +21,15 @@ export default function EditResearch() {
       title: "",
       knowledge_area: "",
       keywords: [],
+      members: [],
       status: "",
       campus: "",
       description: "",
     });
     const [keywords, setKeywords] = useState<string[]>([]);
-    const [text, setText] = useState("");
+    const [members, setMembers] = useState<string[]>([]);
+    const [textKeywords, setTextKeywords] = useState("");
+    const [textMembers, setTextMembers] = useState("");
     const [loading, setLoading] = useState(false);
     const [pageLoading, setPageLoading] = useState(true);
 
@@ -43,6 +46,7 @@ export default function EditResearch() {
                     description: data.description,
                 });
                 setKeywords(data.keywords || []);
+                setMembers(data.members || []);
             } catch (error) {
                 Alert.alert("Erro", "Não foi possível carregar os dados do projeto.");
                 router.back();
@@ -54,15 +58,28 @@ export default function EditResearch() {
     }, [researchId]);
 
     const handleAddKeyword = () => {
-      const trimmed = text.trim();
+      const trimmed = textKeywords.trim();
       if (trimmed && !keywords.includes(trimmed)) {
         setKeywords([...keywords, trimmed]);
       }
-      setText("");
+      setTextKeywords("");
     };
 
     const handleRemoveKeyword = (word: any) => {
       setKeywords(keywords.filter((k) => k !== word));
+    };
+
+    
+    const handleAddMember = () => {
+      const trimmed = textMembers.trim();
+      if (trimmed && !members.includes(trimmed)) {
+        setMembers([...members, trimmed]);
+      }
+      setTextMembers("");
+    };
+
+    const handleRemoveMember = (word: any) => {
+      setMembers(members.filter((k) => k !== word));
     };
 
     const campusOptions = [
@@ -88,7 +105,7 @@ export default function EditResearch() {
 
       setLoading(true);
       try {
-          const updatedForm = { ...form, keywords };
+          const updatedForm = { ...form, keywords, members };
           await updateResearch(researchId, updatedForm);
           Alert.alert("Sucesso!", "Projeto atualizado com sucesso.");
           router.push("/tabs/profile/researcher-projects");
@@ -144,8 +161,8 @@ export default function EditResearch() {
           <InputContainer label="Palavras chave:">
                 <TextInputField
                   placeholder="Digite uma palavra chave"
-                  value={text}
-                  onChangeText={setText}
+                  value={textKeywords}
+                  onChangeText={setTextKeywords}
                   onSubmitEditing={handleAddKeyword}
                   returnKeyType="done"
                 />
@@ -156,6 +173,30 @@ export default function EditResearch() {
                         <Text style={styles.tagText}>{item}</Text>
                         <TouchableOpacity onPress={() => handleRemoveKeyword(item)}>
                           <Ionicons name="close-outline" size={18} color="#666" />
+                        </TouchableOpacity>
+                      </View>
+                    ))}
+                  </View>
+                )}
+              </InputContainer>
+
+        <InputContainer label="Membros:">
+                <TextInputField
+                  placeholder="Digite um novo membro"
+                  value={textMembers}
+                  onChangeText={setTextMembers}
+                  onSubmitEditing={handleAddMember}
+                  returnKeyType="done"
+                />
+                {members.length > 0 && (
+                  <View style={styles.tagsContainer}>
+                    {members.map((item, index) => (
+                      <View key={index} style={styles.tag}>
+                        <Text style={styles.tagText}>{item}</Text>
+                        <TouchableOpacity onPress={() => handleRemoveMember(item)}>
+                            {index !== 0 && (
+                              <Ionicons name="close-outline" size={18} color="#666" />
+                            )}
                         </TouchableOpacity>
                       </View>
                     ))}
