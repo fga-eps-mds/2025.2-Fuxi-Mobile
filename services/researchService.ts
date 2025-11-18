@@ -9,11 +9,6 @@ export const getResearches = async () => {
     return response.data
 }
 
-export const getFavorites = async () => {
-    const response = await apiClient.get("/favorites/")
-    return response.data.map((favorite: any)=>{return favorite.research})
-}
-
 export const getMyResearches = async () => {
     const token = await AsyncStorage.getItem("authToken")
     if (!token) return
@@ -52,4 +47,38 @@ export const getResearchById = async (id: number) => {
 
     const response = await apiClient.get(`/research/${id}/`)
     return response.data
+}
+
+export const getPublicResearchById = async (id: number) => {
+    const response = await apiClient.get(`/research/all/${id}`,  {
+        headers: {}
+    })
+    return response.data
+}
+
+export const getFavorites = async () => {
+    const response = await apiClient.get("/favorites/")
+    return response.data.map((favorite: any)=>{return favorite.research})
+}
+
+export const addFavorite = async (id: number) => {
+    const response = await apiClient.post("/favorites/add/", {research: id})
+    console.log(response.data);
+    
+    return response.data
+
+}
+
+export const removeFavorite = async (id: number) => {
+    const response = await apiClient.delete(`/favorites/remove/${id}`)
+    return response.data
+}
+
+export const checkFavorite = async (id: number) => {
+    const favorites = (await apiClient.get("/favorites/")).data
+    if (favorites.some((favorite: any) => favorite.research.id === id)){
+        return favorites.filter((favorite: any) => favorite.research.id === id)[0].id
+    } else{
+        return null
+    }
 }

@@ -53,8 +53,7 @@ export default function Favorites() {
 
 
   const handleCardPress = (id: number) => {
-    // Redireciona para a tela de Detalhes
-    // router.push(`/research/${id}`); 
+    router.push(`/tabs/home/project?id=${id}`); 
   };
   
   const Section: React.FC<{ title: string; list: ResearchData[] }> = ({ title, list }) => {

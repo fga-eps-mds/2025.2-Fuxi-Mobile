@@ -7,7 +7,7 @@ interface AppScrollViewProps extends ScrollViewProps{
 
 export function ViewContainer({children, style, ...rest}: AppScrollViewProps) {
     return (
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={[styles.container, style]}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={[styles.container, style]} {...rest}>
         {children}
       </ScrollView>
     )

@@ -12,6 +12,11 @@ export default function HomeStackLayout() {
         name="index" 
         options={{ title: 'Home' }}
       />
+
+      <Stack.Screen 
+        name="project" 
+        options={{ title: 'Detalhes' }}
+      />
       
 
     </Stack>

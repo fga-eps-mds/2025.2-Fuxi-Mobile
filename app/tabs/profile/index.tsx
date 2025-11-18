@@ -152,9 +152,6 @@ export default function Profile() {
 }
 
 const styles = StyleSheet.create({
-  container:{
-
-  },
   box: {
     height: 187,
     padding: 10,
