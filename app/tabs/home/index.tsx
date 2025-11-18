@@ -1,7 +1,7 @@
 import { AppText } from '@/components/AppText';
 import { ResearchCard } from '@/components/ResearchCard';
-import { getProfile, logoutUser } from '@/services/authService';
-import { getMyResearches, getResearches } from '@/services/researchService';
+import { getProfile } from '@/services/authService';
+import { getResearches } from '@/services/researchService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
@@ -25,7 +25,6 @@ export interface UserData {
     fantasyName?: string;
     size?: string;
   };
-  researches?: ResearchData[]
 }
 
 export interface ResearchData {
@@ -48,7 +47,6 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null)
   const [researches, setResearches] = useState<ResearchData[]>([]);
-  const [searchText, setSearchText] = useState('');
   
   const fetchUserData = async () => {
     setLoading(true);
@@ -61,11 +59,7 @@ export default function Home() {
            user = await getProfile()
         }
 
-        const researches = await getResearches(); 
-
-        if (user && user.user_type === "researcher"){
-          user.researches = await getMyResearches();
-        }
+        const researches = await getResearches();
         
         setUserData(user);
         setResearches(researches);
@@ -139,13 +133,9 @@ export default function Home() {
         );
     }
 
-    // Conteúdo do pesquisador: 3 seções.
     return (
         <>
-            {/* <Section title="Meus favoritos" list={data.favorites} /> */}
             <Section title="Mais recentes" list={researches} />
-            {userData?.user_type === 'researcher' && userData?.researches &&  <Section title="Meus projetos" list={userData.researches} /> }
-             
         </>
     );
   };

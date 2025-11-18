@@ -4,6 +4,7 @@ import { getFavorites } from '@/services/researchService';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import colors from "../../../theme/colors";
+import { useRouter } from 'expo-router';
 
 export interface ResearchData {
   id: number;
@@ -19,6 +20,7 @@ export interface ResearchData {
 }
 
 export default function Favorites() {
+  const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
