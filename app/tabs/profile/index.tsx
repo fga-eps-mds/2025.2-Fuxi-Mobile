@@ -89,7 +89,7 @@ export default function Profile() {
 
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
-      <ViewContainer>
+      <ViewContainer style={{justifyContent: "flex-start"}}>
         {loading ? (
           <View style={[styles.box, { justifyContent: "center" }]}>
             <ActivityIndicator size="small" color={colors.primary} />
@@ -152,6 +152,9 @@ export default function Profile() {
 }
 
 const styles = StyleSheet.create({
+  container:{
+
+  },
   box: {
     height: 187,
     padding: 10,
@@ -188,12 +191,13 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 25,
+    paddingHorizontal: 20,
     height: 45,
     backgroundColor: "#FF0000",
-    borderRadius: 5,
+    borderRadius: 10,
   },
   logoutText: {
+    fontSize: 16,
     color: "#fff",
     fontWeight: "600",
   },

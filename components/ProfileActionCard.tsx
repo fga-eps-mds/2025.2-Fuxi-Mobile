@@ -42,10 +42,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(152,152,152,0.10)",
 
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 2,
+    // shadowColor: "#000",
+    // shadowOpacity: 0.05,
+    // shadowRadius: 3,
+    // elevation: 2,
   },
   textContainer: {
     flexDirection: "column",
