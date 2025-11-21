@@ -1,12 +1,19 @@
 import { Feather, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
-import { FlatList, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, FlatList, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ResearchCard } from "@/components/ResearchCard";
+import { getResearches } from "@/services/researchService";
 import colors from "@/theme/colors";
+import { ResearchData } from "../home";
+import { router } from "expo-router";
 
 export default function SearchScreen() {
   const [searchText, setSearchText] = useState("");
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [searchResults, setSearchResults] = useState<ResearchData[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Carregar histórico salvo
   useEffect(() => {
@@ -31,13 +38,28 @@ export default function SearchScreen() {
   };
 
   // Quando o usuário envia uma pesquisa
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (searchText.trim() === "") return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const results = await getResearches();
+      const filteredResults = results.filter((research: ResearchData) =>
+        research.title.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setSearchResults(filteredResults);
+    } catch (err) {
+      setError("Erro ao buscar resultados.");
+    } finally {
+      setLoading(false);
+    }
 
     const newList = [searchText, ...recentSearches.filter(item => item !== searchText)].slice(0, 5);
     setRecentSearches(newList);
     saveSearches(newList);
-    setSearchText("");
+    // setSearchText("");
     Keyboard.dismiss();
   };
 
@@ -47,6 +69,11 @@ export default function SearchScreen() {
     setRecentSearches(filtered);
     saveSearches(filtered);
   };
+  
+  const handlePress = (id: number) => {
+    router.push(`/tabs/home/project?id=${id}`);
+};
+
 
   return (
     <View style={styles.container}>
@@ -67,32 +94,42 @@ export default function SearchScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Pesquisas recentes */}
-
+      {/* Resultados da pesquisa */}
+      {loading ? (
+        <ActivityIndicator size="large" color={colors.primary} style={{ marginTop: 20 }} />
+      ) : error ? (
+        <Text style={styles.errorText}>{error}</Text>
+      ) : searchResults.length > 0 ? (
+        <FlatList
+          data={searchResults}
+          keyExtractor={item => item.id.toString()}
+          renderItem={({ item }) => <ResearchCard research={item} onPress={() => handlePress(item.id)} />}
+          style={{ marginTop: 20 }}
+        />
+      ) : (
         <View style={styles.recentContainer}>
           <Text style={styles.title}>Pesquisas recentes:</Text>
-      {recentSearches.length > 0 && (
-          <View style={styles.recentBox}>
-            <FlatList
-              data={recentSearches}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <View style={styles.recentItem}>
-                  <Ionicons name="search-outline" size={18} color="#666" />
-                  <Text numberOfLines={1} style={styles.recentText}>
-                    {item}
-                  </Text>
-                  <TouchableOpacity onPress={() => handleRemove(item)}>
-                    <Ionicons name="close-outline" size={20} color="#666" />
-                  </TouchableOpacity>
-                </View>
-              )}
-            />
-                 
-          </View>
-           )}
+          {recentSearches.length > 0 && (
+            <View style={styles.recentBox}>
+              <FlatList
+                data={recentSearches}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                  <View style={styles.recentItem}>
+                    <Ionicons name="search-outline" size={18} color="#666" />
+                    <Text numberOfLines={1} style={styles.recentText}>
+                      {item}
+                    </Text>
+                    <TouchableOpacity onPress={() => handleRemove(item)}>
+                      <Ionicons name="close-outline" size={20} color="#666" />
+                    </TouchableOpacity>
+                  </View>
+                )}
+              />
+            </View>
+          )}
         </View>
-
+      )}
     </View>
   );
 }
@@ -152,6 +189,12 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     color: "#333",
     fontWeight: "500",
+  },
+  errorText: {
+    textAlign: 'center',
+    marginTop: 20,
+    color: colors.danger,
+    fontSize: 16,
   },
 });
 
