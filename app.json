@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "2025.2-Fuxi-Mobile",
-    "slug": "2025.2-Fuxi-Mobile",
+    "name": "vitra",
+    "slug": "vitra",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -19,7 +19,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.thgomxs.vitra"
     },
     "web": {
       "output": "static",
@@ -44,6 +45,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "c8c4cf9a-7bc9-4f27-8133-12e6df6afccd"
+      }
     }
   }
 }
