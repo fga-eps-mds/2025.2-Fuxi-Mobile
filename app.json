@@ -20,7 +20,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.thgomxs.vitra"
+      "package": "com.fuxi.vitra"
     },
     "web": {
       "output": "static",
