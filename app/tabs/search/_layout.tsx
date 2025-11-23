@@ -12,6 +12,10 @@ export default function CreateProjectStackLayout() {
         name="index" 
         options={{ headerShown: false }}
       />
+      <Stack.Screen 
+        name="filters" 
+        options={{ headerShown: false }}
+      />
       
 
     </Stack>

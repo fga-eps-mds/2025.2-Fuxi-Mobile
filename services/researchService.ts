@@ -82,3 +82,37 @@ export const checkFavorite = async (id: number) => {
         return null
     }
 }
+
+export async function searchResearches({
+  title,
+  knowledgeArea,
+  keywords,
+  researcherName,
+  campus,
+  status
+}: {
+  title?: string;
+  knowledgeArea?: string;
+  keywords?: string[];
+  researcherName?: string;
+  campus?: string;
+  status?: string;
+}) {
+  const params = new URLSearchParams();
+
+  if (title) params.append("title", title);
+  if (knowledgeArea) params.append("knowledge_area", knowledgeArea);
+  if (researcherName) params.append("researcher", researcherName);
+  if (campus) params.append("campus", campus);
+  if (status) params.append("status", status);
+
+  if (keywords && keywords.length > 0) {
+      keywords.forEach(kw => params.append("keyword", kw));
+  }
+
+  const response = await apiClient.get(`/research/search/?${params.toString()}`,{
+        headers: {}
+    });
+
+  return response.data;
+}

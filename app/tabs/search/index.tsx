@@ -3,10 +3,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { ResearchCard } from "@/components/ResearchCard";
-import { getResearches } from "@/services/researchService";
+import { searchResearches } from "@/services/researchService";
 import colors from "@/theme/colors";
 import { ResearchData } from "../home";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+
+
 
 export default function SearchScreen() {
   const [searchText, setSearchText] = useState("");
@@ -14,6 +16,22 @@ export default function SearchScreen() {
   const [searchResults, setSearchResults] = useState<ResearchData[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const params = useLocalSearchParams() as any;
+
+  // Quando a pesquisa é feita com filtros
+  const fetchResearches = async ()=>{
+    try {
+      const results = await searchResearches({knowledgeArea: params.area, keywords: params.keywords,researcherName: params.pesquisador, campus: params.campus,status: params.situacao})
+
+      setSearchResults(results);
+    } catch (err) {
+      console.log(err);
+      setError("Erro ao buscar resultados.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
 
   // Carregar histórico salvo
   useEffect(() => {
@@ -26,7 +44,9 @@ export default function SearchScreen() {
       }
     };
     loadSearches();
+    fetchResearches()
   }, []);
+
 
   // Salvar histórico no AsyncStorage
   const saveSearches = async (newSearches: string[]) => {
@@ -39,26 +59,24 @@ export default function SearchScreen() {
 
   // Quando o usuário envia uma pesquisa
   const handleSearch = async () => {
-    if (searchText.trim() === "") return;
-
     setLoading(true);
     setError(null);
 
     try {
-      const results = await getResearches();
-      const filteredResults = results.filter((research: ResearchData) =>
-        research.title.toLowerCase().includes(searchText.toLowerCase())
-      );
-      setSearchResults(filteredResults);
+      const results = await searchResearches({title: searchText});
+      setSearchResults(results);
     } catch (err) {
+      console.log(err);
       setError("Erro ao buscar resultados.");
     } finally {
       setLoading(false);
     }
 
-    const newList = [searchText, ...recentSearches.filter(item => item !== searchText)].slice(0, 5);
-    setRecentSearches(newList);
-    saveSearches(newList);
+    if (searchText.trim() !== ""){
+      const newList = [searchText, ...recentSearches.filter(item => item !== searchText)].slice(0, 5);
+      setRecentSearches(newList);
+      saveSearches(newList);
+    }
     // setSearchText("");
     Keyboard.dismiss();
   };
@@ -73,6 +91,9 @@ export default function SearchScreen() {
   const handlePress = (id: number) => {
     router.push(`/tabs/home/project?id=${id}`);
 };
+  const handleFilters = () =>{
+    router.push(`/tabs/search/filters`);
+  }
 
 
   return (
@@ -89,7 +110,7 @@ export default function SearchScreen() {
           onSubmitEditing={handleSearch}
           returnKeyType="search"
         />
-        <TouchableOpacity style={styles.filterButton} onPress={() => alert("Abrir filtros avançados")}>
+        <TouchableOpacity style={styles.filterButton} onPress={handleFilters}>
           <Feather name="filter" size={20} color="#808080" />
         </TouchableOpacity>
       </View>
