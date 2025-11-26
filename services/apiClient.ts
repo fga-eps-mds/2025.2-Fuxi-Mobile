@@ -4,7 +4,7 @@ import axios from 'axios';
 //COLOQUEM O SEU IP LOCAL AQUI QUANDO FOR TESTAR
 //Winoows: use "ipconfig" no terminal e procure o seu IPV4
 //Mac/Linux: use "ifconfig" no terminal e procure algo como wlan0 e coloque o inet
-const IP_LOCAL = "http://[IP AQUI]:8000"
+const IP_LOCAL = "http://10.42.0.1:8000"
 
 const apiClient = axios.create({
     baseURL: IP_LOCAL,

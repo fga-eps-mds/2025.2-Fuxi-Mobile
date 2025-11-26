@@ -10,6 +10,22 @@ import { addFavorite, checkFavorite, getPublicResearchById, removeFavorite } fro
 import { SimpleAccordion } from '@/components/SimpleAccordion';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { Feather, Ionicons } from "@expo/vector-icons";
+import { getUsers } from '@/services/userService'; // NEW IMPORT
+
+// NEW INTERFACES
+interface AuthorProfile {
+  id: number;
+  firstName: string;
+  surname: string;
+  campus: string;
+}
+
+interface AuthorData {
+  id: number;
+  email: string;
+  researcher_profile: AuthorProfile;
+  // Potentially other profile types if needed, but for now just researcher
+}
 
 export interface ProjectData {
   id: number;
@@ -24,6 +40,7 @@ export interface ProjectData {
   campus: string;
 }
 
+
 export default function Project() {
     const router = useRouter();
     const [favoriteId, setFavoriteId] = useState(null);
@@ -32,6 +49,7 @@ export default function Project() {
     const [error, setError] = useState<string | null>(null);
     const { id } = useLocalSearchParams();
     const [project, setProject] = useState<ProjectData | null>(null);
+    const [author, setAuthor] = useState<AuthorData | null>(null); // NEW STATE
     const projectId = Number(id);
 
 
@@ -45,6 +63,13 @@ export default function Project() {
             const favoriteId = await checkFavorite(projectId)
             console.log(favoriteId);
             
+            if (project && project.researcher) {
+                const users = await getUsers();
+                const authorData = users.find(
+                    (user: any) => user.researcher_profile?.id === project.researcher
+                );
+                setAuthor(authorData);
+            }
 
             if (favoriteId) {
               setFavoriteId(favoriteId)  
@@ -54,6 +79,7 @@ export default function Project() {
         } catch (e) {
             setError("Não foi possível carregar o projeto. Tente novamente.");
             setProject(null);
+            setAuthor(null);
         } finally {
             setLoading(false);
         }
@@ -129,6 +155,18 @@ export default function Project() {
                   <AppText style={styles.subtitle}>{project && project.status}</AppText>
                 </View>
 
+                {author && author.researcher_profile && (
+                    <TouchableOpacity style={[styles.box, styles.autorContainer]} onPress={() => { /* Navigate to author profile later */ }}>
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.autor}>Autor</Text>
+                            <Text style={styles.autorNome}>{author.researcher_profile.firstName} {author.researcher_profile.surname}</Text>
+                            <Text style={styles.autorEmail}>{author.email}</Text>
+                            <Text style={styles.autorCampus}>{author.researcher_profile.campus}</Text>
+                        </View>
+                        <Feather name="chevron-right" size={24} color="#003A7A" />
+                    </TouchableOpacity>
+                )}
+
                 <SimpleAccordion title="Descrição" style={{marginTop: 10}}>
                   {project && project.description}
                 </SimpleAccordion>
@@ -166,6 +204,11 @@ const styles = StyleSheet.create({
     },
     star:{
       color: colors.primary
+    },
+    autor: {
+    color: colors.primary,
+    fontSize: 18,
+    fontWeight: "700"
     },
     header:{
       flexDirection: "row"
@@ -234,5 +277,24 @@ const styles = StyleSheet.create({
     retryText: {
         color: '#fff',
         fontWeight: '600',
+    },
+    autorContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    autorNome: {
+      fontSize: 17,
+      fontWeight: '500',
+      color: '#333',
+    },
+    autorEmail: {
+      fontSize: 14,
+      color: colors.primary,
+      marginVertical: 2,
+    },
+    autorCampus: {
+      fontSize: 14,
+      color: '#666',
     },
 })
