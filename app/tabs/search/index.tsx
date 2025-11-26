@@ -1,37 +1,88 @@
 import { Feather, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { ActivityIndicator, FlatList, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { ResearchCard } from "@/components/ResearchCard";
 import { searchResearches } from "@/services/researchService";
 import colors from "@/theme/colors";
 import { ResearchData } from "../home";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, useFocusEffect } from "expo-router";
+
+interface SearchFilters {
+  pesquisador?: string;
+  keywords?: string[];
+  campus?: string;
+  area?: string;
+  situacao?: string;
+}
+
+const STORAGE_KEY_FILTERS = "searchFilters";
+
 
 
 
 export default function SearchScreen() {
-  const [searchText, setSearchText] = useState("");
-  const [recentSearches, setRecentSearches] = useState<string[]>([]);
-  const [searchResults, setSearchResults] = useState<ResearchData[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const params = useLocalSearchParams() as any;
+    const [searchText, setSearchText] = useState("");
+    const [recentSearches, setRecentSearches] = useState<string[]>([]);
+    const [searchResults, setSearchResults] = useState<ResearchData[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [activeFilters, setActiveFilters] = useState<SearchFilters>({});
+  
+    // Quando a pesquisa é feita com filtros
+    const fetchResearches = useCallback(async (filters: SearchFilters, searchTxt?: string) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const results = await searchResearches({
+          knowledgeArea: filters.area,
+          keywords: filters.keywords,
+          researcherName: filters.pesquisador,
+          campus: filters.campus,
+          status: filters.situacao,
+          title: searchTxt || undefined, // Add title for combined search
+        });
+        setSearchResults(results);
+      } catch (err) {
+        console.log(err);
+        setError("Erro ao buscar resultados.");
+      } finally {
+        setLoading(false);
+      }
+    }, []);
+  
+    useFocusEffect(
+      useCallback(() => {
+        const loadAndApplyFilters = async () => {
+          try {
+            const storedFilters = await AsyncStorage.getItem(STORAGE_KEY_FILTERS);
+            if (storedFilters) {
+              const parsedFilters: SearchFilters = JSON.parse(storedFilters);
+              setActiveFilters(parsedFilters);
+              fetchResearches(parsedFilters, searchText); // Apply filters and current search text
+            } else {
+              setActiveFilters({});
+              fetchResearches({}); // No filters, fetch all or default
+            }
+          } catch (error) {
+            console.error("Failed to load filters from AsyncStorage", error);
+            setActiveFilters({});
+            fetchResearches({}); // Fallback to no filters
+          }
+        };
+        loadAndApplyFilters();
+      }, [fetchResearches])
+    );
 
-  // Quando a pesquisa é feita com filtros
-  const fetchResearches = async ()=>{
+
+  // Salvar histórico no AsyncStorage
+  const saveSearches = async (newSearches: string[]) => {
     try {
-      const results = await searchResearches({knowledgeArea: params.area, keywords: params.keywords,researcherName: params.pesquisador, campus: params.campus,status: params.situacao})
-
-      setSearchResults(results);
-    } catch (err) {
-      console.log(err);
-      setError("Erro ao buscar resultados.");
-    } finally {
-      setLoading(false);
+      await AsyncStorage.setItem("recentSearches", JSON.stringify(newSearches));
+    } catch (error) {
+      console.log("Erro ao salvar histórico:", error);
     }
-  }
-
+  };
 
   // Carregar histórico salvo
   useEffect(() => {
@@ -44,18 +95,7 @@ export default function SearchScreen() {
       }
     };
     loadSearches();
-    fetchResearches()
   }, []);
-
-
-  // Salvar histórico no AsyncStorage
-  const saveSearches = async (newSearches: string[]) => {
-    try {
-      await AsyncStorage.setItem("recentSearches", JSON.stringify(newSearches));
-    } catch (error) {
-      console.log("Erro ao salvar histórico:", error);
-    }
-  };
 
   // Quando o usuário envia uma pesquisa
   const handleSearch = async () => {
@@ -63,8 +103,7 @@ export default function SearchScreen() {
     setError(null);
 
     try {
-      const results = await searchResearches({title: searchText});
-      setSearchResults(results);
+      await fetchResearches(activeFilters, searchText);
     } catch (err) {
       console.log(err);
       setError("Erro ao buscar resultados.");
@@ -77,7 +116,6 @@ export default function SearchScreen() {
       setRecentSearches(newList);
       saveSearches(newList);
     }
-    // setSearchText("");
     Keyboard.dismiss();
   };
 
@@ -93,6 +131,7 @@ export default function SearchScreen() {
 };
   const handleFilters = () =>{
     router.push(`/tabs/search/filters`);
+    setSearchText(""); // Clear search text when navigating to filters
   }
 
 

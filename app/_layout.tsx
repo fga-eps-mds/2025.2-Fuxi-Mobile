@@ -11,7 +11,10 @@ export default function RootLayout() {
       }} 
       >
 
-      <Stack.Screen name="index"         options={{ title: "", headerBackVisible: false}}/>
+      <Stack.Screen name="index"         
+        options={{ title: "", headerBackVisible: false}}
+      />
+      
       <Stack.Screen
         name="auth/register-type"
         options={{ title: "Seleção de Cadastro" }}

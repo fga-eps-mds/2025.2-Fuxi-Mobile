@@ -1,6 +1,6 @@
 import colors from "@/theme/colors";
 import { router } from "expo-router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -14,7 +14,18 @@ import {
   Alert
 } from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
-import { searchResearches } from "@/services/researchService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+interface SearchFilters {
+  pesquisador?: string;
+  keywords?: string[];
+  campus?: string;
+  area?: string;
+  situacao?: string;
+}
+
+const STORAGE_KEY_FILTERS = "searchFilters";
+
 
 export default function FiltersScreen() {
   const [pesquisador, setPesquisador] = useState("");
@@ -25,6 +36,25 @@ export default function FiltersScreen() {
   const [text, setText] = useState("");
 
   const [dropdownVisible, setDropdownVisible] = useState<null | string>(null);
+
+  useEffect(() => {
+    const loadFilters = async () => {
+      try {
+        const storedFilters = await AsyncStorage.getItem(STORAGE_KEY_FILTERS);
+        if (storedFilters) {
+          const parsedFilters: SearchFilters = JSON.parse(storedFilters);
+          setPesquisador(parsedFilters.pesquisador || "");
+          setKeywords(parsedFilters.keywords || []);
+          setCampus(parsedFilters.campus || "");
+          setArea(parsedFilters.area || "");
+          setSituacao(parsedFilters.situacao || "");
+        }
+      } catch (error) {
+        console.error("Failed to load filters from AsyncStorage", error);
+      }
+    };
+    loadFilters();
+  }, []);
 
   const dropdownOptions = {
     campus: ["UNB DARCY RIBEIRO", "UNB GAMA: FCTE", "UNB PLANALTINA: FUP", "UNB CEILÂNDIA: FCE"],
@@ -45,12 +75,17 @@ export default function FiltersScreen() {
 
   
 
-  const resetAll = () => {
+  const resetAll = async () => {
     setPesquisador("");
     setKeywords([]);
     setCampus("");
     setArea("");
     setSituacao("");
+    try {
+      await AsyncStorage.removeItem(STORAGE_KEY_FILTERS);
+    } catch (error) {
+      console.error("Failed to remove filters from AsyncStorage", error);
+    }
   };
  
   const handleCloseFilters = () =>{
@@ -69,20 +104,25 @@ export default function FiltersScreen() {
     setKeywords(keywords.filter((k) => k !== word));
   };
 
-  const handleSearch = async ()=>{
-    if (appliedFiltersCount === 0) {
-      Alert.alert("Nenhum filtro foi utilizado!") 
-      return 
-    }
-    router.push({pathname: `/tabs/search`, params: {
+    const handleSearch = async ()=>{
+      if (appliedFiltersCount === 0) {
+        Alert.alert("Nenhum filtro foi utilizado!")
+        return
+      }
+      const currentFilters: SearchFilters = {
         pesquisador,
         keywords,
         campus,
         area,
         situacao
-      }});
-  }
-
+      };
+      try {
+        await AsyncStorage.setItem(STORAGE_KEY_FILTERS, JSON.stringify(currentFilters));
+      } catch (error) {
+        console.error("Failed to save filters to AsyncStorage", error);
+      }
+      router.push(`/tabs/search`);
+    }
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
