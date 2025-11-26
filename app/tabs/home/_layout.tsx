@@ -17,6 +17,11 @@ export default function HomeStackLayout() {
         name="project" 
         options={{ title: 'Detalhes' }}
       />
+
+      <Stack.Screen 
+      name="author-profile" 
+      options={{ title: 'Autor' }} 
+      />
       
 
     </Stack>
