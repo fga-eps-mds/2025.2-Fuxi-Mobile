@@ -156,7 +156,7 @@ export default function Project() {
                 </View>
 
                 {author && author.researcher_profile && (
-                    <TouchableOpacity style={[styles.box, styles.autorContainer]} onPress={() => { /* Navigate to author profile later */ }}>
+                    <TouchableOpacity style={[styles.box, styles.autorContainer]} onPress={() => router.push(`/tabs/profile/author-profile?id=${author.id}`)}>
                         <View style={{ flex: 1 }}>
                             <Text style={styles.autor}>Autor</Text>
                             <Text style={styles.autorNome}>{author.researcher_profile.firstName} {author.researcher_profile.surname}</Text>
@@ -175,11 +175,6 @@ export default function Project() {
                   {project && project.members.join(", ")}
                 </SimpleAccordion>
 
-                <PrimaryButton
-                  title="Entre em contato"
-                  onPress={handleContact}
-                  disabled={loading}
-                />
               </>
           );
         };

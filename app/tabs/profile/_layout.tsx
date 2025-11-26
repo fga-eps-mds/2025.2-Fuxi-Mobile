@@ -27,6 +27,11 @@ export default function ProfileStackLayout() {
       name="edit-project" 
       options={{ title: 'Editar Projeto' }} 
       />
+
+      <Stack.Screen 
+      name="author-profile" 
+      options={{ title: 'Autor' }} 
+      />
     </Stack>
   );
 }
