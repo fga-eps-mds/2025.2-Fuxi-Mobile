@@ -17,31 +17,45 @@ export function validateBirthDate(dateStr: string): boolean {
   const month = parseInt(match[2]) - 1; // monthes começam em 0
   const year = parseInt(match[3]);
 
-  const date = new Date(year, month, day);
+  // Construct date in UTC to avoid timezone issues
+  const date = new Date(0); // Create a reference date at epoch
+  date.setUTCFullYear(year, month, day);
+  date.setUTCHours(0, 0, 0, 0);
 
-  // verifica se a date é real
+  // Check if the date is real (e.g., 31/02 is not real)
+  // When setting year, month, day, JS automatically corrects invalid dates (e.g., 31 Feb becomes 2 Mar)
   if (
-    date.getFullYear() !== year ||
-    date.getMonth() !== month ||
-    date.getDate() !== day
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() !== month ||
+    date.getUTCDate() !== day
   ) {
-    Alert.alert("data inválida", "Insira uma data real de nascimento.");
+    Alert.alert("Data inválida", "Insira uma data real de nascimento.");
     return false;
   }
 
-  // verifica idade
-  const hoje = new Date();
-  const idade = hoje.getFullYear() - year;
-  const jaFezAniversario =
-    hoje.getMonth() > month ||
-    (hoje.getMonth() === month && hoje.getDate() >= day);
+  // Check age
+  const hoje = new Date(); // This will be the faked system time (e.g., 2025-01-01T00:00:00.000Z)
+  // Ensure 'hoje' also represents the start of the day in UTC for consistent comparison
+  hoje.setUTCHours(0, 0, 0, 0);
+  
+  // Future date check
+  if (date > hoje) { 
+    Alert.alert("Data inválida", "A data de nascimento não pode ser no futuro.");
+    return false;
+  }
 
-  const idadeFinal = jaFezAniversario ? idade : idade - 1;
+  const date18YearsAgo = new Date();
+  date18YearsAgo.setUTCFullYear(hoje.getUTCFullYear() - 18, hoje.getUTCMonth(), hoje.getUTCDate());
+  date18YearsAgo.setUTCHours(0, 0, 0, 0);
 
-  if (idadeFinal < 18) {
+
+
+
+  if (date > date18YearsAgo) {
     Alert.alert("Idade inválida", "Você precisa ter pelo menos 18 anos.");
     return false;
   }
 
   return true;
 }
+

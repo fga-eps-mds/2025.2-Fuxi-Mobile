@@ -24,7 +24,7 @@ describe("validateBirthDate", () => {
     const result = validateBirthDate("31/02/2000");
     expect(result).toBe(false);
     expect(Alert.alert).toHaveBeenCalledWith(
-      "data inválida",  
+      "Data inválida",
       "Insira uma data real de nascimento."
     );
   });
