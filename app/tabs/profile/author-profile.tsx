@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
     container: {
         padding: 20,
         backgroundColor: '#fff',
+        justifyContent: "flex-start",
     },
     feedbackContainer: {
         flex: 1,
