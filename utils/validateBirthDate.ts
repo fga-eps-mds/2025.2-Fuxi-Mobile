@@ -17,13 +17,13 @@ export function validateBirthDate(dateStr: string): boolean {
   const month = parseInt(match[2]) - 1; // monthes começam em 0
   const year = parseInt(match[3]);
 
-  // Construct date in UTC to avoid timezone issues
-  const date = new Date(0); // Create a reference date at epoch
+  // Constrói a data em UTC para evitar problemas de fuso horário
+  const date = new Date(0); // Cria uma data de referência na época
   date.setUTCFullYear(year, month, day);
   date.setUTCHours(0, 0, 0, 0);
 
-  // Check if the date is real (e.g., 31/02 is not real)
-  // When setting year, month, day, JS automatically corrects invalid dates (e.g., 31 Feb becomes 2 Mar)
+  // Verifica se a data é real (por exemplo, 31/02 não é real)
+  // Ao definir ano, mês, dia, o JS corrige automaticamente datas inválidas (por exemplo, 31 de fevereiro torna-se 2 de março)
   if (
     date.getUTCFullYear() !== year ||
     date.getUTCMonth() !== month ||
@@ -33,12 +33,12 @@ export function validateBirthDate(dateStr: string): boolean {
     return false;
   }
 
-  // Check age
-  const hoje = new Date(); // This will be the faked system time (e.g., 2025-01-01T00:00:00.000Z)
-  // Ensure 'hoje' also represents the start of the day in UTC for consistent comparison
+  // Verifica a idade
+  const hoje = new Date(); // Este será o tempo de sistema simulado (por exemplo, 2025-01-01T00:00:00.000Z)
+  // Garante que 'hoje' também represente o início do dia em UTC para comparação consistente
   hoje.setUTCHours(0, 0, 0, 0);
   
-  // Future date check
+  // Verifica data futura
   if (date > hoje) { 
     Alert.alert("Data inválida", "A data de nascimento não pode ser no futuro.");
     return false;

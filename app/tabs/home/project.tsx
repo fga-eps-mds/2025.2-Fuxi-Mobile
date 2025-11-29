@@ -10,9 +10,8 @@ import { addFavorite, checkFavorite, getPublicResearchById, removeFavorite } fro
 import { SimpleAccordion } from '@/components/SimpleAccordion';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { Feather, Ionicons } from "@expo/vector-icons";
-import { getUsers } from '@/services/userService'; // NEW IMPORT
+import { getUsers } from '@/services/userService'; 
 
-// NEW INTERFACES
 interface AuthorProfile {
   id: number;
   firstName: string;
@@ -24,14 +23,14 @@ interface AuthorData {
   id: number;
   email: string;
   researcher_profile: AuthorProfile;
-  // Potentially other profile types if needed, but for now just researcher
+  // Potencialmente outros tipos de perfil, se necessário, mas por enquanto apenas pesquisador
 }
 
 export interface ProjectData {
   id: number;
   researcher: number;
   members: string[]
-  createdDate?: string; // formato ISO (ex: "2025-11-07")
+  createdDate?: string;
   title: string;
   description: string;
   status: string;
@@ -49,7 +48,7 @@ export default function Project() {
     const [error, setError] = useState<string | null>(null);
     const { id } = useLocalSearchParams();
     const [project, setProject] = useState<ProjectData | null>(null);
-    const [author, setAuthor] = useState<AuthorData | null>(null); // NEW STATE
+    const [author, setAuthor] = useState<AuthorData | null>(null); 
     const projectId = Number(id);
 
 

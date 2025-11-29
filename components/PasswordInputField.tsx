@@ -1,8 +1,6 @@
 import { StyleSheet, View, TouchableOpacity, TextInputProps } from "react-native";
 import { useState} from "react";
 import { TextInputField } from "@/components/TextInputField";
-
-// Import necessary icon library
 import { Feather } from "@expo/vector-icons";
 
 interface PasswordInputFieldProps extends Omit<TextInputProps, "secureTextEntry"> {

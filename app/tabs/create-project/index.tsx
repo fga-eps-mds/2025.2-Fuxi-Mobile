@@ -17,7 +17,7 @@ import colors from "@/theme/colors";
 export default function CreateResearch() {
     const router = useRouter();
 
-    // Tag input
+    // Gerenciamento de palavras-chave
     const [keywords, setKeywords] = useState<string[]>([]);
     const [text, setText] = useState("");
 

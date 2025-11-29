@@ -18,7 +18,7 @@ export interface UserData {
     id: number;
     firstName?: string;
     surname?: string;
-    birthDate?: string; // formato ISO (ex: "2000-01-01")
+    birthDate?: string;
     campus?: string;
     category?: string;
     cnpj?: string;
@@ -31,7 +31,7 @@ export interface ResearchData {
   id: number;
   researcher: number;
   members: string[]
-  createdDate?: string; // formato ISO (ex: "2025-11-07")
+  createdDate?: string;
   title: string;
   description: string;
   status: string;

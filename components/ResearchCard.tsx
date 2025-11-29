@@ -12,6 +12,7 @@ interface ResearchCardProps {
     showActions?: boolean;
 }
 
+// React.fc = componente funcional com tipagem de props
 export const ResearchCard: React.FC<ResearchCardProps> = ({ research, onPress, onEdit, onDelete, showActions = false }) => {
     const membersList = research.members.length > 1 ? `Membros: ${research.members[0]}, ${research.members[1]}, ...` : `Membro: ${research.members[0]}`;
 

@@ -90,7 +90,6 @@ export default function AuthorPage() {
 
     return (
         <ViewContainer style={styles.container}>
-            {/* Author Info Box */}
             <View style={styles.authorCard}>
                 <Text style={styles.authorName}>
                     {author.researcher_profile.firstName} {author.researcher_profile.surname}
@@ -98,8 +97,7 @@ export default function AuthorPage() {
                 <Text style={styles.authorEmail}>{author.email}</Text>
                 <Text style={styles.authorCampus}>{author.researcher_profile.campus}</Text>
             </View>
-
-            {/* Projects List */}
+            
             <Text style={styles.projectsTitle}>Mais projetos</Text>
             {projects.length > 0 ? (
                 projects.map((item) => (
