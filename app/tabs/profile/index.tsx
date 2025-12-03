@@ -129,7 +129,17 @@ export default function Profile() {
                     onPress={() => router.push("/tabs/profile/researcher-projects")}
                   />
                 )}
-
+              
+              {/* alteração aqui */}
+              {userData?.user_type === "company" && (
+                <ProfileActionCard
+                  title="Minhas Demandas"
+                  description="Veja e gerencie as demandas da sua empresa"
+                  onPress={() => router.push("/tabs/profile/company-demands")}
+                />
+              )}
+              {/* alteração aqui */}
+              
                 <ProfileActionCard
                   title="Meu Perfil"
                   description="Atualize seus dados pessoais"

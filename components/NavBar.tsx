@@ -35,6 +35,19 @@ export function NavBar({ state, descriptors, navigation }: BottomTabBarProps) {
           {...props}
         />
       ),
+      "create-demand": (props: any) => (
+        <Feather
+          name="plus"
+          size={26}
+          style={{
+            backgroundColor: colors.primary,
+            color: "white",
+            borderRadius: 50,
+            padding: 5,
+          }}
+          {...props}
+        />
+      ),
       search: (props: any) => <Feather name="search" size={26} color="#1D1D1D" {...props} />,
       profile: (props: any) => <Feather name="user" size={26} color="#1D1D1D" {...props} />,
     };
@@ -49,6 +62,12 @@ export function NavBar({ state, descriptors, navigation }: BottomTabBarProps) {
 
       switch (userType) {
         case 'company':
+          if (route.name.startsWith('create-project')) {
+            return false;
+          }
+          break;
+
+  
         case 'collaborator':
           if (route.name.startsWith('create-project')) {
             return false;
@@ -69,7 +88,7 @@ export function NavBar({ state, descriptors, navigation }: BottomTabBarProps) {
     });
 
     // Força a ordem correta dos ícones, já que o Expo Router está reordenando
-    const desiredOrder = ['home', 'favorites', 'create-project', 'search', 'profile'];
+    const desiredOrder = ['home', 'favorites','create-project', 'create-demand', 'search', 'profile'];
     visibleRoutes.sort((a, b) => {
       const aName = a.name.split('/')[0];
       const bName = b.name.split('/')[0];
@@ -85,12 +104,6 @@ export function NavBar({ state, descriptors, navigation }: BottomTabBarProps) {
       
       visibleRoutes.map((route, index) => {
         const { options } = descriptors[route.key];
-        // const label =
-        //   options.tabBarLabel !== undefined
-        //     ? options.tabBarLabel
-        //     : options.title !== undefined
-        //       ? options.title
-        //       : route.name;
 
 
         const isFocused = route.key === state.routes[state.index].key;
@@ -106,6 +119,7 @@ export function NavBar({ state, descriptors, navigation }: BottomTabBarProps) {
             navigation.navigate(route.name, route.params);
           }
         };
+
 
         const onLongPress = () => {
           navigation.emit({
@@ -143,11 +157,10 @@ export function NavBar({ state, descriptors, navigation }: BottomTabBarProps) {
 
 const styles = StyleSheet.create({
   container: {
-    // position: "absolute",
     position: "fixed",
     bottom: 0,
     width: "100%",
-    height: 120, //75 o normal, aumentei pq o android corta um pouco - Pedro
+    height: 120, 
     paddingVertical: 10,
     paddingHorizontal: 24,
     flexDirection: "row",
