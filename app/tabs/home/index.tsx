@@ -7,6 +7,8 @@ import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import colors from "../../../theme/colors";
+import { getDemands } from '@/services/demandService';
+import { DemandCard } from '@/components/DemandCard';
 
 
 export interface UserData {
@@ -55,6 +57,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null)
   const [researches, setResearches] = useState<ResearchData[]>([]);
+  const [demands, setDemands] = useState<DemandData[]>([]);
   
   const fetchUserData = async () => {
     setLoading(true);
@@ -68,13 +71,16 @@ export default function Home() {
         }
 
         const researches = await getResearches();
+        const demands = await getDemands();
         
         setUserData(user);
         setResearches(researches);
+        setDemands(demands);
 
     } catch (e) {
         setError("Não foi possível carregar os dados. Tente novamente.");
         setResearches([]);
+        setDemands([]);
     } finally {
         setLoading(false);
     }
@@ -89,13 +95,8 @@ export default function Home() {
     await fetchUserData();
     setRefreshing(false);
   };
-
-
-  const handleCardPress = (id: number) => {
-    router.push(`/tabs/home/project?id=${id}`); 
-  };
   
-  const Section: React.FC<{ title: string; list: ResearchData[] }> = ({ title, list }) => {
+  const ResearchesSection: React.FC<{ title: string; list: ResearchData[] }> = ({ title, list }) => {
     if (list.length === 0) {
         return (
             <View style={styles.sectionContainer}>
@@ -112,7 +113,35 @@ export default function Home() {
                 <ResearchCard 
                     key={research.id} 
                     research={research} 
-                    onPress={handleCardPress} 
+                    onPress={(id: number) => {
+                              router.push(`/tabs/home/project?id=${id}`); 
+                            }} 
+                />
+            ))}
+        </View>
+    );
+  };
+
+    const DemandsSection: React.FC<{ title: string; list: DemandData[] }> = ({ title, list }) => {
+    if (list.length === 0) {
+        return (
+            <View style={styles.sectionContainer}>
+                <AppText style={styles.sectionTitle}>{title}:</AppText>
+                <Text style={styles.noDataText}>Nenhuma informação encontrada nesta seção.</Text>
+            </View>
+        );
+    }
+
+    return (
+        <View style={styles.sectionContainer}>
+            <AppText style={styles.sectionTitle}>{title}:</AppText>
+            {list.map(demand => (
+                <DemandCard 
+                    key={demand.id} 
+                    demand={demand} 
+                    onPress={(id: number) => {
+                              router.push(`/tabs/home/demand?id=${id}`); 
+                            }} 
                 />
             ))}
         </View>
@@ -142,7 +171,8 @@ export default function Home() {
 
     return (
         <>
-            <Section title="Mais recentes" list={researches} />
+            <ResearchesSection title="Mais recentes" list={researches} />
+            <DemandsSection title="Demandas" list={demands} />
         </>
     );
   };
