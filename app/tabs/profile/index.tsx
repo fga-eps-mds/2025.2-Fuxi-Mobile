@@ -130,15 +130,15 @@ export default function Profile() {
                   />
                 )}
               
-              {/* alteração aqui */}
-              {userData?.user_type === "company" && (
-                <ProfileActionCard
-                  title="Minhas Demandas"
-                  description="Veja e gerencie as demandas da sua empresa"
-                  onPress={() => router.push("/tabs/profile/company-demands")}
-                />
-              )}
-              {/* alteração aqui */}
+                {/* alteração aqui */}
+                {userData?.user_type === "company" && (
+                  <ProfileActionCard
+                    title="Minhas Demandas"
+                    description="Veja e gerencie as demandas da sua empresa"
+                    onPress={() => router.push("/tabs/profile/company-demands")}
+                  />
+                )}
+                {/* alteração aqui */}
               
                 <ProfileActionCard
                   title="Meu Perfil"

@@ -29,8 +29,13 @@ export default function ProfileStackLayout() {
       />
 
       <Stack.Screen 
-      name="author-profile" 
-      options={{ title: 'Autor' }} 
+      name="company-demands" 
+      options={{ title: 'Minhas Demandas' }} 
+      />
+
+      <Stack.Screen 
+      name="edit-demand" 
+      options={{ title: 'Editar Demanda' }} 
       />
     </Stack>
   );

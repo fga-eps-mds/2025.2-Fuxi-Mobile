@@ -40,6 +40,14 @@ export interface ResearchData {
   campus: string;
 }
 
+export interface DemandData {
+  id: number;
+  company: number;
+  title: string;
+  description: string;
+  knowledge_area: string;
+}
+
 export default function Home() {
   const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
