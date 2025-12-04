@@ -11,6 +11,9 @@ import { SimpleAccordion } from '@/components/SimpleAccordion';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { getUsers } from '@/services/userService'; 
+import { getProfile } from '@/services/authService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { UserData } from '.';
 
 interface AuthorProfile {
   id: number;
@@ -49,7 +52,29 @@ export default function Project() {
     const { id } = useLocalSearchParams();
     const [project, setProject] = useState<ProjectData | null>(null);
     const [author, setAuthor] = useState<AuthorData | null>(null); 
+    const [userData, setUserData] = useState<UserData | null>(null)
+
     const projectId = Number(id);
+
+      const fetchUserData = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            let user: UserData | null = null
+            const token = await AsyncStorage.getItem("authToken")
+            if (token) {
+              user = await getProfile()
+            }
+            
+            setUserData(user);
+
+        } catch (e) {
+            setError("Não foi possível carregar os dados. Tente novamente.");
+        } finally {
+            setLoading(false);
+        }
+      };
 
 
       
@@ -59,8 +84,13 @@ export default function Project() {
     
         try {
             const project = await getPublicResearchById(projectId); 
-            const favoriteId = await checkFavorite(projectId)
-            console.log(favoriteId);
+
+            if (userData !== null){
+              const favoriteId = await checkFavorite(projectId)
+              if (favoriteId) {
+                setFavoriteId(favoriteId)  
+              }
+            }
             
             if (project && project.researcher) {
                 const users = await getUsers();
@@ -68,10 +98,6 @@ export default function Project() {
                     (user: any) => user.researcher_profile?.id === project.researcher
                 );
                 setAuthor(authorData);
-            }
-
-            if (favoriteId) {
-              setFavoriteId(favoriteId)  
             }
         
             setProject(project);
@@ -86,6 +112,7 @@ export default function Project() {
     
       useEffect(() => {
         fetchProject();
+        fetchUserData();
       }, []);
     
       const onRefresh = async () => {
@@ -138,7 +165,7 @@ export default function Project() {
               <>
                 <View style={styles.header}>
                 <Text style={styles.title}>Informações do projeto</Text>
-                {favoriteId ? <Ionicons name='star' onPress={handleFavorite} size={30} color={colors.primary}/> : <Ionicons name='star-outline' onPress={handleFavorite} size={30} color={colors.primary}/>}
+                {userData !== null ? (favoriteId ? <Ionicons name='star' onPress={handleFavorite} size={30} color={colors.primary}/> : <Ionicons name='star-outline' onPress={handleFavorite} size={30} color={colors.primary}/>) : null}
                 
                 </View>
                 <View style={styles.box}>
