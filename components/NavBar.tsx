@@ -66,7 +66,11 @@ export function NavBar({ state, descriptors, navigation }: BottomTabBarProps) {
             return false;
           }
           break;
-
+        case 'researcher':
+          if (route.name.startsWith('create-project')) {
+            return false;
+          }
+          break;
   
         case 'collaborator':
           if (route.name.startsWith('create-project')) {
@@ -75,12 +79,9 @@ export function NavBar({ state, descriptors, navigation }: BottomTabBarProps) {
           break;
         
         case null: // Representa um usuário convidado (não logado)
-          if (route.name.startsWith('create-project') || route.name.startsWith('favorites')) {
+          if (route.name.startsWith('create-project') || route.name.startsWith('create-demand') || route.name.startsWith('favorites')) {
             return false;
           }
-          break;
-
-        case 'researcher':
           break;
       }
 
