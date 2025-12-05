@@ -56,3 +56,24 @@ export const getPublicDemandById = async (id: number) => {
     return response.data
 }
 
+export async function searchDemands({
+  title,
+  knowledgeArea,
+  companyName,
+}: {
+  title?: string;
+  knowledgeArea?: string;
+  companyName?: string;
+}) {
+  const params = new URLSearchParams();
+
+  if (title) params.append("title", title);
+  if (knowledgeArea) params.append("knowledge_area", knowledgeArea);
+  if (companyName) params.append("company", companyName);
+
+  const response = await apiClient.get(`/demand/search/?${params.toString()}`,{
+        headers: {}
+    });
+
+  return response.data;
+}
