@@ -10,6 +10,9 @@ import colors from "../../../theme/colors";
 import { getDemands } from '@/services/demandService';
 import { DemandCard } from '@/components/DemandCard';
 
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
+
 
 export interface UserData {
   id: number;
@@ -85,6 +88,13 @@ export default function Home() {
         setLoading(false);
     }
   };
+
+  // Atualiza sempre que a tela for focada
+  useFocusEffect(
+    useCallback(() => {
+      fetchUserData();
+    }, [])
+  );
 
   useEffect(() => {
     fetchUserData();
