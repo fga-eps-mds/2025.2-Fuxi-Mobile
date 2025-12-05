@@ -67,13 +67,13 @@ export function NavBar({ state, descriptors, navigation }: BottomTabBarProps) {
           }
           break;
         case 'researcher':
-          if (route.name.startsWith('create-project')) {
+          if (route.name.startsWith('create-demand')) {
             return false;
           }
           break;
   
         case 'collaborator':
-          if (route.name.startsWith('create-project')) {
+          if (route.name.startsWith('create-project') || route.name.startsWith('create-demand')) {
             return false;
           }
           break;

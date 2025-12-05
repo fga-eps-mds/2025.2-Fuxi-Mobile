@@ -9,6 +9,7 @@ import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Alert, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import colors from "@/theme/colors";
+import { createDemand } from '@/services/demandService';
 
 
 
@@ -31,7 +32,7 @@ export default function CreateResearch() {
   
       setLoading(true);
       try{ 
-          const createResponse = await createResearch(form)
+          const createResponse = await createDemand(form)
           console.log(createResponse);
 
           setForm({
