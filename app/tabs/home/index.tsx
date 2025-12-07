@@ -182,7 +182,9 @@ export default function Home() {
     return (
         <>
             <ResearchesSection title="Mais recentes" list={researches} />
-            <DemandsSection title="Demandas" list={demands} />
+            {userData?.user_type === 'company' || userData?.user_type === 'researcher' ? (
+              <DemandsSection title="Demandas" list={demands} />
+            ) : null}
         </>
     );
   };
