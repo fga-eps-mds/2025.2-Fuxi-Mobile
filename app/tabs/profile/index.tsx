@@ -23,6 +23,8 @@ interface UserData {
   };
 }
 
+const STORAGE_KEY_FILTERS = "searchFilters";
+
 export default function Profile() {
   const router = useRouter();
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -83,6 +85,7 @@ export default function Profile() {
   };
 
   const handleLogout = async () => {
+    await AsyncStorage.removeItem(STORAGE_KEY_FILTERS);
     await logoutUser();
     router.replace("/");
   };

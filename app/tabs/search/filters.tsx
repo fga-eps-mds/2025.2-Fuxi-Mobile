@@ -72,9 +72,6 @@ export default function FiltersScreen() {
     return Boolean(v && v !== "");
   }).length;
 
-
-  
-
   const resetAll = async () => {
     setPesquisador("");
     setKeywords([]);
@@ -217,7 +214,7 @@ export default function FiltersScreen() {
         <View style={styles.modalOverlay}>
           <View style={styles.modalBox}>
             <FlatList
-              data={dropdownVisible ? dropdownOptions[dropdownVisible] : []}
+              data={dropdownVisible ? dropdownOptions[dropdownVisible as keyof typeof dropdownOptions] : []}
               keyExtractor={(item) => item}
               renderItem={({ item }) => (
                 <Pressable
