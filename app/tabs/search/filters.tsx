@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import SegmentedControl from "@/components/SegmentedControl";
 
 interface SearchFilters {
   pesquisador?: string;
@@ -34,6 +35,9 @@ export default function FiltersScreen() {
   const [area, setArea] = useState("");
   const [situacao, setSituacao] = useState("");
   const [text, setText] = useState("");
+  const [selectedOption, setSelectedOption] = useState('Tudo');
+  const options = ['Projeto', 'Tudo', 'Demanda'];
+
 
   const [dropdownVisible, setDropdownVisible] = useState<null | string>(null);
 
@@ -208,6 +212,15 @@ export default function FiltersScreen() {
           onReset={() => setSituacao("")}
         />
       </ScrollView>
+
+      {/* Botões natureza */}
+      <View>
+        <SegmentedControl
+          options={options}
+          selected={selectedOption}
+          onSelect={setSelectedOption}
+        />
+    </View>
 
       {/* Modal Dropdown */}
       <Modal visible={dropdownVisible !== null} transparent animationType="fade">
