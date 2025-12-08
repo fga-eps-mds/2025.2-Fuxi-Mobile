@@ -43,6 +43,7 @@ export interface ProjectData {
 }
 
 
+
 export default function Project() {
     const router = useRouter();
     const [favoriteId, setFavoriteId] = useState(null);
@@ -53,6 +54,7 @@ export default function Project() {
     const [project, setProject] = useState<ProjectData | null>(null);
     const [author, setAuthor] = useState<AuthorData | null>(null); 
     const [userData, setUserData] = useState<UserData | null>(null)
+    const [memberNames, setMemberNames] = useState<string[]>([]);
 
     const projectId = Number(id);
 
@@ -101,6 +103,30 @@ export default function Project() {
             }
         
             setProject(project);
+
+            if (project && project.members) {
+              const users = await getUsers();
+              const names = project.members
+                .map((memberId: string) => {
+                  const user = users.find((u: any) => u.id === Number(memberId));
+                  if (user?.researcher_profile) {
+                    // return `${user.researcher_profile.firstName} ${user.researcher_profile.surname}`; // Nome completo
+                    return `${user.researcher_profile.firstName}`; // Apenas o primeiro nome
+                  }
+                  if (user?.collaborator_profile) {
+                    // return `${user.collaborator_profile.firstName} ${user.collaborator_profile.surname}`; // Nome completo
+                    return `${user.collaborator_profile.firstName}`; // Apenas o primeiro nome
+                  }
+                  if (user?.company_profile) {
+                    return user.company_profile.fantasyName;
+                  }
+                  return null;
+                })
+                .filter(Boolean);
+
+              setMemberNames(names);
+            }
+
         } catch (e) {
             setError("Não foi possível carregar o projeto. Tente novamente.");
             setProject(null);
@@ -198,8 +224,9 @@ export default function Project() {
                 </SimpleAccordion>
 
                 <SimpleAccordion title="Membros" style={{marginTop: 10, marginBottom: 5}}>
-                  {project && project.members.join(", ")}
+                  {memberNames.length > 0 ? memberNames.join(", ") : "Nenhum membro encontrado"}
                 </SimpleAccordion>
+
 
               </>
           );

@@ -1,8 +1,10 @@
 import { ResearchData } from '@/app/tabs/home';
 import Feather from '@expo/vector-icons/Feather';
 import React from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import colors from "../theme/colors";
+import { getUsers } from '@/services/userService';
 
 interface ResearchCardProps {
     research: ResearchData;
@@ -14,7 +16,42 @@ interface ResearchCardProps {
 
 // React.fc = componente funcional com tipagem de props
 export const ResearchCard: React.FC<ResearchCardProps> = ({ research, onPress, onEdit, onDelete, showActions = false }) => {
-    const membersList = research.members.length > 1 ? `Membros: ${research.members[0]}, ${research.members[1]}, ...` : `Membro: ${research.members[0]}`;
+    const [memberNames, setMemberNames] = useState<string[]>([]);
+
+    useEffect(() => {
+        const fetchMemberNames = async () => {
+            try {
+                const users = await getUsers();
+                const names = research.members
+                    .map((memberId: string) => {
+                        const user = users.find((u: any) => u.id === Number(memberId));
+                        if (user?.researcher_profile) {
+                            return `${user.researcher_profile.firstName} ${user.researcher_profile.surname}`;
+                        }
+                        if (user?.collaborator_profile) {
+                            return `${user.collaborator_profile.firstName} ${user.collaborator_profile.surname}`;
+                        }
+                        if (user?.company_profile) {
+                            return user.company_profile.fantasyName;
+                        }
+                        return null;
+                    })
+                    .filter(Boolean);
+                setMemberNames(names);
+            } catch (error) {
+                setMemberNames([]);
+            }
+        };
+
+        fetchMemberNames();
+    }, [research.members]);
+
+    const membersList =
+        memberNames.length > 0
+            ? memberNames.length > 1
+                ? `Membros: ${memberNames.slice(0, 2).join(", ")}${memberNames.length > 2 ? ", ..." : ""}`
+                : `Membro: ${memberNames[0]}`
+            : "Nenhum membro";
 
     const cardContent = (
         <>
