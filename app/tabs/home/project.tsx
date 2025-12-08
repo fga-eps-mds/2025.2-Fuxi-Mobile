@@ -14,6 +14,7 @@ import { getUsers } from '@/services/userService';
 import { getProfile } from '@/services/authService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserData } from '.';
+import { MemberCard } from '@/components/MemberCard';
 
 interface AuthorProfile {
   id: number;
@@ -54,7 +55,7 @@ export default function Project() {
     const [project, setProject] = useState<ProjectData | null>(null);
     const [author, setAuthor] = useState<AuthorData | null>(null); 
     const [userData, setUserData] = useState<UserData | null>(null)
-    const [memberNames, setMemberNames] = useState<string[]>([]);
+    const [membersInfos, setMembersInfos] = useState<any[]>([]);
 
     const projectId = Number(id);
 
@@ -106,25 +107,23 @@ export default function Project() {
 
             if (project && project.members) {
               const users = await getUsers();
-              const names = project.members
+              const membersInfos = project.members
                 .map((memberId: string) => {
                   const user = users.find((u: any) => u.id === Number(memberId));
                   if (user?.researcher_profile) {
-                    // return `${user.researcher_profile.firstName} ${user.researcher_profile.surname}`; // Nome completo
-                    return `${user.researcher_profile.firstName}`; // Apenas o primeiro nome
+                    return {name: user.researcher_profile.firstName, email: user.email}; 
                   }
                   if (user?.collaborator_profile) {
-                    // return `${user.collaborator_profile.firstName} ${user.collaborator_profile.surname}`; // Nome completo
-                    return `${user.collaborator_profile.firstName}`; // Apenas o primeiro nome
+                    return {name: user.collaborator_profile.firstName, email: user.email};
                   }
                   if (user?.company_profile) {
-                    return user.company_profile.fantasyName;
+                    return {name: user.company_profile.fantasyName, email: user.email};
                   }
                   return null;
                 })
                 .filter(Boolean);
 
-              setMemberNames(names);
+              setMembersInfos(membersInfos);
             }
 
         } catch (e) {
@@ -224,7 +223,15 @@ export default function Project() {
                 </SimpleAccordion>
 
                 <SimpleAccordion title="Membros" style={{marginTop: 10, marginBottom: 5}}>
-                  {memberNames.length > 0 ? memberNames.join(", ") : "Nenhum membro encontrado"}
+                    <View>
+                    {membersInfos.map(member => (
+                        <MemberCard 
+                            key={member.email}
+                            name={member.name} 
+                            email={member.email}
+                        />
+                    ))}
+                    </View>
                 </SimpleAccordion>
 
 

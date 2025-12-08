@@ -112,6 +112,11 @@ export default function EditResearch() {
         return;
       }
 
+      if (user.user_type === 'company') {
+        Alert.alert("Erro", "Uma empresa não pode ser adicionada como membro.");
+        return;
+      }
+
       if (!members.includes(user.id)) {
         setMembers([...members, user.id]);           // salva ID para enviar ao backend
         setMemberEmails([...memberEmails, user.email]); // mostra email para o usuário
