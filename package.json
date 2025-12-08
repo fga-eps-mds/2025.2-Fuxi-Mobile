@@ -9,12 +9,18 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll",
+    "test:coverage": "jest --coverage"
   },
   "jest": {
     "preset": "jest-expo",
     "transformIgnorePatterns": [
       "node_modules/(?!(?:.pnpm/)?((jest-)?react-native|@react-native(-community)?|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg))"
+    ],
+    "collectCoverageFrom": [
+      "components/**/*.{ts,tsx}",
+      "utils/**/*.{ts,tsx}",
+      "!**/__tests__/**"
     ]
   },
   "dependencies": {
@@ -57,11 +63,11 @@
   },
   "devDependencies": {
     "@expo/ngrok": "^4.1.3",
+    "@testing-library/react-native": "^13.3.3",
     "@types/jest": "^30.0.0",
     "@types/react": "~19.1.0",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0",
-    "jest": "^30.2.0",
     "jest-expo": "^54.0.13",
     "ts-jest": "^29.4.5",
     "typescript": "~5.9.2"
