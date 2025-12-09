@@ -5,12 +5,10 @@ import { ActivityIndicator, FlatList, Keyboard, StyleSheet, Text, TextInput, Tou
 import { ResearchCard } from "@/components/ResearchCard";
 import { searchResearches } from "@/services/researchService";
 import colors from "@/theme/colors";
-import { ResearchData } from "../home";
-import { router, useLocalSearchParams, useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { STORAGE_KEY_FILTERS, STORAGE_NATURE } from "./filters";
 import { searchDemands } from "@/services/demandService";
 import { DemandCard } from "@/components/DemandCard";
-import { DemandData } from "../home/demand";
 
 interface SearchFilters {
   pesquisador?: string;

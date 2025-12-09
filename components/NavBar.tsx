@@ -1,7 +1,6 @@
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { usePathname } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import colors from "../theme/colors";

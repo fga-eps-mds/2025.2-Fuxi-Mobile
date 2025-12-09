@@ -11,7 +11,6 @@ import {
   FlatList,
   Pressable,
   ScrollView,
-  Alert
 } from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";

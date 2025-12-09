@@ -1,7 +1,6 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, View } from "react-native";
 import { AppText } from "@/components/AppText";
-import { Feather } from "@expo/vector-icons";
 import colors from "@/theme/colors";
 
 interface MemberCardProps {

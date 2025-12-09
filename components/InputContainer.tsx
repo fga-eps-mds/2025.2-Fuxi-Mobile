@@ -1,5 +1,5 @@
 import React from "react"
-import { View, ViewProps, Text, StyleSheet } from "react-native"
+import { View, ViewProps, StyleSheet } from "react-native"
 import { AppText } from "@/components/AppText"
 
 interface InputContainerProps extends ViewProps {
