@@ -23,13 +23,16 @@ interface SearchFilters {
   campus?: string;
   area?: string;
   situacao?: string;
+  empresa?: string;
 }
 
-const STORAGE_KEY_FILTERS = "searchFilters";
+export const STORAGE_KEY_FILTERS: string = "searchFilters";
+export const STORAGE_NATURE: string = "searchNature"
 
 
 export default function FiltersScreen() {
   const [pesquisador, setPesquisador] = useState("");
+  const [empresa, setEmpresa] = useState("")
   const [keywords, setKeywords] = useState<string[]>([]);
   const [campus, setCampus] = useState("");
   const [area, setArea] = useState("");
@@ -37,14 +40,21 @@ export default function FiltersScreen() {
   const [text, setText] = useState("");
   const [selectedOption, setSelectedOption] = useState('Tudo');
   const options = ['Projeto', 'Tudo', 'Demanda'];
-
-
   const [dropdownVisible, setDropdownVisible] = useState<null | string>(null);
+  const [fieldsDisabled, setFieldsDisabled] = useState(false);
 
   useEffect(() => {
     const loadFilters = async () => {
       try {
         const storedFilters = await AsyncStorage.getItem(STORAGE_KEY_FILTERS);
+        const storedNature = await AsyncStorage.getItem(STORAGE_NATURE) || "Tudo"
+
+        if (storedNature === "Demanda") {
+          setFieldsDisabled(true);
+        } else {
+          setFieldsDisabled(false);
+        }
+        setSelectedOption(storedNature)
         if (storedFilters) {
           const parsedFilters: SearchFilters = JSON.parse(storedFilters);
           setPesquisador(parsedFilters.pesquisador || "");
@@ -52,6 +62,7 @@ export default function FiltersScreen() {
           setCampus(parsedFilters.campus || "");
           setArea(parsedFilters.area || "");
           setSituacao(parsedFilters.situacao || "");
+          setEmpresa(parsedFilters.empresa || "");
         }
       } catch (error) {
         console.error("Failed to load filters from AsyncStorage", error);
@@ -65,23 +76,13 @@ export default function FiltersScreen() {
     situacao: [ "RASCUNHO", "EM ANÁLISE", "APROVADO", "EM ANDAMENTO", "CONCLUÍDO", "CANCELADO"]
   };
 
-  const appliedFiltersCount = [
-    pesquisador,
-    keywords,
-    campus,
-    area,
-    situacao
-  ].filter((v) => {
-    if (Array.isArray(v)) return v.length > 0;
-    return Boolean(v && v !== "");
-  }).length;
-
   const resetAll = async () => {
     setPesquisador("");
     setKeywords([]);
     setCampus("");
     setArea("");
     setSituacao("");
+    setEmpresa("")
     try {
       await AsyncStorage.removeItem(STORAGE_KEY_FILTERS);
     } catch (error) {
@@ -105,25 +106,41 @@ export default function FiltersScreen() {
     setKeywords(keywords.filter((k) => k !== word));
   };
 
-    const handleSearch = async ()=>{
-      if (appliedFiltersCount === 0) {
-        Alert.alert("Nenhum filtro foi utilizado!")
-        return
-      }
+  const handleFilters = async ()=>{
       const currentFilters: SearchFilters = {
         pesquisador,
         keywords,
         campus,
         area,
-        situacao
+        situacao,
+        empresa
       };
       try {
+        console.log(currentFilters);
+        
         await AsyncStorage.setItem(STORAGE_KEY_FILTERS, JSON.stringify(currentFilters));
       } catch (error) {
         console.error("Failed to save filters to AsyncStorage", error);
       }
       router.push(`/tabs/search`);
-    }
+  }
+
+  const handleSelectedOption = async (option: string) => {
+      setSelectedOption(option)
+
+      if (option === "Demanda") {
+        setFieldsDisabled(true);
+      } else {
+        setFieldsDisabled(false);
+      }
+
+      try {
+        await AsyncStorage.setItem(STORAGE_NATURE, option);
+      } catch (error) {
+        console.error("Failed to save filters to AsyncStorage", error);
+      }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
@@ -138,12 +155,14 @@ export default function FiltersScreen() {
           <Text style={styles.resetAllText}>Limpar Todos</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.applyBtn} onPress={handleSearch}>
+        <TouchableOpacity style={styles.applyBtn} onPress={handleFilters}>
           <Text style={styles.applyText}>
-            Aplicar Filtros ({appliedFiltersCount})
+            Aplicar Filtros 
           </Text>
         </TouchableOpacity>
       </View>
+
+
 
       <ScrollView style={{ marginTop: 10 }}>
         {/* Campo Pesquisador */}
@@ -151,20 +170,25 @@ export default function FiltersScreen() {
           label="Pesquisador"
           onReset={() => setPesquisador("")}
         />
+
         <TextInput
-          style={styles.input}
+          style={[styles.input, fieldsDisabled && { opacity: 0.5 }]}
+          editable={!fieldsDisabled}
           value={pesquisador}
           placeholder="Digite o nome"
           onChangeText={setPesquisador}
         />
+        
 
         {/* Palavras-chave */}
         <FieldLabel
           label="Palavras-chave"
           onReset={() => setKeywords([])}
         />
+
         <TextInput
-          style={styles.input}
+          style={[styles.input, fieldsDisabled && { opacity: 0.5 }]}
+          editable={!fieldsDisabled}
           value={text}
           placeholder="Digite uma palavra-chave"
           onChangeText={setText}
@@ -184,6 +208,26 @@ export default function FiltersScreen() {
         </View>
       )}
 
+    
+        {/* Dropdown Campus */}
+        <DropdownField
+          label="Campus"
+          fieldsDisabled={fieldsDisabled}
+          value={campus}
+          onPress={() => setDropdownVisible("campus")}
+          onReset={() => setCampus("")}
+        />
+
+
+        {/* Dropdown Situação */}
+        <DropdownField
+          label="Status"
+          fieldsDisabled={fieldsDisabled}
+          value={situacao}
+          onPress={() => setDropdownVisible("situacao")}
+          onReset={() => setSituacao("")}
+        />
+
         {/* Área de conhecimento */}
         <FieldLabel
           label="Área de conhecimento"
@@ -192,25 +236,24 @@ export default function FiltersScreen() {
         <TextInput
           style={styles.input}
           value={area}
-          placeholder="Digite palavras-chave"
+          placeholder="Digite a área de conhecimento"
           onChangeText={setArea}
         />
-
-        {/* Dropdown Campus */}
-        <DropdownField
-          label="Campus"
-          value={campus}
-          onPress={() => setDropdownVisible("campus")}
-          onReset={() => setCampus("")}
+        
+        {/* Campo Empresa */}
+        <FieldLabel
+          label="Empresa"
+          onReset={() => setEmpresa("")}
         />
 
-        {/* Dropdown Situação */}
-        <DropdownField
-          label="Status"
-          value={situacao}
-          onPress={() => setDropdownVisible("situacao")}
-          onReset={() => setSituacao("")}
+        <TextInput
+          style={[styles.input, !fieldsDisabled && { opacity: 0.5 }]}
+          editable={fieldsDisabled}
+          value={empresa}
+          placeholder="Digite o nome da empresa"
+          onChangeText={setEmpresa}
         />
+        
       </ScrollView>
 
       {/* Botões natureza */}
@@ -218,7 +261,7 @@ export default function FiltersScreen() {
         <SegmentedControl
           options={options}
           selected={selectedOption}
-          onSelect={setSelectedOption}
+          onSelect={handleSelectedOption}
         />
     </View>
 
@@ -268,7 +311,7 @@ function FieldLabel({ label, onReset }: any) {
   );
 }
 
-function DropdownField({ label, value, onPress, onReset }: any) {
+function DropdownField({ label, value, onPress, onReset, fieldsDisabled, setDropdownVisible }: any) {
   return (
     <>
       <View style={styles.labelRow}>
@@ -278,13 +321,18 @@ function DropdownField({ label, value, onPress, onReset }: any) {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.dropdown} onPress={onPress}>
-        <Text style={styles.dropdownText}>{value || "Selecionar"}</Text>
-        <Feather name="chevron-down" size={24} color="black" />
-      </TouchableOpacity>
+        <TouchableOpacity
+          disabled={fieldsDisabled}
+          style={[styles.dropdown, fieldsDisabled && { opacity: 0.5 }]}
+          onPress={!fieldsDisabled && onPress}
+        >
+          <Text style={styles.dropdownText}>{value || "Selecionar"}</Text>
+          <Feather name="chevron-down" size={24} color="black" />
+        </TouchableOpacity>
     </>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
