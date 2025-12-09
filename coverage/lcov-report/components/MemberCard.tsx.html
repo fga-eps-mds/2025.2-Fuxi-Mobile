@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for components/PrimaryButton.tsx</title>
+    <title>Code coverage report for components/MemberCard.tsx</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
@@ -19,20 +19,20 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">components</a> PrimaryButton.tsx</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">components</a> MemberCard.tsx</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
@@ -104,7 +104,21 @@
 <a name='L39'></a><a href='#L39'>39</a>
 <a name='L40'></a><a href='#L40'>40</a>
 <a name='L41'></a><a href='#L41'>41</a>
-<a name='L42'></a><a href='#L42'>42</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -120,11 +134,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -145,48 +155,74 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { usePathname } from "expo-router";
-import React from "react";
-import { GestureResponderEvent, StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
-import colors from "../theme/colors";
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React from "react";
+import { TouchableOpacity, StyleSheet, View } from "react-native";
+import { AppText } from "@/components/AppText";
+import { Feather } from "@expo/vector-icons";
+import colors from "@/theme/colors";
 &nbsp;
-interface PrimaryButtonProps {
-    title: string
-    color?: string
-    disabled?: boolean
-    onPress?: (event: GestureResponderEvent) =&gt; void
-    style?: ViewStyle;
+interface MemberCardProps {
+  name: string;
+  email: string;
 }
 &nbsp;
-const authPaths = <span class="cstat-no" title="statement not covered" >["/auth/login", "/auth/register-company", "/auth/register-researcher", "/auth/register-collaborator"]</span>
-&nbsp;
-export function <span class="fstat-no" title="function not covered" >PrimaryButton(</span>{ title, disabled, color = <span class="branch-0 cbranch-no" title="branch not covered" >colors.primary,</span> onPress, style }: PrimaryButtonProps) {
-    const pathname = <span class="cstat-no" title="statement not covered" >usePathname()</span>
-&nbsp;
-    const authStyle = <span class="cstat-no" title="statement not covered" >(authPaths.includes(pathname)) ? { marginTop: 20 } : {} as any</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    return (</span>
-        &lt;TouchableOpacity style = {[styles.button, {backgroundColor: color}, authStyle, style]} disabled={disabled} onPress={onPress}&gt;
-            &lt;Text style = {styles.text}&gt;{title}&lt;/Text&gt;
-        &lt;/TouchableOpacity&gt;
-    )
+export function <span class="fstat-no" title="function not covered" >MemberCard(</span>{
+  name,
+  email,
+}: MemberCardProps) {
+<span class="cstat-no" title="statement not covered" >  return (</span>
+    &lt;TouchableOpacity style={styles.card}&gt;
+      &lt;View style={styles.textContainer}&gt;
+        &lt;AppText style={styles.title}&gt;{name}&lt;/AppText&gt;
+        &lt;AppText style={styles.description}&gt;{email}&lt;/AppText&gt;
+      &lt;/View&gt;
+    &lt;/TouchableOpacity&gt;
+  );
 }
 &nbsp;
 const styles = <span class="cstat-no" title="statement not covered" >StyleSheet.create({</span>
-    button: {
-        width: "100%",
-        alignItems: "center",
-        borderRadius: 12,
-        paddingVertical: 14,
-        marginVertical: 6,
-    },
+  card: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
 &nbsp;
-    text: {
-        color: "#fff",
-        fontWeight: "600",
-        fontSize: 17
-    }
-})</pre></td></tr></table></pre>
+    padding: 18,
+    marginTop: 20,
+&nbsp;
+    backgroundColor: "#F5F8FF",
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "rgba(152,152,152,0.10)",
+  },
+  textContainer: {
+    flexDirection: "column",
+    flexShrink: 1,
+  },
+  title: {
+    fontSize: 17,
+    color: "#1E1E1E",
+  },
+  description: {
+    fontSize: 14,
+    color: colors.primary,
+    marginTop: 2,
+  },
+});
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
