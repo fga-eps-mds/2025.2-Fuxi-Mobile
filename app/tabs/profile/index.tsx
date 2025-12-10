@@ -8,6 +8,7 @@ import { getProfile, logoutUser } from "@/services/authService";
 import { useRouter } from "expo-router";
 import { ViewContainer } from "@/components/ViewContainer";
 import { ProfileActionCard } from "@/components/ProfileActionCard"; 
+import { STORAGE_NATURE } from "../search/filters";
 
 interface UserData {
   id: number;
@@ -85,6 +86,7 @@ export default function Profile() {
   };
 
   const handleLogout = async () => {
+    await AsyncStorage.removeItem(STORAGE_NATURE)
     await AsyncStorage.removeItem(STORAGE_KEY_FILTERS);
     await logoutUser();
     router.replace("/");

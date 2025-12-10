@@ -42,6 +42,7 @@ export default function SearchScreen() {
                     researcherName: filters.pesquisador,
                     campus: filters.campus,
                     status: filters.situacao,
+                    companyName: filters.empresa,
                     title: searchTxt || undefined, // Add title for combined search
                   });
         const demandsResult = await searchDemands({
@@ -72,7 +73,7 @@ export default function SearchScreen() {
     useFocusEffect(
       useCallback(() => {
         const loadAndApplyFilters = async () => {
-          const storedNature = (await AsyncStorage.getItem(STORAGE_NATURE))?.toString() as string;
+          const storedNature = (await AsyncStorage.getItem(STORAGE_NATURE))?.toString() as string || "Tudo";
           setActiveNature(storedNature);
 
           try {
