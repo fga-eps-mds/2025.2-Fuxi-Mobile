@@ -4,6 +4,9 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import colors from "../theme/colors";
 
+import { getUsers } from '@/services/userService';
+import { useEffect, useState } from 'react';
+
 interface DemandCardProps {
     demand: DemandData;
     onPress?: (id: number) => void;
@@ -14,11 +17,28 @@ interface DemandCardProps {
 
 // React.fc = componente funcional com tipagem de props
 export const DemandCard: React.FC<DemandCardProps> = ({ demand, onPress, onEdit, onDelete, showActions = false }) => {
+        const [companyName, setCompanyName] = useState<string>("");
+
+        useEffect(() => {
+            const fetchCompanyName = async () => {
+                try {
+                    const users = await getUsers();
+                    const company = users.find((u: any) => u.company_profile?.id === Number(demand.company));
+                    setCompanyName(company.company_profile.fantasyName);
+                } catch (error) {                    
+                    setCompanyName("");
+                }
+            };
+    
+            fetchCompanyName();
+        }, [demand.company]);
+
     const cardContent = (
         <>
             <View style={styles.cardContent}>
                 <Text style={styles.cardTitle}>{demand.title}</Text>
                 <Text style={styles.cardDescription}>{demand.description}</Text>
+                <Text style={styles.cardDescription}>Empresa: {companyName}</Text>
             </View>
 
             {showActions ? (

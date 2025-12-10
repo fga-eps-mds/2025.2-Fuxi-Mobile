@@ -246,8 +246,9 @@ export default function FiltersScreen() {
         />
 
         <TextInput
-          style={[styles.input, !fieldsDisabled && { opacity: 0.5 }]}
-          editable={fieldsDisabled}
+          style={styles.input}
+          // style={[styles.input, !fieldsDisabled && { opacity: 0.5 }]}
+          // editable={fieldsDisabled}
           value={empresa}
           placeholder="Digite o nome da empresa"
           onChangeText={setEmpresa}

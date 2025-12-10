@@ -54,6 +54,7 @@ export default function Project() {
     const { id } = useLocalSearchParams();
     const [project, setProject] = useState<ProjectData | null>(null);
     const [author, setAuthor] = useState<AuthorData | null>(null); 
+    const [company, setCompany] = useState<any | null>(null); 
     const [userData, setUserData] = useState<UserData | null>(null)
     const [membersInfos, setMembersInfos] = useState<any[]>([]);
 
@@ -101,6 +102,14 @@ export default function Project() {
                     (user: any) => user.researcher_profile?.id === project.researcher
                 );
                 setAuthor(authorData);
+            }
+
+            if (project && project.sponsoring_company) {
+                const users = await getUsers();
+                const companyData = users.find(
+                    (user: any) => user.company_profile?.id === project.sponsoring_company
+                );
+                setCompany(companyData);
             }
         
             setProject(project);
@@ -217,7 +226,17 @@ export default function Project() {
                         <Feather name="chevron-right" size={24} color="#003A7A" />
                     </TouchableOpacity>
                 )}
-
+                {company && company.company_profile && (
+                    <TouchableOpacity style={[styles.box, styles.autorContainer]} onPress={() => router.push(`/tabs/home/company-profile?id=${company.id}`)}>
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.autor}>Empresa Financiadora</Text>
+                            <Text style={styles.autorNome}>{company.company_profile.fantasyName}</Text>
+                            <Text style={styles.autorEmail}>{company.email}</Text>
+                        </View>
+                        <Feather name="chevron-right" size={24} color="#003A7A" />
+                    </TouchableOpacity>
+                )}
+                
                 <SimpleAccordion title="Descrição" style={{marginTop: 10}}>
                   {project && project.description}
                 </SimpleAccordion>
@@ -278,7 +297,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(152, 152, 152, 0.10)",
     backgroundColor: "#F5F8FF",
-    marginTop: 20,
+    marginTop: 10,
   },
   name: {
     fontSize: 20,

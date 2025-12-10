@@ -17,6 +17,7 @@ export interface ResearchData {
   knowledge_area: string;
   keywords: string[];
   campus: string;
+  sponsoring_company: number;
 }
 
 export default function Favorites() {

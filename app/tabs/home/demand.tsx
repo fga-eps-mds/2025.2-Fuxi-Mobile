@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(152, 152, 152, 0.10)",
     backgroundColor: "#F5F8FF",
-    marginTop: 20,
+    marginTop: 10,
   },
   name: {
     fontSize: 20,

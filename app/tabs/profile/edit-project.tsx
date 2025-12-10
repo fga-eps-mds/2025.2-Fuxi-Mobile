@@ -36,6 +36,7 @@ export default function EditResearch() {
     status: "",
     campus: "",
     description: "",
+    sponsoring_company: "",
   });
   const [keywords, setKeywords] = useState<string[]>([]);
   const [members, setMembers] = useState<number[]>([]); // IDs para enviar ao backend
@@ -44,19 +45,28 @@ export default function EditResearch() {
   const [textMembers, setTextMembers] = useState("");
   const [loading, setLoading] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
+  const [companyEmail, setCompanyEmail] = useState("");
 
   useEffect(() => {
     if (!researchId) return;
     const fetchResearch = async () => {
       try {
         const data = await getResearchById(researchId);
+
+        if (data.sponsoring_company){          
+          const companyEmail = await getCompanyEmail(data.sponsoring_company)
+          setCompanyEmail(companyEmail)
+        }
+
         setForm({
           title: data.title,
           knowledge_area: data.knowledge_area,
           status: data.status,
           campus: data.campus,
           description: data.description,
+          sponsoring_company: data.sponsoring_company,
         });
+        
         setKeywords(data.keywords || []);
 
         // Se o backend retorna members como IDs, mantemos em members (IDs)
@@ -78,6 +88,8 @@ export default function EditResearch() {
           setMemberEmails([]);
         }
       } catch (error) {
+        console.log(error);
+        
         Alert.alert("Erro", "Não foi possível carregar os dados do projeto.");
         router.back();
       } finally {
@@ -144,6 +156,39 @@ export default function EditResearch() {
     }
   };
 
+  const checkCompany = async () => {
+    const trimmed = companyEmail.trim();
+    if (!trimmed) return;
+
+    try {
+      const users = await getUsers();
+      const user = users.find((u: any) => u.email === trimmed && u.user_type === "company" );
+
+      if (!user) {
+        Alert.alert("Erro", "Empresa não encontrada.");
+        setForm({ ...form, sponsoring_company: "" })
+        return false;
+      }
+
+      setForm({ ...form, sponsoring_company: user.company_profile.id })  
+
+      return user.company_profile.id
+
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível buscar a empresa.");
+      setForm({ ...form, sponsoring_company: "" })  
+      return false;
+    }
+  };
+
+
+  const getCompanyEmail = async (id: number) => {
+    const users = await getUsers();    
+    const user = users.find((u: any) => u.company_profile && u.company_profile.id === id);
+
+    return user.email
+  };
+
   const campusOptions = [
     { label: "UNB DARCY RIBEIRO", value: "UNB DARCY RIBEIRO" },
     { label: "UNB GAMA: FCTE", value: "UNB GAMA: FCTE" },
@@ -174,11 +219,25 @@ export default function EditResearch() {
 
     setLoading(true);
     try {
-      const updatedForm = { ...form, keywords, members }; // envia apenas IDs
+      let companyId: number | null = null;
+
+      // Só valida se o campo tiver conteúdo
+      if (companyEmail.trim() !== "") {
+        companyId = await checkCompany();
+        if (!companyId) return; // Empresa inválida → impede submit
+      }
+
+      const updatedForm = {
+        ...form,
+        keywords,
+        members,
+        sponsoring_company: companyId, // null ou id
+      };
+      
       await updateResearch(researchId, updatedForm);
       Alert.alert("Sucesso!", "Projeto atualizado com sucesso.");
       router.push("/tabs/profile/researcher-projects");
-    } catch (error: any) {
+    } catch (error: any) {      
       const errorMsg = error?.response?.data?.detail || "Não foi possível atualizar o projeto. Tente novamente mais tarde.";
       Alert.alert("Erro na atualização", errorMsg);
     } finally {
@@ -250,6 +309,7 @@ export default function EditResearch() {
             )}
           </InputContainer>
 
+
           <InputContainer label="Membros (por email):">
             <TextInputField
               placeholder="Digite o email do membro"
@@ -263,17 +323,30 @@ export default function EditResearch() {
                 {memberEmails.map((email, index) => (
                   <View key={index} style={styles.tag}>
                     <Text style={styles.tagText}>{email}</Text>
-                    <TouchableOpacity onPress={() => handleRemoveMember(email)}>
-                      {index !== 0 && (
-                        <Ionicons name="close-outline" size={18} color="#666" />
-                      )}
-                    </TouchableOpacity>
-                  </View>
+                      <TouchableOpacity onPress={() => handleRemoveMember(email)}>
+                            {index !== 0 && (
+                              <Ionicons name="close-outline" size={18} color="#666" />
+                            )}
+                      </TouchableOpacity>
+                 </View>
                 ))}
               </View>
             )}
+
           </InputContainer>
 
+
+          <InputContainer label="Empresa financiadora (por email):">
+            <TextInputField
+              placeholder="Digite o email da empresa financiadora"
+              value={companyEmail}
+              onChangeText={(text) => setCompanyEmail(text)}
+            />
+          </InputContainer>        
+          
+
+             
+  
           <InputContainer label="Status">
             <DropdownSelect
               options={statusOptions}

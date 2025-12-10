@@ -7,6 +7,9 @@ import colors from '@/theme/colors';
 import { DemandData } from '../home/index';
 import { DemandCard } from '@/components/DemandCard';
 import { getDemands } from '@/services/demandService';
+import { ResearchData } from '../favorites';
+import { getResearches } from '@/services/researchService';
+import { ResearchCard } from '@/components/ResearchCard';
 
 interface CompanyProfile {
   id: number;
@@ -26,6 +29,7 @@ export default function CompanyPage() {
 
     const [company, setCompany] = useState<CompanyData | null>(null);
     const [demands, setDemands] = useState<DemandData[]>([]);
+    const [projects, setProjects] = useState<ResearchData[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -46,9 +50,16 @@ export default function CompanyPage() {
             
             if (companyData && companyData.company_profile) {
                 const allDemands = await getDemands();
+                const allProjects = await getResearches();
+
                 const companyDemands = allDemands.filter(
                     (p: DemandData) => p.company === companyData.company_profile.id
                 );
+                const companyProjects = allProjects.filter(
+                    (p: ResearchData) => p.sponsoring_company === companyData.company_profile.id
+                );
+
+                setProjects(companyProjects)
                 setDemands(companyDemands);
             }
         } catch (e) {
@@ -65,6 +76,10 @@ export default function CompanyPage() {
 
     const handleDemandPress = (demandId: number) => {
         router.push(`/tabs/home/demand?id=${demandId}`);
+    };
+
+    const handleProjectPress = (projectId: number) => {
+        router.push(`/tabs/home/project?id=${projectId}`);
     };
 
     if (loading) {
@@ -95,13 +110,23 @@ export default function CompanyPage() {
                 <Text style={styles.companyEmail}>{company.email}</Text>
             </View>
             
-            <Text style={styles.demandsTitle}>Mais demandas</Text>
+            <Text style={styles.demandsTitle}>Demandas</Text>
             {demands.length > 0 ? (
                 demands.map((item) => (
                     <DemandCard key={item.id.toString()} demand={item} onPress={() => handleDemandPress(item.id)} />
                 ))
             ) : (
                 <Text style={styles.noProjectsText}>Nenhuma outra demanda encontrada.</Text>
+            )}
+
+
+            <Text style={styles.demandsTitle}>Projetos financiados</Text>
+            {projects.length > 0 ? (
+                projects.map((item) => (
+                    <ResearchCard key={item.id.toString()} research={item} onPress={() => handleProjectPress(item.id)} />
+                ))
+            ) : (
+                <Text style={styles.noProjectsText}>Nenhum outro projeto encontrado.</Text>
             )}
         </ViewContainer>
     );
