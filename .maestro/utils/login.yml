@@ -1,9 +1,10 @@
 appId: com.fuxi.vitra
 ---
 # Login
-# Este fluxo começa na tela de login e usa as credenciais do 'cadastro.yml'
-- inputText: "${EMAIL}"
-- pressKey: "Tab"
+# Este fluxo começa na tela de login e usa as credenciais passadas
+- inputText: "${LOGIN_EMAIL}"
+- tapOn: "Minimo 8 caracteres"
 - inputText: "${SENHA}"
+- hideKeyboard
 - tapOn: "Entrar"
 - assertVisible: "Mais recentes:"

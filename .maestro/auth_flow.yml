@@ -1,8 +1,10 @@
 appId: com.fuxi.vitra
 name: Fluxo de Autenticação do Pesquisador
 env:
-  EMAIL: "john.doe.${Math.random().toString(36).substring(2, 10)}@unb.br"
+  EMAIL_PESQUISADOR: "john.doe.${Math.random().toString(36).substring(2, 10)}@unb.br"
   SENHA: "Password123"
+  EMAIL_EMPRESA: "empresa.xyz.${Math.random().toString(36).substring(2, 10)}@business.com"
+  EMAIL_COLABORADOR: "colaborador.${Math.random().toString(36).substring(2, 10)}@email.br"
 ---
 # Fluxo de ponta-a-ponta: Cadastro, Login e Logout de um Pesquisador
 # NOTA: Este teste assume que o aplicativo começa em um estado deslogado
@@ -12,16 +14,48 @@ env:
     file: ./utils/setup.yml
 
 - runFlow:
-    file: ./utils/cadastro.yml
+    file: ./utils/cadastro-pesquisador.yml
     env:
         USER_TYPE: "Sou um pesquisador."
-        EMAIL: "${EMAIL}"
+        EMAIL_PESQUISADOR: "${EMAIL_PESQUISADOR}"
         SENHA: "${SENHA}"
 
 - runFlow:
     file: ./utils/login.yml
     env:
-        EMAIL: "${EMAIL}"
+        LOGIN_EMAIL: "${EMAIL_PESQUISADOR}"
+        SENHA: "${SENHA}"
+
+- runFlow:
+    file: ./utils/logout.yml
+
+- runFlow:
+    file: ./utils/cadastro-empresa.yml
+    env:
+        USER_TYPE: "Represento uma empresa."
+        EMAIL_EMPRESA: "${EMAIL_EMPRESA}"
+        SENHA: "${SENHA}"
+
+- runFlow:
+    file: ./utils/login.yml
+    env:
+        LOGIN_EMAIL: "${EMAIL_EMPRESA}"
+        SENHA: "${SENHA}"
+
+- runFlow:
+    file: ./utils/logout.yml
+
+- runFlow:
+    file: ./utils/cadastro-colaborador.yml
+    env:
+        USER_TYPE: "Sou um colaborador."
+        EMAIL_COLABORADOR: "${EMAIL_COLABORADOR}"
+        SENHA: "${SENHA}"
+
+- runFlow:
+    file: ./utils/login.yml
+    env:
+        LOGIN_EMAIL: "${EMAIL_COLABORADOR}"
         SENHA: "${SENHA}"
 
 - runFlow:

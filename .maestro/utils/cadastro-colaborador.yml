@@ -8,27 +8,34 @@ appId: com.fuxi.vitra
 # Preenche o formulário clicando em cada campo
 - tapOn:
     text: "Seu nome"
-- inputText: "John"
+- inputText: "Jorge"
 
 - tapOn:
     text: "Seu sobrenome"
-- inputText: "Doe"
+- inputText: "Silva"
 
 - tapOn:
-    text: "exemplo@unb.br"
-- inputText: "${EMAIL}"
+    text: "exemplo@dominio.br"
+- inputText: "${EMAIL_COLABORADOR}"
 
 - tapOn: "Minimo 8 caracteres"
 - inputText: "${SENHA}"
 
 - tapOn:
+
     text: "DD/MM/AAAA"
+
 - inputText: "10/10/2000"
 
+- hideKeyboard # Esconde o teclado
+
 # Seleciona o campus e confirma
-- tapOn: "Selecione seu câmpus"
-- tapOn: "UNB GAMA: FCTE"
+
+- tapOn: "Selecione sua categoria"
+
+- tapOn: "DISCENTE"
 - tapOn: "Confirmar"
 
+- tapOn: "OK"
 # Verifica se voltou para a tela de login
 - assertVisible: "Comece agora!"
