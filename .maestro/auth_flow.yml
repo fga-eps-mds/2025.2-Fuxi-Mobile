@@ -1,0 +1,28 @@
+appId: com.fuxi.vitra
+name: Fluxo de Autenticação do Pesquisador
+env:
+  EMAIL: "john.doe.${Math.random().toString(36).substring(2, 10)}@unb.br"
+  SENHA: "Password123"
+---
+# Fluxo de ponta-a-ponta: Cadastro, Login e Logout de um Pesquisador
+# NOTA: Este teste assume que o aplicativo começa em um estado deslogado
+# onde os botões "Entrar" e "Cadastrar" estão visíveis.
+
+- runFlow:
+    file: ./utils/setup.yml
+
+- runFlow:
+    file: ./utils/cadastro.yml
+    env:
+        USER_TYPE: "Sou um pesquisador."
+        EMAIL: "${EMAIL}"
+        SENHA: "${SENHA}"
+
+- runFlow:
+    file: ./utils/login.yml
+    env:
+        EMAIL: "${EMAIL}"
+        SENHA: "${SENHA}"
+
+- runFlow:
+    file: ./utils/logout.yml

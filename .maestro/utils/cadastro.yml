@@ -1,0 +1,34 @@
+appId: com.fuxi.vitra
+---
+# Cadastro
+# Este fluxo começa na tela de login/cadastro
+- tapOn: "Cadastrar"
+- tapOn: ${USER_TYPE}
+
+# Preenche o formulário clicando em cada campo
+- tapOn:
+    text: "Seu nome"
+- inputText: "John"
+
+- tapOn:
+    text: "Seu sobrenome"
+- inputText: "Doe"
+
+- tapOn:
+    text: "exemplo@unb.br"
+- inputText: "${EMAIL}"
+
+- tapOn: "Minimo 8 caracteres"
+- inputText: "${SENHA}"
+
+- tapOn:
+    text: "DD/MM/AAAA"
+- inputText: "10/10/2000"
+
+# Seleciona o campus e confirma
+- tapOn: "Selecione seu câmpus"
+- tapOn: "UNB GAMA: FCTE"
+- tapOn: "Confirmar"
+
+# Verifica se voltou para a tela de login
+- assertVisible: "Comece agora!"
