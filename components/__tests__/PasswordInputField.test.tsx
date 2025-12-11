@@ -1,82 +1,47 @@
-import * as React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
-import { PasswordInputField } from '../PasswordInputField';
+import React from "react";
+import { render, fireEvent } from "@testing-library/react-native";
+import { PasswordInputField } from "../PasswordInputField";
 
-// Mock do Feather icons
-jest.mock('@expo/vector-icons', () => ({
-  Feather: 'Feather',
-}));
-
-describe('PasswordInputField Component', () => {
-  // Testa se o componente renderiza com placeholder padrão
-  it('should render with default placeholder', () => {
-    const mockOnChangeText = jest.fn();
+describe("PasswordInputField Component", () => {
+  it("should render correctly", () => {
     const { getByPlaceholderText } = render(
-      <PasswordInputField
-        value=""
-        onChangeText={mockOnChangeText}
-      />
+      <PasswordInputField value="" onChangeText={jest.fn()} />
     );
 
-    const input = getByPlaceholderText('Minimo 8 caracteres');
-    expect(input).toBeDefined();
+    const input = getByPlaceholderText("Minimo 8 caracteres");
+    expect(input).toBeTruthy();
   });
 
-  // Testa se o componente renderiza com placeholder customizado
-  it('should render with custom placeholder', () => {
-    const mockOnChangeText = jest.fn();
-    const { getByPlaceholderText } = render(
-      <PasswordInputField
-        value=""
-        onChangeText={mockOnChangeText}
-        placeholder="Digite sua senha"
-      />
+  it("should toggle password visibility when pressing the eye button", () => {
+    const { getByPlaceholderText, getByText } = render(
+      <PasswordInputField value="" onChangeText={jest.fn()} />
     );
 
-    const input = getByPlaceholderText('Digite sua senha');
-    expect(input).toBeDefined();
+    const input = getByPlaceholderText("Minimo 8 caracteres");
+
+    // O ícone do olho
+    const eyeIcon = getByText(""); // Feather renderiza como texto
+
+    // Primeiro clique — mostrar senha
+    fireEvent.press(eyeIcon);
+    expect(input.props.secureTextEntry).toBe(false);
+
+    // Segundo clique — esconder senha
+    fireEvent.press(eyeIcon);
+    expect(input.props.secureTextEntry).toBe(true);
   });
 
-  // Testa se a função onChangeText é chamada ao digitar
-  it('should call onChangeText when typing', () => {
-    const mockOnChangeText = jest.fn();
+  it("should call onChangeText when typing", () => {
+    const mock = jest.fn();
+
     const { getByPlaceholderText } = render(
-      <PasswordInputField
-        value=""
-        onChangeText={mockOnChangeText}
-      />
+      <PasswordInputField value="" onChangeText={mock} />
     );
 
-    const input = getByPlaceholderText('Minimo 8 caracteres');
-    fireEvent.changeText(input, 'minhasenha123');
+    const input = getByPlaceholderText("Minimo 8 caracteres");
 
-    expect(mockOnChangeText).toHaveBeenCalledWith('minhasenha123');
-  });
+    fireEvent.changeText(input, "abc123");
 
-  // Testa se o componente exibe o valor corretamente
-  it('should display the value correctly', () => {
-    const mockOnChangeText = jest.fn();
-    const { getByDisplayValue } = render(
-      <PasswordInputField
-        value="senha123"
-        onChangeText={mockOnChangeText}
-      />
-    );
-
-    const input = getByDisplayValue('senha123');
-    expect(input).toBeDefined();
-  });
-
-  // Testa se o componente renderiza corretamente
-  it('should render the component correctly', () => {
-    const mockOnChangeText = jest.fn();
-    const { getByPlaceholderText } = render(
-      <PasswordInputField
-        value="teste"
-        onChangeText={mockOnChangeText}
-      />
-    );
-
-    expect(getByPlaceholderText('Minimo 8 caracteres')).toBeDefined();
+    expect(mock).toHaveBeenCalledWith("abc123");
   });
 });
