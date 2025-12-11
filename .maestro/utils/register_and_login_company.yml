@@ -1,0 +1,21 @@
+appId: com.fuxi.vitra
+---
+# Garante que o app comece deslogado
+- runFlow: ./setup.yml
+
+# Cadastra um novo usuário empresa
+- runFlow:
+    file: ./cadastro-empresa.yml
+    env:
+      USER_TYPE: "Represento uma empresa."
+      NOME_EMPRESA: "${NOME_EMPRESA}"
+      CNPJ: "${CNPJ}"
+      EMAIL_EMPRESA: "${EMAIL_EMPRESA}"
+      SENHA: "${SENHA}"
+
+# Faz o login com a nova empresa
+- runFlow:
+    file: ./login.yml
+    env:
+      LOGIN_EMAIL: "${EMAIL_EMPRESA}"
+      SENHA: "${SENHA}"

@@ -1,8 +1,12 @@
 import React from "react";
-import { Text, StyleSheet, StatusBar } from "react-native";
+import { StatusBar as RNStatusBar } from "react-native";
 
-<StatusBar
-        hidden={false} 
-        barStyle="dark-content" 
-        backgroundColor="#fff"  
-      />
+export default function StatusBar() {
+  return (
+    <RNStatusBar
+      hidden={false}
+      barStyle="dark-content"
+      backgroundColor="#fff"
+    />
+  );
+}

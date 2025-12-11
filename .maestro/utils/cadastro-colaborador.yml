@@ -8,11 +8,11 @@ appId: com.fuxi.vitra
 # Preenche o formulário clicando em cada campo
 - tapOn:
     text: "Seu nome"
-- inputText: "Jorge"
+- inputText: "${NOME}"
 
 - tapOn:
     text: "Seu sobrenome"
-- inputText: "Silva"
+- inputText: "${SOBRENOME}"
 
 - tapOn:
     text: "exemplo@dominio.br"

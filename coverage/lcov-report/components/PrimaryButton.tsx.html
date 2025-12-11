@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>2/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -117,21 +117,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -158,21 +158,21 @@ interface PrimaryButtonProps {
     style?: ViewStyle;
 }
 &nbsp;
-const authPaths = <span class="cstat-no" title="statement not covered" >["/auth/login", "/auth/register-company", "/auth/register-researcher", "/auth/register-collaborator"]</span>
+const authPaths = ["/auth/login", "/auth/register-company", "/auth/register-researcher", "/auth/register-collaborator"]
 &nbsp;
-export function <span class="fstat-no" title="function not covered" >PrimaryButton(</span>{ title, disabled, color = <span class="branch-0 cbranch-no" title="branch not covered" >colors.primary,</span> onPress, style }: PrimaryButtonProps) {
-    const pathname = <span class="cstat-no" title="statement not covered" >usePathname()</span>
+export function PrimaryButton({ title, disabled, color = colors.primary, onPress, style }: PrimaryButtonProps) {
+    const pathname = usePathname()
 &nbsp;
-    const authStyle = <span class="cstat-no" title="statement not covered" >(authPaths.includes(pathname)) ? { marginTop: 20 } : {} as any</span>
+    const authStyle = (authPaths.includes(pathname)) ? <span class="branch-0 cbranch-no" title="branch not covered" >{ marginTop: 20 } </span>: {} as any
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    return (</span>
+    return (
         &lt;TouchableOpacity style = {[styles.button, {backgroundColor: color}, authStyle, style]} disabled={disabled} onPress={onPress}&gt;
             &lt;Text style = {styles.text}&gt;{title}&lt;/Text&gt;
         &lt;/TouchableOpacity&gt;
     )
 }
 &nbsp;
-const styles = <span class="cstat-no" title="statement not covered" >StyleSheet.create({</span>
+const styles = StyleSheet.create({
     button: {
         width: "100%",
         alignItems: "center",
@@ -193,7 +193,7 @@ const styles = <span class="cstat-no" title="statement not covered" >StyleSheet.
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-12-08T23:16:35.636Z
+                at 2025-12-11T22:05:11.479Z
             </div>
         <script src="../prettify.js"></script>
         <script>
