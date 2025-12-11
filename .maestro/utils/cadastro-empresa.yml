@@ -8,10 +8,10 @@ appId: com.fuxi.vitra
 # Preenche o formulário clicando em cada campo
 - tapOn:
     text: "Nome da empresa"
-- inputText: "Empresa XYZ"
+- inputText: "${NOME_EMPRESA}"
 
 - tapOn: "00.000.000/0000-00"
-- inputText: "40.432.544/0001-47"
+- inputText: "${CNPJ}"
 
 - tapOn:
     text: "contato@empresa.com"

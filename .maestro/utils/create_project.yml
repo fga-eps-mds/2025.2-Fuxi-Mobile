@@ -1,0 +1,30 @@
+appId: com.fuxi.vitra
+---
+# Assume que o usuário já está logado e na tela Home
+- tapOn: "" # Ícone de '+' na barra de navegação (para pesquisador, leva a 'create-project')
+- assertVisible: "Novo Projeto:"
+- tapOn:
+    text: "Título"
+- inputText: "${NOME_PROJETO}"
+- tapOn:
+    text: "Descrição"
+- inputText: "Esta e uma descricao de teste para o projeto."
+- tapOn:
+    text: "Área de conhecimento"
+- inputText: "Engenharia de Software"
+- tapOn:
+    text: "Digite uma palavra chave"
+- inputText: "testes"
+- pressKey: "Enter"
+- tapOn:
+    text: "Digite uma palavra chave"
+- inputText: "maestro"
+- pressKey: "Enter"
+- tapOn: "Selecione um status"
+- tapOn: "EM ANDAMENTO"
+- tapOn: "Selecione um campus"
+- tapOn: "UNB GAMA: FCTE"
+- tapOn: "Criar"
+- assertVisible: "Projeto criado com sucesso."
+- tapOn: "OK"
+- assertVisible: "Mais recentes:" # Confirma que voltou para a Home
