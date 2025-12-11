@@ -79,4 +79,33 @@ describe('PasswordInputField Component', () => {
 
     expect(getByPlaceholderText('Minimo 8 caracteres')).toBeDefined();
   });
+
+  // Testa se o botão de visibilidade alterna a exibição da senha
+  it('should toggle password visibility when eye button is pressed', () => {
+    const mockOnChangeText = jest.fn();
+    const { getByPlaceholderText, getByTestId } = render(
+      <PasswordInputField
+        value="senha123"
+        onChangeText={mockOnChangeText}
+      />
+    );
+
+    const input = getByPlaceholderText('Minimo 8 caracteres');
+    
+    // Inicialmente a senha deve estar oculta (secureTextEntry = true)
+    expect(input.props.secureTextEntry).toBe(true);
+
+    // Encontra o botão do olho e clica
+    const eyeButton = getByTestId('password-visibility-toggle');
+    fireEvent.press(eyeButton);
+
+    // Após clicar, a senha deve estar visível (secureTextEntry = false)
+    expect(input.props.secureTextEntry).toBe(false);
+
+    // Clica novamente para ocultar
+    fireEvent.press(eyeButton);
+
+    // Senha deve estar oculta novamente
+    expect(input.props.secureTextEntry).toBe(true);
+  });
 });
