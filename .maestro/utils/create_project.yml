@@ -6,12 +6,21 @@ appId: com.fuxi.vitra
 - tapOn:
     text: "Título"
 - inputText: "${NOME_PROJETO}"
+
+- hideKeyboard
+
 - tapOn:
     text: "Descrição"
 - inputText: "Esta e uma descricao de teste para o projeto."
+
+- hideKeyboard
+
 - tapOn:
     text: "Área de conhecimento"
 - inputText: "Engenharia de Software"
+
+- hideKeyboard
+
 - tapOn:
     text: "Digite uma palavra chave"
 - inputText: "testes"
@@ -20,10 +29,16 @@ appId: com.fuxi.vitra
     text: "Digite uma palavra chave"
 - inputText: "maestro"
 - pressKey: "Enter"
+
 - tapOn: "Selecione um status"
 - tapOn: "EM ANDAMENTO"
 - tapOn: "Selecione um campus"
 - tapOn: "UNB GAMA: FCTE"
+
+- swipe: # Scroll da tela
+    start: 50%, 70%
+    end: 50%, 50%
+
 - tapOn: "Criar"
 - assertVisible: "Projeto criado com sucesso."
 - tapOn: "OK"
