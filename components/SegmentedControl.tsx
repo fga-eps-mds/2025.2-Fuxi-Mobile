@@ -2,7 +2,14 @@ import * as React from "react";
 import { Text, View, StyleSheet, TextProps, TouchableOpacity } from "react-native";
 import colors from "@/theme/colors";
 
-const SegmentedControl = ({ options, selected, onSelect }) => {
+
+type SegmentedControlProps = {
+  options: string[];              
+  selected: string;              
+  onSelect: (value: string) => void;
+};
+
+const SegmentedControl = ({ options, selected, onSelect }:SegmentedControlProps) => {
   return (
     <View style={styles.container}>
       {options.map((option, index) => {
