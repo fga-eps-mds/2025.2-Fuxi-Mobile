@@ -25,10 +25,7 @@ appId: com.fuxi.vitra
     text: "Digite uma palavra chave"
 - inputText: "testes"
 - pressKey: "Enter"
-- tapOn:
-    text: "Digite uma palavra chave"
-- inputText: "maestro"
-- pressKey: "Enter"
+
 
 - tapOn: "Selecione um status"
 - tapOn: "EM ANDAMENTO"

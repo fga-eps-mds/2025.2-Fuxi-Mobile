@@ -22,7 +22,6 @@ env:
 
 # 3. Navega para a tela de edição do projeto recém-criado
 - tapOn: "" # Ícone de Perfil
-- tapOn: "Meu Perfil"
 - tapOn: "Meus Projetos"
 - assertVisible: "${NOME_PROJETO}"
 # Clica no primeiro ícone 'edit' que encontrar na tela
@@ -32,9 +31,29 @@ env:
 - assertVisible: "Editar Projeto:"
 
 # 4. Edita o título do projeto
-- tapOn:
+- longPressOn:
     text: "${NOME_PROJETO}" # Toca no campo de título que já tem o texto antigo
-- inputText: " (editado)" # Adiciona texto ao final
+
+- tapOn: "Mais opções" # Ícone de três pontos para selecionar tudo
+- tapOn: "Selecionar tudo"
+
+- eraseText # Apaga o texto selecionado
+
+- inputText: "${NOME_PROJETO} (editado)" # Adiciona texto ao final
+- pressKey: "Enter"
+
+- tapOn:
+    text: "Digite uma palavra chave"
+- inputText: "maestro"
+- pressKey: "Enter"
+
+
+# Faz um swipe forte para garantir scroll
+- swipe:
+    start: 50%, 70%
+    end: 50%, 30%
+
+    
 - tapOn: "Atualizar"
 
 # 5. Verifica se a alteração foi salva

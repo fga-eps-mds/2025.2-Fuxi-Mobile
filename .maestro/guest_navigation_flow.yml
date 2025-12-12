@@ -33,6 +33,7 @@ env:
 - assertVisible: "Entrar" # Confirma que o logout foi feito e está na tela de login/registro
 
 # --- ETAPA DE TESTE (como Convidado) ---
+- tapOn: "Apenas visualizar"
 
 # 5. Verifica se a tela Home é exibida com conteúdo público
 - assertVisible: "Mais recentes:"
@@ -53,6 +54,10 @@ env:
     text: "Explore projetos existentes..."
 - inputText: "Tecnologia" # Busca pelo termo chave do nosso projeto
 - pressKey: "Enter" # Submete a busca
+
+- scrollUntilVisible:
+    element: "${NOME_PROJETO}"
+    direction: "down"
 
 # 9. Verifica se o projeto criado na etapa de setup aparece nos resultados
 - assertVisible: "${NOME_PROJETO}"
