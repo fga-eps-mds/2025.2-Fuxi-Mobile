@@ -1,9 +1,8 @@
-// components/__tests__/ResearchCard.test.tsx
+// components/__tests__/DemandCard.test.tsx
 import * as React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import { ResearchCard } from '../ResearchCard';
+import { DemandCard } from '../DemandCard';
 import { getUsers } from '@/services/userService';
-import { TouchableOpacity } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
 
 // Mock dos usuários
@@ -11,19 +10,14 @@ jest.mock('@/services/userService', () => ({
   getUsers: jest.fn()
 }));
 
-// JSON de pesquisa de exemplo
-const mockResearch = {
+// JSON de demanda de exemplo
+const mockDemand = {
   id: 1,
-  researcher: 1,
-  sponsoring_company: 1,
+  company: 1,
   createdDate: "2025-12-10",
-  title: "MINHA PESQUISA 3",
+  title: "MINHA DEMANDA",
   description: "DESCRIÇÃO DA PESQUISA",
-  status: "APROVADO",
-  knowledge_area: "CIENCIA",
-  keywords: ["PALAVRA1","PALAVRA2","PALAVRA3"],
-  members: ["1"],
-  campus: "FCTE"
+  knowledge_area: "CIENCIA"
 };
 
 // JSON de usuários de exemplo
@@ -54,29 +48,29 @@ const mockUsers = [
   }
 ];
 
-describe('ResearchCard Component', () => {
+describe('DemandCard Component', () => {
   beforeEach(() => {
     (getUsers as jest.Mock).mockResolvedValue(mockUsers);
   });
 
-  it('renders title, description and member names', async () => {
-    const { getByText } = render(<ResearchCard research={mockResearch} />);
+  it('renders title, description and company name', async () => {
+    const { getByText } = render(<DemandCard demand={mockDemand} />);
 
-    expect(getByText(mockResearch.title)).toBeDefined();
-    expect(getByText(mockResearch.description)).toBeDefined();
+    expect(getByText(mockDemand.title)).toBeDefined();
+    expect(getByText(mockDemand.description)).toBeDefined();
 
     await waitFor(() => {
-      expect(getByText('Membro: Pesquisador da Silva')).toBeDefined();
+      expect(getByText('Empresa: Empresa')).toBeDefined();
     });
   });
 
   it('calls onPress when card is pressed', async () => {
     const onPressMock = jest.fn();
-    const { getByText } = render(<ResearchCard research={mockResearch} onPress={onPressMock} />);
+    const { getByText } = render(<DemandCard demand={mockDemand} onPress={onPressMock} />);
 
     await waitFor(() => {
-      fireEvent.press(getByText(mockResearch.title));
-      expect(onPressMock).toHaveBeenCalledWith(mockResearch.id);
+      fireEvent.press(getByText(mockDemand.title));
+      expect(onPressMock).toHaveBeenCalledWith(mockDemand.id);
     });
   });
 
@@ -84,53 +78,42 @@ describe('ResearchCard Component', () => {
     const onEditMock = jest.fn();
     const onDeleteMock = jest.fn();
 
+    // Adicionamos testID para capturar botões
     const { getAllByTestId } = render(
-      <ResearchCard
-        research={mockResearch}
+      <DemandCard
+        demand={mockDemand}
         showActions={true}
         onEdit={onEditMock}
         onDelete={onDeleteMock}
       />
     );
 
+    // Usaremos querySelector-like pelo testID
     const editButton = getAllByTestId('edit-button')[0];
     const deleteButton = getAllByTestId('delete-button')[0];
 
     fireEvent.press(editButton);
     fireEvent.press(deleteButton);
 
-    expect(onEditMock).toHaveBeenCalledWith(mockResearch.id);
-    expect(onDeleteMock).toHaveBeenCalledWith(mockResearch.id);
+    expect(onEditMock).toHaveBeenCalledWith(mockDemand.id);
+    expect(onDeleteMock).toHaveBeenCalledWith(mockDemand.id);
   });
 
   it('renders chevron when showActions is false', async () => {
     const { getByTestId } = render(
-      <ResearchCard research={mockResearch} onPress={() => {}} />
+      <DemandCard demand={mockDemand} onPress={() => {}} />
     );
 
     const chevronIcon = getByTestId('chevron-icon');
     expect(chevronIcon).toBeDefined();
   });
 
-  it('shows "Nenhum membro" when members array is empty', async () => {
-    const emptyResearch = { ...mockResearch, members: [] };
-    const { getByText } = render(<ResearchCard research={emptyResearch} />);
+  it('shows "Empresa: " when company name is not found', async () => {
+    const emptyCompanyDemand = { ...mockDemand, company: 999 }; // ID de empresa inexistente
+    const { getByText } = render(<DemandCard demand={emptyCompanyDemand} />);
 
     await waitFor(() => {
-      expect(getByText('Nenhum membro')).toBeDefined();
-    });
-  });
-
-  it('handles multiple members and users without profile', async () => {
-    const multiMembersResearch = {
-      ...mockResearch,
-      members: ["1", "2", "3", "999"] // 999 não existe no mockUsers
-    };
-
-    const { getByText } = render(<ResearchCard research={multiMembersResearch} />);
-
-    await waitFor(() => {
-      expect(getByText('Membros: Pesquisador da Silva, Empresa, ...')).toBeDefined();
+      expect(getByText('Empresa: ')).toBeDefined();
     });
   });
 });

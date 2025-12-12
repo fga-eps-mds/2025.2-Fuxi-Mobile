@@ -1,11 +1,9 @@
 import { DemandData } from '@/app/tabs/home';
 import Feather from '@expo/vector-icons/Feather';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import colors from "../theme/colors";
-
 import { getUsers } from '@/services/userService';
-import { useEffect, useState } from 'react';
 
 interface DemandCardProps {
     demand: DemandData;
@@ -15,23 +13,21 @@ interface DemandCardProps {
     showActions?: boolean;
 }
 
-// React.fc = componente funcional com tipagem de props
 export const DemandCard: React.FC<DemandCardProps> = ({ demand, onPress, onEdit, onDelete, showActions = false }) => {
-        const [companyName, setCompanyName] = useState<string>("");
+    const [companyName, setCompanyName] = useState<string>("");
 
-        useEffect(() => {
-            const fetchCompanyName = async () => {
-                try {
-                    const users = await getUsers();
-                    const company = users.find((u: any) => u.company_profile?.id === Number(demand.company));
-                    setCompanyName(company.company_profile.fantasyName);
-                } catch (error) {                    
-                    setCompanyName("");
-                }
-            };
-    
-            fetchCompanyName();
-        }, [demand.company]);
+    useEffect(() => {
+        const fetchCompanyName = async () => {
+            try {
+                const users = await getUsers();
+                const company = users.find((u: any) => u.company_profile?.id === Number(demand.company));
+                setCompanyName(company.company_profile.fantasyName);
+            } catch (error) {
+                setCompanyName("");
+            }
+        };
+        fetchCompanyName();
+    }, [demand.company]);
 
     const cardContent = (
         <>
@@ -43,15 +39,31 @@ export const DemandCard: React.FC<DemandCardProps> = ({ demand, onPress, onEdit,
 
             {showActions ? (
                 <View style={styles.actionsContainer}>
-                    <TouchableOpacity onPress={() => onEdit?.(demand.id)} style={styles.actionButton}>
+                    <TouchableOpacity
+                        testID="edit-button"
+                        onPress={() => onEdit?.(demand.id)}
+                        style={styles.actionButton}
+                    >
                         <Feather name='edit' color={colors.primary} size={24} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => onDelete?.(demand.id)} style={styles.actionButton}>
+                    <TouchableOpacity
+                        testID="delete-button"
+                        onPress={() => onDelete?.(demand.id)}
+                        style={styles.actionButton}
+                    >
                         <Feather name='trash-2' color={colors.danger} size={24} />
                     </TouchableOpacity>
                 </View>
             ) : (
-                onPress && <Feather name='chevron-right' color={colors.primary} size={24} style={styles.icon} />
+                onPress && (
+                    <Feather
+                        testID="chevron-icon"
+                        name='chevron-right'
+                        color={colors.primary}
+                        size={24}
+                        style={styles.icon}
+                    />
+                )
             )}
         </>
     );
