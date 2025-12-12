@@ -72,4 +72,25 @@ describe('DropdownSelect Component', () => {
     const placeholder = getByText('Sem opções');
     expect(placeholder).toBeDefined();
   });
+
+  // Testa se onSelect é chamado quando um item é selecionado
+  it('should call onSelect when an item is selected', () => {
+    const mockOnSelect = jest.fn();
+    const { UNSAFE_getByType } = render(
+      <DropdownSelect
+        options={mockOptions}
+        value={null}
+        onSelect={mockOnSelect}
+      />
+    );
+
+    // Importa o Dropdown para acessar via UNSAFE_getByType
+    const Dropdown = require('react-native-element-dropdown').Dropdown;
+    const dropdown = UNSAFE_getByType(Dropdown);
+    
+    // Simula a mudança de valor chamando onChange diretamente
+    dropdown.props.onChange({ label: 'Opção 2', value: 'opcao2' });
+
+    expect(mockOnSelect).toHaveBeenCalledWith('opcao2');
+  });
 });
