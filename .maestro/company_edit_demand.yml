@@ -49,3 +49,11 @@ env:
 - assertVisible: "Demanda atualizada com sucesso." # A mensagem de alerta parece ser a mesma
 - tapOn: "OK"
 - assertVisible: "${NOME_DEMANDA} (editada)"
+
+
+# 6. Navega de volta para o perfil
+- tapOn: "" # Ícone de Perfil
+
+# 7. Volta para a tela inicial
+- assertVisible: "Sair da minha conta"
+- tapOn: "" # Ícone de Casa

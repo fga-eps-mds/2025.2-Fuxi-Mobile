@@ -21,6 +21,10 @@ env:
       NOME_PROJETO: "${NOME_PROJETO}"
 
 # 3. Encontra o projeto na Home e vai para a tela de detalhes
+- scrollUntilVisible:
+    element:
+        text: "${NOME_PROJETO}"
+
 - assertVisible: "${NOME_PROJETO}"
 - tapOn:
     text: "${NOME_PROJETO}"
@@ -33,7 +37,7 @@ env:
 
 # 5. Verifica se o projeto aparece na tela de Favoritos
 - tapOn: "" # Ícone da aba de Favoritos na barra de navegação
-- assertVisible: "Meus favoritos"
+- assertVisible: "Meus favoritos:"
 - assertVisible: "${NOME_PROJETO}"
 
 # 6. Desfavorita o projeto e verifica
@@ -47,3 +51,13 @@ env:
 - tapOn: "" # Ícone da aba de Favoritos
 - assertNotVisible: "${NOME_PROJETO}"
 - assertVisible: "Nenhuma informação encontrada nesta seção."
+
+# 8. Navega de volta para a tela inicial
+- tapOn: "" # Ícone de Casa
+- tapOn: "" # Ícone de Casa
+
+- scrollUntilVisible:
+    element:
+        text: "Mais recentes:"
+    direction: "up"
+

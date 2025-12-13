@@ -17,7 +17,7 @@ env:
 
 # 2. Verifica as restrições da UI
 - assertVisible: "Mais recentes:"
-- assertNotVisible: "" # Confirma que o botão de '+' (criar projeto/demanda) NÃO está visível
+- assertNotVisible: "" # Confirma que o botão de '+' (criar projeto/demanda) NÃO está visível
 
 # 3. Verifica se as outras abas funcionam
 - tapOn: ""
@@ -27,3 +27,6 @@ env:
 - assertVisible: "Meu Perfil"
 - assertNotVisible: "Meus Projetos" # Colaborador não tem essa seção
 - assertNotVisible: "Minhas Demandas"
+
+# 4. Volta para a tela inicial
+- tapOn: "" # Ícone de Casa

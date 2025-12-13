@@ -34,3 +34,6 @@ env:
 - assertVisible: "Novos dados salvos com sucesso."
 - tapOn: "OK"
 - assertVisible: "${NOME} ${SOBRENOME_NOVO}" # Confirma que o novo nome completo aparece na tela de perfil
+
+# 5. Volta para a tela inicial
+- tapOn: "" # Ícone de Casa
