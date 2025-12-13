@@ -1,0 +1,23 @@
+appId: com.fuxi.vitra
+name: Fluxo de Criação de Demanda (Empresa)
+env:
+  NOME_EMPRESA: "Empresa de Teste ${Math.random().toString(36).substring(2, 8)}"
+  CNPJ: "56.216.638/0001-19" # CNPJ válido para teste
+  EMAIL_EMPRESA: "empresa.${Math.random().toString(36).substring(2, 10)}@teste.com"
+  SENHA: "Password123"
+  NOME_DEMANDA: "Demanda de IA para Teste ${Math.random().toString(36).substring(2, 8)}"
+---
+# 1. Cadastra e loga com um novo usuário empresa
+- runFlow:
+    file: ./utils/register_and_login_company.yml
+    env:
+      NOME_EMPRESA: "${NOME_EMPRESA}"
+      CNPJ: "${CNPJ}"
+      EMAIL_EMPRESA: "${EMAIL_EMPRESA}"
+      SENHA: "${SENHA}"
+
+# 2. Cria uma nova demanda
+- runFlow:
+    file: ./utils/create_demand.yml
+    env:
+      NOME_DEMANDA: "${NOME_DEMANDA}"

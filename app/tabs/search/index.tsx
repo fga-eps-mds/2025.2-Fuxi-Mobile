@@ -5,8 +5,10 @@ import { ActivityIndicator, FlatList, Keyboard, StyleSheet, Text, TextInput, Tou
 import { ResearchCard } from "@/components/ResearchCard";
 import { searchResearches } from "@/services/researchService";
 import colors from "@/theme/colors";
-import { ResearchData } from "../home";
-import { router, useLocalSearchParams, useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
+import { STORAGE_KEY_FILTERS, STORAGE_NATURE } from "./filters";
+import { searchDemands } from "@/services/demandService";
+import { DemandCard } from "@/components/DemandCard";
 
 interface SearchFilters {
   pesquisador?: string;
@@ -14,34 +16,51 @@ interface SearchFilters {
   campus?: string;
   area?: string;
   situacao?: string;
+  empresa?: string;
 }
-
-const STORAGE_KEY_FILTERS = "searchFilters";
-
-
-
 
 export default function SearchScreen() {
     const [searchText, setSearchText] = useState("");
     const [recentSearches, setRecentSearches] = useState<string[]>([]);
-    const [searchResults, setSearchResults] = useState<ResearchData[]>([]);
+    const [searchResults, setSearchResults] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [activeFilters, setActiveFilters] = useState<SearchFilters>({});
+    const [activeNature, setActiveNature] = useState<string>();
   
-    // Quando a pesquisa é feita com filtros
-    const fetchResearches = useCallback(async (filters: SearchFilters, searchTxt?: string) => {
+    const fetchResearches = useCallback(async (filters: SearchFilters, nature?: string, searchTxt?: string) => {
       setLoading(true);
       setError(null);
       try {
-        const results = await searchResearches({
-          knowledgeArea: filters.area,
-          keywords: filters.keywords,
-          researcherName: filters.pesquisador,
-          campus: filters.campus,
-          status: filters.situacao,
-          title: searchTxt || undefined, // Add title for combined search
-        });
+        console.log(nature);
+
+        
+        let results: any;
+        const researchesResult = await searchResearches({
+                    knowledgeArea: filters.area,
+                    keywords: filters.keywords,
+                    researcherName: filters.pesquisador,
+                    campus: filters.campus,
+                    status: filters.situacao,
+                    companyName: filters.empresa,
+                    title: searchTxt || undefined, // Add title for combined search
+                  });
+        const demandsResult = await searchDemands({
+                    knowledgeArea: filters.area,
+                    companyName: filters.empresa,
+                    title: searchTxt || undefined, // Add title for combined search
+                  });
+
+        if (nature === "Projeto") results = researchesResult
+        if (nature === "Demanda") results = demandsResult
+        if (nature === "Tudo" || nature === null) results = [...researchesResult, ...demandsResult]
+                
+        let index = 0
+        results.map((item: any) =>{
+          item.uID = index
+          index++
+        })
+        
         setSearchResults(results);
       } catch (err) {
         console.log(err);
@@ -54,20 +73,24 @@ export default function SearchScreen() {
     useFocusEffect(
       useCallback(() => {
         const loadAndApplyFilters = async () => {
+          const storedNature = (await AsyncStorage.getItem(STORAGE_NATURE))?.toString() as string || "Tudo";
+          setActiveNature(storedNature);
+
           try {
             const storedFilters = await AsyncStorage.getItem(STORAGE_KEY_FILTERS);
+
             if (storedFilters) {
               const parsedFilters: SearchFilters = JSON.parse(storedFilters);
               setActiveFilters(parsedFilters);
-              fetchResearches(parsedFilters, searchText); // Apply filters and current search text
+              fetchResearches(parsedFilters, storedNature, searchText); // Apply filters and current search text
             } else {
               setActiveFilters({});
-              fetchResearches({}); // No filters, fetch all or default
+              fetchResearches({}, storedNature); // No filters, fetch all or default
             }
           } catch (error) {
             console.error("Failed to load filters from AsyncStorage", error);
             setActiveFilters({});
-            fetchResearches({}); // Fallback to no filters
+            fetchResearches({}, storedNature); // Fallback to no filters
           }
         };
         loadAndApplyFilters();
@@ -103,7 +126,7 @@ export default function SearchScreen() {
     setError(null);
 
     try {
-      await fetchResearches(activeFilters, searchText);
+      await fetchResearches(activeFilters, activeNature, searchText);
     } catch (err) {
       console.log(err);
       setError("Erro ao buscar resultados.");
@@ -126,9 +149,12 @@ export default function SearchScreen() {
     saveSearches(filtered);
   };
   
-  const handlePress = (id: number) => {
-    router.push(`/tabs/home/project?id=${id}`);
-};
+  const handlePressProject = (id: number) => {
+      router.push(`/tabs/home/project?id=${id}`);
+  };
+  const handlePressDemand = (id: number) => {
+      router.push(`/tabs/home/demand?id=${id}`);
+  };
   const handleFilters = () =>{
     router.push(`/tabs/search/filters`);
     setSearchText(""); // Clear search text when navigating to filters
@@ -159,11 +185,11 @@ export default function SearchScreen() {
         <ActivityIndicator size="large" color={colors.primary} style={{ marginTop: 20 }} />
       ) : error ? (
         <Text style={styles.errorText}>{error}</Text>
-      ) : searchResults.length > 0 ? (
+      ) : searchResults.length > 0 ? ( 
         <FlatList
           data={searchResults}
-          keyExtractor={item => item.id.toString()}
-          renderItem={({ item }) => <ResearchCard research={item} onPress={() => handlePress(item.id)} />}
+          keyExtractor={item => item.uID.toString()}
+          renderItem={({ item }) => item.researcher ? <ResearchCard research={item} onPress={() => handlePressProject(item.id)} /> : <DemandCard demand={item} onPress={() => handlePressDemand(item.id)} />}
           style={{ marginTop: 20 }}
         />
       ) : (

@@ -1,0 +1,41 @@
+appId: com.fuxi.vitra
+---
+# Cadastro
+# Este fluxo começa na tela de login/cadastro
+- tapOn: "Cadastrar"
+- tapOn: ${USER_TYPE}
+
+# Preenche o formulário clicando em cada campo
+- tapOn:
+    text: "Seu nome"
+- inputText: "${NOME}"
+
+- tapOn:
+    text: "Seu sobrenome"
+- inputText: "${SOBRENOME}"
+
+- tapOn:
+    text: "exemplo@dominio.br"
+- inputText: "${EMAIL_COLABORADOR}"
+
+- tapOn: "Minimo 8 caracteres"
+- inputText: "${SENHA}"
+
+- tapOn:
+
+    text: "DD/MM/AAAA"
+
+- inputText: "10/10/2000"
+
+- hideKeyboard # Esconde o teclado
+
+# Seleciona o campus e confirma
+
+- tapOn: "Selecione sua categoria"
+
+- tapOn: "DISCENTE"
+- tapOn: "Confirmar"
+
+- tapOn: "OK"
+# Verifica se voltou para a tela de login
+- assertVisible: "Comece agora!"

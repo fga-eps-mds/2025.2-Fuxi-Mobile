@@ -5,125 +5,253 @@ import { TextAreaInputField } from '@/components/TextAreaInputField';
 import { TextInputField } from '@/components/TextInputField';
 import { ViewContainer } from '@/components/ViewContainer';
 import { getResearchById, updateResearch } from '@/services/researchService';
+import { getUsers } from '@/services/userService';
 import { Ionicons } from '@expo/vector-icons';
 import { Text } from '@react-navigation/elements';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Alert, Keyboard, KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View, ActivityIndicator } from "react-native";
+import {
+  Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+  ActivityIndicator,
+} from "react-native";
 import colors from "@/theme/colors";
 
 export default function EditResearch() {
-    const router = useRouter();
-    const { id } = useLocalSearchParams();
-    const researchId = Number(id);
+  const router = useRouter();
+  const { id } = useLocalSearchParams();
+  const researchId = Number(id);
 
-    const [form, setForm] = useState<any>({
-      title: "",
-      knowledge_area: "",
-      keywords: [],
-      members: [],
-      status: "",
-      campus: "",
-      description: "",
-    });
-    const [keywords, setKeywords] = useState<string[]>([]);
-    const [members, setMembers] = useState<string[]>([]);
-    const [textKeywords, setTextKeywords] = useState("");
-    const [textMembers, setTextMembers] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [pageLoading, setPageLoading] = useState(true);
+  const [form, setForm] = useState<any>({
+    title: "",
+    knowledge_area: "",
+    keywords: [],
+    members: [],
+    status: "",
+    campus: "",
+    description: "",
+    sponsoring_company: "",
+  });
+  const [keywords, setKeywords] = useState<string[]>([]);
+  const [members, setMembers] = useState<number[]>([]); // IDs para enviar ao backend
+  const [memberEmails, setMemberEmails] = useState<string[]>([]); // emails para mostrar ao usuário
+  const [textKeywords, setTextKeywords] = useState("");
+  const [textMembers, setTextMembers] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
+  const [companyEmail, setCompanyEmail] = useState("");
 
-    useEffect(() => {
-        if (!researchId) return;
-        const fetchResearch = async () => {
-            try {
-                const data = await getResearchById(researchId);
-                setForm({
-                    title: data.title,
-                    knowledge_area: data.knowledge_area,
-                    status: data.status,
-                    campus: data.campus,
-                    description: data.description,
-                });
-                setKeywords(data.keywords || []);
-                setMembers(data.members || []);
-            } catch (error) {
-                Alert.alert("Erro", "Não foi possível carregar os dados do projeto.");
-                router.back();
-            } finally {
-                setPageLoading(false);
-            }
-        };
-        fetchResearch();
-    }, [researchId]);
+  useEffect(() => {
+    if (!researchId) return;
+    const fetchResearch = async () => {
+      try {
+        const data = await getResearchById(researchId);
 
-    const handleAddKeyword = () => {
-      const trimmed = textKeywords.trim();
-      if (trimmed && !keywords.includes(trimmed)) {
-        setKeywords([...keywords, trimmed]);
+        if (data.sponsoring_company){          
+          const companyEmail = await getCompanyEmail(data.sponsoring_company)
+          setCompanyEmail(companyEmail)
+        }
+
+        setForm({
+          title: data.title,
+          knowledge_area: data.knowledge_area,
+          status: data.status,
+          campus: data.campus,
+          description: data.description,
+          sponsoring_company: data.sponsoring_company,
+        });
+        
+        setKeywords(data.keywords || []);
+
+        // Se o backend retorna members como IDs, mantemos em members (IDs)
+        const existingMembers = Array.isArray(data.members) ? data.members : [];
+        setMembers(existingMembers);
+
+        // Para exibir os e-mails dos membros já existentes, buscamos todos usuários e mapeamos pelos IDs
+        try {
+          const users = await getUsers();
+          const emails = existingMembers
+            .map((id: number | string) => {
+              const user = users.find((u: any) => u.id === Number(id));
+              return user?.email || null;
+            })
+            .filter(Boolean) as string[];
+          setMemberEmails(emails);
+        } catch {
+          // Se não conseguir buscar, apenas não mostra emails pré-existentes
+          setMemberEmails([]);
+        }
+      } catch (error) {
+        console.log(error);
+        
+        Alert.alert("Erro", "Não foi possível carregar os dados do projeto.");
+        router.back();
+      } finally {
+        setPageLoading(false);
       }
-      setTextKeywords("");
     };
+    fetchResearch();
+  }, [researchId, router]);
 
-    const handleRemoveKeyword = (word: any) => {
-      setKeywords(keywords.filter((k) => k !== word));
-    };
+  const handleAddKeyword = () => {
+    const trimmed = textKeywords.trim();
+    if (trimmed && !keywords.includes(trimmed)) {
+      setKeywords([...keywords, trimmed]);
+    }
+    setTextKeywords("");
+  };
 
-    
-    const handleAddMember = () => {
-      const trimmed = textMembers.trim();
-      if (trimmed && !members.includes(trimmed)) {
-        setMembers([...members, trimmed]);
-      }
-      setTextMembers("");
-    };
+  const handleRemoveKeyword = (word: string) => {
+    setKeywords(keywords.filter((k) => k !== word));
+  };
 
-    const handleRemoveMember = (word: any) => {
-      setMembers(members.filter((k) => k !== word));
-    };
+  const handleAddMember = async () => {
+    const trimmed = textMembers.trim();
+    if (!trimmed) return;
 
-    const campusOptions = [
-      { label: "UNB DARCY RIBEIRO", value: "UNB DARCY RIBEIRO" },
-      { label: "UNB GAMA: FCTE", value: "UNB GAMA: FCTE"},
-      { label: "UNB PLANALTINA: FUP", value: "UNB PLANALTINA: FUP" },
-      { label: "UNB CEILÂNDIA: FCE", value: "UNB CEILÂNDIA: FCE" },
-    ];
-    const statusOptions = [
-      { label: "RASCUNHO", value: "RASCUNHO" },
-      { label: "EM ANÁLISE", value: "EM ANÁLISE" },
-      { label: "APROVADO", value: "APROVADO" },
-      { label: "EM ANDAMENTO", value: "EM ANDAMENTO" },
-      { label: "CONCLUÍDO", value: "CONCLUÍDO" },
-      { label: "CANCELADO", value: "CANCELADO" },
-    ];
+    try {
+      const users = await getUsers();
+      const user = users.find((u: any) => u.email === trimmed);
 
-    const handleSubmit= async () => {
-      if (Object.values(form).some(value => !value)) {
-        Alert.alert("Preencha todos os campos obrigatórios.");
+      if (!user) {
+        Alert.alert("Erro", "Usuário não encontrado.");
         return;
       }
 
-      setLoading(true);
-      try {
-          const updatedForm = { ...form, keywords, members };
-          await updateResearch(researchId, updatedForm);
-          Alert.alert("Sucesso!", "Projeto atualizado com sucesso.");
-          router.push("/tabs/profile/researcher-projects");
-      } catch (error: any) {
-          const errorMsg = error.response?.data?.detail || "Não foi possível atualizar o projeto. Tente novamente mais tarde.";
-          Alert.alert("Erro na atualização", errorMsg);
-      } finally {
-          setLoading(false);
+      if (user.user_type === 'company') {
+        Alert.alert("Erro", "Uma empresa não pode ser adicionada como membro.");
+        return;
       }
+
+      if (!members.includes(user.id)) {
+        setMembers([...members, user.id]);           // salva ID para enviar ao backend
+        setMemberEmails([...memberEmails, user.email]); // mostra email para o usuário
+      } else {
+        Alert.alert("Aviso", "Esse usuário já está na lista de membros.");
+      }
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível buscar o usuário.");
     }
 
-    if (pageLoading) {
-        return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size="large" color={colors.primary} />
-            </View>
-        );
+    setTextMembers("");
+  };
+
+  const handleRemoveMember = (email: string) => {
+    const index = memberEmails.indexOf(email);
+    if (index !== -1) {
+      const newEmails = [...memberEmails];
+      newEmails.splice(index, 1);
+
+      const newMembers = [...members];
+      newMembers.splice(index, 1);
+
+      setMemberEmails(newEmails);
+      setMembers(newMembers);
     }
+  };
+
+  const checkCompany = async () => {
+    const trimmed = companyEmail.trim();
+    if (!trimmed) return;
+
+    try {
+      const users = await getUsers();
+      const user = users.find((u: any) => u.email === trimmed && u.user_type === "company" );
+
+      if (!user) {
+        Alert.alert("Erro", "Empresa não encontrada.");
+        setForm({ ...form, sponsoring_company: "" })
+        return false;
+      }
+
+      setForm({ ...form, sponsoring_company: user.company_profile.id })  
+
+      return user.company_profile.id
+
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possível buscar a empresa.");
+      setForm({ ...form, sponsoring_company: "" })  
+      return false;
+    }
+  };
+
+
+  const getCompanyEmail = async (id: number) => {
+    const users = await getUsers();    
+    const user = users.find((u: any) => u.company_profile && u.company_profile.id === id);
+
+    return user.email
+  };
+
+  const campusOptions = [
+    { label: "UNB DARCY RIBEIRO", value: "UNB DARCY RIBEIRO" },
+    { label: "UNB GAMA: FCTE", value: "UNB GAMA: FCTE" },
+    { label: "UNB PLANALTINA: FUP", value: "UNB PLANALTINA: FUP" },
+    { label: "UNB CEILÂNDIA: FCE", value: "UNB CEILÂNDIA: FCE" },
+  ];
+  const statusOptions = [
+    { label: "RASCUNHO", value: "RASCUNHO" },
+    { label: "EM ANÁLISE", value: "EM ANÁLISE" },
+    { label: "APROVADO", value: "APROVADO" },
+    { label: "EM ANDAMENTO", value: "EM ANDAMENTO" },
+    { label: "CONCLUÍDO", value: "CONCLUÍDO" },
+    { label: "CANCELADO", value: "CANCELADO" },
+  ];
+
+  const handleSubmit = async () => {
+    const required = [
+      form.title,
+      form.knowledge_area,
+      form.status,
+      form.campus,
+      form.description,
+    ];
+    if (required.some(value => !value || (typeof value === 'string' && value.trim() === ''))) {
+      Alert.alert("Preencha todos os campos obrigatórios.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      let companyId: number | null = null;
+
+      // Só valida se o campo tiver conteúdo
+      if (companyEmail.trim() !== "") {
+        companyId = await checkCompany();
+        if (!companyId) return; // Empresa inválida → impede submit
+      }
+
+      const updatedForm = {
+        ...form,
+        keywords,
+        members,
+        sponsoring_company: companyId, // null ou id
+      };
+      
+      await updateResearch(researchId, updatedForm);
+      Alert.alert("Sucesso!", "Projeto atualizado com sucesso.");
+      router.push("/tabs/profile/researcher-projects");
+    } catch (error: any) {      
+      const errorMsg = error?.response?.data?.detail || "Não foi possível atualizar o projeto. Tente novamente mais tarde.";
+      Alert.alert("Erro na atualização", errorMsg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (pageLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <KeyboardAvoidingView
@@ -134,92 +262,107 @@ export default function EditResearch() {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ViewContainer>
           <Text style={styles.title}>Editar Projeto:</Text>
+
           <InputContainer label="Título:">
-              <TextInputField
-                placeholder="Título"
-                value={form.title}
-                onChangeText={(text) => setForm({ ...form, title: text })}
-              />
+            <TextInputField
+              placeholder="Título"
+              value={form.title}
+              onChangeText={(text) => setForm({ ...form, title: text })}
+            />
           </InputContainer>
 
           <InputContainer label="Descrição:">
-              <TextAreaInputField
-                placeholder="Descrição"
-                value={form.description}
-                onChangeText={(text) => setForm({ ...form, description: text })}
-              />
+            <TextAreaInputField
+              placeholder="Descrição"
+              value={form.description}
+              onChangeText={(text) => setForm({ ...form, description: text })}
+            />
           </InputContainer>
 
           <InputContainer label="Área de conhecimento:">
-              <TextInputField
-                placeholder="Área de conhecimento"
-                value={form.knowledge_area}
-                onChangeText={(text) => setForm({ ...form, knowledge_area: text })}
-              />
+            <TextInputField
+              placeholder="Área de conhecimento"
+              value={form.knowledge_area}
+              onChangeText={(text) => setForm({ ...form, knowledge_area: text })}
+            />
           </InputContainer>
 
           <InputContainer label="Palavras chave:">
-                <TextInputField
-                  placeholder="Digite uma palavra chave"
-                  value={textKeywords}
-                  onChangeText={setTextKeywords}
-                  onSubmitEditing={handleAddKeyword}
-                  returnKeyType="done"
-                />
-                {keywords.length > 0 && (
-                  <View style={styles.tagsContainer}>
-                    {keywords.map((item, index) => (
-                      <View key={index} style={styles.tag}>
-                        <Text style={styles.tagText}>{item}</Text>
-                        <TouchableOpacity onPress={() => handleRemoveKeyword(item)}>
-                          <Ionicons name="close-outline" size={18} color="#666" />
-                        </TouchableOpacity>
-                      </View>
-                    ))}
+            <TextInputField
+              placeholder="Digite uma palavra chave"
+              value={textKeywords}
+              onChangeText={setTextKeywords}
+              onSubmitEditing={handleAddKeyword}
+              returnKeyType="done"
+            />
+            {keywords.length > 0 && (
+              <View style={styles.tagsContainer}>
+                {keywords.map((item, index) => (
+                  <View key={index} style={styles.tag}>
+                    <Text style={styles.tagText}>{item}</Text>
+                    <TouchableOpacity onPress={() => handleRemoveKeyword(item)}>
+                      <Ionicons name="close-outline" size={18} color="#666" />
+                    </TouchableOpacity>
                   </View>
-                )}
-              </InputContainer>
+                ))}
+              </View>
+            )}
+          </InputContainer>
 
-        <InputContainer label="Membros:">
-                <TextInputField
-                  placeholder="Digite um novo membro"
-                  value={textMembers}
-                  onChangeText={setTextMembers}
-                  onSubmitEditing={handleAddMember}
-                  returnKeyType="done"
-                />
-                {members.length > 0 && (
-                  <View style={styles.tagsContainer}>
-                    {members.map((item, index) => (
-                      <View key={index} style={styles.tag}>
-                        <Text style={styles.tagText}>{item}</Text>
-                        <TouchableOpacity onPress={() => handleRemoveMember(item)}>
+
+          <InputContainer label="Membros (por email):">
+            <TextInputField
+              placeholder="Digite o email do membro"
+              value={textMembers}
+              onChangeText={setTextMembers}
+              onSubmitEditing={handleAddMember}
+              returnKeyType="done"
+            />
+            {memberEmails.length > 0 && (
+              <View style={styles.tagsContainer}>
+                {memberEmails.map((email, index) => (
+                  <View key={index} style={styles.tag}>
+                    <Text style={styles.tagText}>{email}</Text>
+                      <TouchableOpacity onPress={() => handleRemoveMember(email)}>
                             {index !== 0 && (
                               <Ionicons name="close-outline" size={18} color="#666" />
                             )}
-                        </TouchableOpacity>
-                      </View>
-                    ))}
-                  </View>
-                )}
-              </InputContainer>
+                      </TouchableOpacity>
+                 </View>
+                ))}
+              </View>
+            )}
 
+          </InputContainer>
+
+
+          <InputContainer label="Empresa financiadora (por email):">
+            <TextInputField
+              placeholder="Digite o email da empresa financiadora"
+              value={companyEmail}
+              onChangeText={(text) => setCompanyEmail(text)}
+            />
+          </InputContainer>        
+          
+
+             
+  
           <InputContainer label="Status">
-              <DropdownSelect
-                options={statusOptions}
-                placeholder="Selecione um status"
-                value={form.status}
-                onSelect={(value) => setForm({ ...form, status: value })}
-              />
+            <DropdownSelect
+              options={statusOptions}
+              placeholder="Selecione um status"
+              value={form.status}
+              onSelect={(value) => setForm({ ...form, status: value })}
+            />
           </InputContainer>
 
           <InputContainer label="Campus">
-              <DropdownSelect
-                options={campusOptions}
-                placeholder="Selecione um campus"
-                value={form.campus}
-                onSelect={(value) => setForm({ ...form, campus: value })}
-              />
+            <DropdownSelect
+              options={campusOptions}
+              placeholder="Selecione um campus"
+              value={form.campus}
+              onSelect={(value) => setForm({ ...form, campus: value })}
+            />
           </InputContainer>
 
           <PrimaryButton
@@ -227,7 +370,6 @@ export default function EditResearch() {
             onPress={handleSubmit}
             disabled={loading}
           />
-
         </ViewContainer>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -243,7 +385,7 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontFamily: "Roboto",
   },
-    container: {
+  container: {
     marginVertical: 10,
   },
   label: {
@@ -285,4 +427,4 @@ const styles = StyleSheet.create({
     marginRight: 6,
     color: "#333",
   },
-})
+});

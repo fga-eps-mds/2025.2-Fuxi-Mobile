@@ -1,0 +1,32 @@
+appId: com.fuxi.vitra
+name: Fluxo de Navegação (Colaborador)
+env:
+  EMAIL_COLABORADOR: "collab.tester.${Math.random().toString(36).substring(2, 10)}@teste.com"
+  SENHA: "Password123"
+  NOME: "Collab"
+  SOBRENOME: "User"
+---
+# 1. Cadastra e loga com um novo colaborador
+- runFlow:
+    file: ./utils/register_and_login_collaborator.yml
+    env:
+      NOME: "${NOME}"
+      SOBRENOME: "${SOBRENOME}"
+      EMAIL_COLABORADOR: "${EMAIL_COLABORADOR}"
+      SENHA: "${SENHA}"
+
+# 2. Verifica as restrições da UI
+- assertVisible: "Mais recentes:"
+- assertNotVisible: "" # Confirma que o botão de '+' (criar projeto/demanda) NÃO está visível
+
+# 3. Verifica se as outras abas funcionam
+- tapOn: ""
+- assertVisible: "Explore projetos existentes..."
+- back
+- tapOn: "" # Ícone de Perfil
+- assertVisible: "Meu Perfil"
+- assertNotVisible: "Meus Projetos" # Colaborador não tem essa seção
+- assertNotVisible: "Minhas Demandas"
+
+# 4. Volta para a tela inicial
+- tapOn: "" # Ícone de Casa

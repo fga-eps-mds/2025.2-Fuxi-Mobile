@@ -1,0 +1,21 @@
+appId: com.fuxi.vitra
+---
+# Garante que o app comece deslogado
+- runFlow: ./setup.yml
+
+# Cadastra um novo usuário pesquisador
+- runFlow:
+    file: ./cadastro-pesquisador.yml
+    env:
+      USER_TYPE: "Sou um pesquisador."
+      NOME: "${NOME}"
+      SOBRENOME: "${SOBRENOME}"
+      EMAIL_PESQUISADOR: "${EMAIL_PESQUISADOR}"
+      SENHA: "${SENHA}"
+
+# Faz o login com o novo usuário
+- runFlow:
+    file: ./login.yml
+    env:
+      LOGIN_EMAIL: "${EMAIL_PESQUISADOR}"
+      SENHA: "${SENHA}"

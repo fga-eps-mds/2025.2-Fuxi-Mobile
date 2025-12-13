@@ -1,0 +1,19 @@
+appId: com.fuxi.vitra
+---
+# Assume que o usuário já está logado e na tela Home
+- tapOn: "" # Ícone '+' na barra de navegação (para empresa, leva a 'create-demand')
+- assertVisible: "Nova Demanda:"
+- tapOn:
+    text: "Título"
+- inputText: "${NOME_DEMANDA}"
+- tapOn:
+    text: "Descrição"
+- inputText: "Descricao da demanda de teste."
+- tapOn:
+    text: "Área de conhecimento"
+- inputText: "Inteligencia Artificial"
+- hideKeyboard
+- tapOn: "Criar"
+- assertVisible: "Demanda criada com sucesso."
+- tapOn: "OK"
+- assertVisible: "Mais recentes:" # Confirma que voltou para a Home

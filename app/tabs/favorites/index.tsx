@@ -5,6 +5,8 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import colors from "../../../theme/colors";
 import { useRouter } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 export interface ResearchData {
   id: number;
@@ -17,6 +19,7 @@ export interface ResearchData {
   knowledge_area: string;
   keywords: string[];
   campus: string;
+  sponsoring_company: number;
 }
 
 export default function Favorites() {
@@ -41,9 +44,12 @@ export default function Favorites() {
     }
   };
 
-  useEffect(() => {
-    fetchFavorites();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchFavorites();
+    }, [])
+  );
+
 
   const onRefresh = async () => {
     setRefreshing(true);
