@@ -1,0 +1,69 @@
+appId: com.fuxi.vitra
+name: Fluxo de Edição de Projeto (Pesquisador)
+env:
+  EMAIL_PESQUISADOR: "edit.tester.${Math.random().toString(36).substring(2, 10)}@unb.br"
+  SENHA: "Password123"
+  NOME_PROJETO: "Projeto para Editar ${Math.random().toString(36).substring(2, 8)}"
+---
+# 1. Cadastra e loga com um novo pesquisador
+- runFlow:
+    file: ./utils/register_and_login_researcher.yml
+    env:
+      NOME: "Tester Edit"
+      SOBRENOME: "Project"
+      EMAIL_PESQUISADOR: "${EMAIL_PESQUISADOR}"
+      SENHA: "${SENHA}"
+
+# 2. Cria um projeto para poder editar
+- runFlow:
+    file: ./utils/create_project.yml
+    env:
+      NOME_PROJETO: "${NOME_PROJETO}"
+
+# 3. Navega para a tela de edição do projeto recém-criado
+- tapOn: "" # Ícone de Perfil
+- tapOn: "Meus Projetos"
+- assertVisible: "${NOME_PROJETO}"
+# Clica no primeiro ícone 'edit' que encontrar na tela
+- tapOn:
+    text: ""
+    index: 0
+- assertVisible: "Editar Projeto:"
+
+# 4. Edita o título do projeto
+- longPressOn:
+    text: "${NOME_PROJETO}" # Toca no campo de título que já tem o texto antigo
+
+- tapOn: "Mais opções" # Ícone de três pontos para selecionar tudo
+- tapOn: "Selecionar tudo"
+
+- eraseText # Apaga o texto selecionado
+
+- inputText: "${NOME_PROJETO} (editado)" # Adiciona texto ao final
+- pressKey: "Enter"
+
+- tapOn:
+    text: "Digite uma palavra chave"
+- inputText: "maestro"
+- pressKey: "Enter"
+
+
+# Faz um swipe forte para garantir scroll
+- swipe:
+    start: 50%, 70%
+    end: 50%, 30%
+
+    
+- tapOn: "Atualizar"
+
+# 5. Verifica se a alteração foi salva
+- assertVisible: "Projeto atualizado com sucesso."
+- tapOn: "OK"
+- assertVisible: "${NOME_PROJETO} (editado)" # Confirma que o novo título aparece na lista
+
+# 6. Navega de volta para o perfil
+- tapOn: "" # Ícone de Perfil
+
+# 7. Volta para a tela inicial
+- assertVisible: "Sair da minha conta"
+- tapOn: "" # Ícone de Casa

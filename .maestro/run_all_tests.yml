@@ -1,0 +1,15 @@
+appId: com.fuxi.vitra
+name: Suíte de Testes Completa
+---
+# Este fluxo mestre executa todos os principais testes E2E em sequência
+# para uma verificação de regressão completa do aplicativo.
+
+- runFlow: guest_navigation_flow.yml
+- runFlow: researcher_create_project.yml
+- runFlow: researcher_edit_project.yml
+- runFlow: company_create_demand.yml
+- runFlow: company_edit_demand.yml
+- runFlow: favorites_flow.yml
+- runFlow: edit_profile_flow.yml
+- runFlow: collaborator_navigation_flow.yml
+- runFlow: auth_flow.yml # Adicionando o fluxo de autenticação final, para testar todos os cadastros/logins sem criar dados antes.

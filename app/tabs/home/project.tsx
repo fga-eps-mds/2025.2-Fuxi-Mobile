@@ -11,6 +11,10 @@ import { SimpleAccordion } from '@/components/SimpleAccordion';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { getUsers } from '@/services/userService'; 
+import { getProfile } from '@/services/authService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { UserData } from '.';
+import { MemberCard } from '@/components/MemberCard';
 
 interface AuthorProfile {
   id: number;
@@ -40,6 +44,7 @@ export interface ProjectData {
 }
 
 
+
 export default function Project() {
     const router = useRouter();
     const [favoriteId, setFavoriteId] = useState(null);
@@ -49,7 +54,31 @@ export default function Project() {
     const { id } = useLocalSearchParams();
     const [project, setProject] = useState<ProjectData | null>(null);
     const [author, setAuthor] = useState<AuthorData | null>(null); 
+    const [company, setCompany] = useState<any | null>(null); 
+    const [userData, setUserData] = useState<UserData | null>(null)
+    const [membersInfos, setMembersInfos] = useState<any[]>([]);
+
     const projectId = Number(id);
+
+      const fetchUserData = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            let user: UserData | null = null
+            const token = await AsyncStorage.getItem("authToken")
+            if (token) {
+              user = await getProfile()
+            }
+            
+            setUserData(user);
+
+        } catch (e) {
+            setError("Não foi possível carregar os dados. Tente novamente.");
+        } finally {
+            setLoading(false);
+        }
+      };
 
 
       
@@ -59,8 +88,13 @@ export default function Project() {
     
         try {
             const project = await getPublicResearchById(projectId); 
-            const favoriteId = await checkFavorite(projectId)
-            console.log(favoriteId);
+
+            if (userData !== null){
+              const favoriteId = await checkFavorite(projectId)
+              if (favoriteId) {
+                setFavoriteId(favoriteId)  
+              }
+            }
             
             if (project && project.researcher) {
                 const users = await getUsers();
@@ -70,11 +104,37 @@ export default function Project() {
                 setAuthor(authorData);
             }
 
-            if (favoriteId) {
-              setFavoriteId(favoriteId)  
+            if (project && project.sponsoring_company) {
+                const users = await getUsers();
+                const companyData = users.find(
+                    (user: any) => user.company_profile?.id === project.sponsoring_company
+                );
+                setCompany(companyData);
             }
         
             setProject(project);
+
+            if (project && project.members) {
+              const users = await getUsers();
+              const membersInfos = project.members
+                .map((memberId: string) => {
+                  const user = users.find((u: any) => u.id === Number(memberId));
+                  if (user?.researcher_profile) {
+                    return {name: user.researcher_profile.firstName, email: user.email}; 
+                  }
+                  if (user?.collaborator_profile) {
+                    return {name: user.collaborator_profile.firstName, email: user.email};
+                  }
+                  if (user?.company_profile) {
+                    return {name: user.company_profile.fantasyName, email: user.email};
+                  }
+                  return null;
+                })
+                .filter(Boolean);
+
+              setMembersInfos(membersInfos);
+            }
+
         } catch (e) {
             setError("Não foi possível carregar o projeto. Tente novamente.");
             setProject(null);
@@ -86,6 +146,7 @@ export default function Project() {
     
       useEffect(() => {
         fetchProject();
+        fetchUserData();
       }, []);
     
       const onRefresh = async () => {
@@ -138,7 +199,7 @@ export default function Project() {
               <>
                 <View style={styles.header}>
                 <Text style={styles.title}>Informações do projeto</Text>
-                {favoriteId ? <Ionicons name='star' onPress={handleFavorite} size={30} color={colors.primary}/> : <Ionicons name='star-outline' onPress={handleFavorite} size={30} color={colors.primary}/>}
+                {userData !== null ? (favoriteId ? <Ionicons name='star' onPress={handleFavorite} size={30} color={colors.primary}/> : <Ionicons name='star-outline' onPress={handleFavorite} size={30} color={colors.primary}/>) : null}
                 
                 </View>
                 <View style={styles.box}>
@@ -165,14 +226,33 @@ export default function Project() {
                         <Feather name="chevron-right" size={24} color="#003A7A" />
                     </TouchableOpacity>
                 )}
-
+                {company && company.company_profile && (
+                    <TouchableOpacity style={[styles.box, styles.autorContainer]} onPress={() => router.push(`/tabs/home/company-profile?id=${company.id}`)}>
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.autor}>Empresa Financiadora</Text>
+                            <Text style={styles.autorNome}>{company.company_profile.fantasyName}</Text>
+                            <Text style={styles.autorEmail}>{company.email}</Text>
+                        </View>
+                        <Feather name="chevron-right" size={24} color="#003A7A" />
+                    </TouchableOpacity>
+                )}
+                
                 <SimpleAccordion title="Descrição" style={{marginTop: 10}}>
                   {project && project.description}
                 </SimpleAccordion>
 
                 <SimpleAccordion title="Membros" style={{marginTop: 10, marginBottom: 5}}>
-                  {project && project.members.join(", ")}
+                    <View>
+                    {membersInfos.map(member => (
+                        <MemberCard 
+                            key={member.email}
+                            name={member.name} 
+                            email={member.email}
+                        />
+                    ))}
+                    </View>
                 </SimpleAccordion>
+
 
               </>
           );
@@ -217,7 +297,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(152, 152, 152, 0.10)",
     backgroundColor: "#F5F8FF",
-    marginTop: 20,
+    marginTop: 10,
   },
   name: {
     fontSize: 20,

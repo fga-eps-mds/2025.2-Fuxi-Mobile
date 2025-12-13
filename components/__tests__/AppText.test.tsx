@@ -1,49 +1,43 @@
-// Teste simples sem React Native/Expo
-describe('AppText Component Logic Tests', () => {
-  // Teste das propriedades esperadas do componente
-  it('should validate component props structure', () => {
-    const mockProps = {
-      children: 'Hello World',
-      style: { color: 'red', fontSize: 16 }
-    };
+import React from 'react';
+import { render } from '@testing-library/react-native';
+import { AppText } from '../AppText';
+import { Text } from 'react-native';
+
+describe('AppText Component', () => {
+  // Testa se o componente renderiza o texto filho corretamente
+  it('should render children text correctly', () => {
+    const textToRender = 'Hello World';
+    const { getByText } = render(<AppText>{textToRender}</AppText>);
     
-    expect(mockProps.children).toBe('Hello World');
-    expect(mockProps.style.color).toBe('red');
-    expect(mockProps.style.fontSize).toBe(16);
+    // Verifica se o texto está no documento
+    const textElement = getByText(textToRender);
+    expect(textElement).toBeDefined();
   });
 
-  // Teste de validação de texto
-  it('should validate text content', () => {
-    const textContent = 'Test Content';
-    expect(textContent).toBeDefined();
-    expect(typeof textContent).toBe('string');
-    expect(textContent.length).toBeGreaterThan(0);
+  // Testa se os estilos customizados são aplicados
+  it('should apply custom styles to the text', () => {
+    const customStyle = { color: 'red', fontSize: 20 };
+    const { getByText } = render(
+      <AppText style={customStyle}>Custom Style Test</AppText>
+    );
+    
+    const textElement = getByText('Custom Style Test');
+    
+    // @ts-ignore - a propriedade style existe no elemento, mas o tipo pode ser complexo
+    const appliedStyle = textElement.props.style.find(
+      (s: { color?: string; fontSize?: number }) => s && s.color === 'red' && s.fontSize === 20
+    );
+    
+    expect(appliedStyle).toBeDefined();
   });
 
-  // Teste de propriedades de estilo
-  it('should validate style properties', () => {
-    const defaultStyle = {
-      color: '#1d1d1d',
-      fontFamily: 'Roboto',
-      fontSize: 17,
-      fontWeight: '400',
-      lineHeight: 17
-    };
-    
-    expect(defaultStyle.color).toBe('#1d1d1d');
-    expect(defaultStyle.fontFamily).toBe('Roboto');
-    expect(defaultStyle.fontSize).toBe(17);
-  });
+  // Testa se outras props de Text são passadas corretamente
+  it('should pass down other Text props', () => {
+    const { getByTestId } = render(
+      <AppText testID="my-app-text">Other Props</AppText>
+    );
 
-  // Teste de merge de estilos
-  it('should merge custom styles with default styles', () => {
-    const defaultStyle = { fontSize: 17, color: '#1d1d1d' };
-    const customStyle = { color: 'blue', fontWeight: 'bold' };
-    
-    const mergedStyle = { ...defaultStyle, ...customStyle };
-    
-    expect(mergedStyle.fontSize).toBe(17); // mantém default
-    expect(mergedStyle.color).toBe('blue'); // sobrescreve
-    expect(mergedStyle.fontWeight).toBe('bold'); // adiciona novo
+    const textElement = getByTestId('my-app-text');
+    expect(textElement).toBeDefined();
   });
 });

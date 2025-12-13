@@ -1,0 +1,39 @@
+appId: com.fuxi.vitra
+name: Fluxo de Edição de Perfil
+env:
+  EMAIL_PESQUISADOR: "edit.profile.tester.${Math.random().toString(36).substring(2, 10)}@unb.br"
+  SENHA: "Password123"
+  NOME: "Tester"
+  SOBRENOME_ANTIGO: "Maestro"
+  SOBRENOME_NOVO: "Editado"
+---
+# 1. Cadastra e loga com um novo pesquisador
+- runFlow:
+    file: ./utils/register_and_login_researcher.yml
+    env:
+      NOME: "${NOME}"
+      SOBRENOME: "${SOBRENOME_ANTIGO}"
+      EMAIL_PESQUISADOR: "${EMAIL_PESQUISADOR}"
+      SENHA: "${SENHA}"
+
+# 2. Navega para a tela de edição de perfil
+- tapOn: "" # Ícone de Perfil
+- assertVisible: "${NOME} ${SOBRENOME_ANTIGO}" # Verifica o nome antigo na tela de perfil
+- tapOn: "Meu Perfil" # Clica na opção "Meu Perfil"
+- assertVisible: "Sobrenome:" # Confirma que está na tela de edição
+
+# 3. Edita o campo Sobrenome
+- tapOn:
+    text: "Sobrenome" # Placeholder do campo
+- eraseText # Limpa o texto existente
+- inputText: "${SOBRENOME_NOVO}"
+- hideKeyboard
+- tapOn: "Salvar"
+
+# 4. Verifica se a alteração foi salva
+- assertVisible: "Novos dados salvos com sucesso."
+- tapOn: "OK"
+- assertVisible: "${NOME} ${SOBRENOME_NOVO}" # Confirma que o novo nome completo aparece na tela de perfil
+
+# 5. Volta para a tela inicial
+- tapOn: "" # Ícone de Casa

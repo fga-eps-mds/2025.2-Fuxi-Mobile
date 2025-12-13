@@ -17,10 +17,20 @@ export default function HomeStackLayout() {
         name="project" 
         options={{ title: 'Detalhes' }}
       />
+      
+      <Stack.Screen 
+        name="demand" 
+        options={{ title: 'Detalhes' }}
+      />
+
 
       <Stack.Screen 
       name="author-profile" 
       options={{ title: 'Autor' }} 
+      />
+      <Stack.Screen 
+      name="company-profile" 
+      options={{ title: 'Empresa' }} 
       />
       
 

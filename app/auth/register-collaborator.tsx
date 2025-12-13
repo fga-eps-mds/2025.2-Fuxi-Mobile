@@ -11,6 +11,7 @@ import { validatePassword } from "@/utils/validatePassword";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, Keyboard, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from "react-native";
+import { PasswordInputField } from "@/components/PasswordInputField";
 
 export default function RegisterCollaborator() {
   const router = useRouter();
@@ -103,13 +104,12 @@ export default function RegisterCollaborator() {
           </InputContainer>
 
           <InputContainer label="Senha">
-              <TextInputField
-                placeholder="Mínimo 8 caracteres"
-                secureTextEntry
-                value={form.senha}
-                onChangeText={(text) => setForm({ ...form, senha: text })}
+              <PasswordInputField
+                  value={form.senha}
+                  onChangeText={(text) => setForm({ ...form, senha: text })}                
               />
           </InputContainer>
+          
 
           <InputContainer label="Data de nascimento">
               <TextInputField

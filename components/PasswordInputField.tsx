@@ -28,6 +28,7 @@ interface PasswordInputFieldProps extends Omit<TextInputProps, "secureTextEntry"
             <TouchableOpacity
                 style={styles.eyeButton}
                 onPress={() => setShowPassword(!showPassword)}
+                testID="password-visibility-toggle"
             >
                 <Feather
                     name={showPassword ? "eye-off" : "eye"}

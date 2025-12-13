@@ -1,0 +1,7 @@
+appId: com.fuxi.vitra
+---
+# Configuração Inicial: Garante que o app esteja na tela de login
+- runFlow:
+    when:
+      visible: "Mais recentes:" # Elemento que só existe na tela Home (logado)
+    file: ./logout.yml

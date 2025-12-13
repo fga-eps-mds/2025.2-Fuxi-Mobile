@@ -1,0 +1,59 @@
+appId: com.fuxi.vitra
+name: Fluxo de Edição de Demanda (Empresa)
+env:
+    NOME_EMPRESA: "Empresa Edit Test ${Math.random().toString(36).substring(2, 8)}"
+    CNPJ: "56.216.638/0001-19" # CNPJ válido para teste
+    EMAIL_EMPRESA: "edit.empresa.${Math.random().toString(36).substring(2, 10)}@teste.com"
+    SENHA: "Password123"
+    NOME_DEMANDA: "Demanda para Editar ${Math.random().toString(36).substring(2, 8)}"
+---
+# 1. Cadastra, loga e cria uma demanda para poder editar
+- runFlow:
+      file: ./utils/register_and_login_company.yml
+      env:
+          NOME_EMPRESA: "${NOME_EMPRESA}"
+          CNPJ: "${CNPJ}"
+          EMAIL_EMPRESA: "${EMAIL_EMPRESA}"
+          SENHA: "${SENHA}"
+
+- runFlow:
+      file: ./utils/create_demand.yml
+      env:
+          NOME_DEMANDA: "${NOME_DEMANDA}"
+
+# 2. Navega para a tela de edição da demanda recém-criada
+- tapOn: "" # Ícone de Perfil
+- tapOn: "Minhas Demandas"
+- assertVisible: "${NOME_DEMANDA}"
+# Clica no primeiro ícone 'edit' que encontrar na tela
+- tapOn:
+      text: ""
+      index: 0
+- assertVisible: "Editar Demanda:"
+
+# 3. Edita o título da demanda
+- longPressOn:
+      text: "${NOME_DEMANDA}" # Toca no campo de título que já tem o texto antigo
+
+- tapOn: "Mais opções" # Ícone de três pontos para selecionar tudo
+- tapOn: "Selecionar tudo"
+
+- eraseText # Apaga o texto selecionado
+
+- inputText: "${NOME_DEMANDA} (editada)" # Adiciona texto ao final
+- pressKey: "Enter"
+
+- tapOn: "Atualizar"
+
+# 4. Verifica se a alteração foi salva
+- assertVisible: "Demanda atualizada com sucesso." # A mensagem de alerta parece ser a mesma
+- tapOn: "OK"
+- assertVisible: "${NOME_DEMANDA} (editada)"
+
+
+# 6. Navega de volta para o perfil
+- tapOn: "" # Ícone de Perfil
+
+# 7. Volta para a tela inicial
+- assertVisible: "Sair da minha conta"
+- tapOn: "" # Ícone de Casa

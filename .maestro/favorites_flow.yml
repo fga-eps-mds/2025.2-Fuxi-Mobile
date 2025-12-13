@@ -1,0 +1,63 @@
+appId: com.fuxi.vitra
+name: Fluxo de Favoritos
+env:
+  EMAIL_PESQUISADOR: "favorite.tester.${Math.random().toString(36).substring(2, 10)}@unb.br"
+  SENHA: "Password123"
+  NOME_PROJETO: "Projeto para Favoritar ${Math.random().toString(36).substring(2, 8)}"
+---
+# 1. Cadastra e loga com um novo pesquisador
+- runFlow:
+    file: ./utils/register_and_login_researcher.yml
+    env:
+      NOME: "Favorite"
+      SOBRENOME: "Tester"
+      EMAIL_PESQUISADOR: "${EMAIL_PESQUISADOR}"
+      SENHA: "${SENHA}"
+
+# 2. Cria um projeto para poder favoritar
+- runFlow:
+    file: ./utils/create_project.yml
+    env:
+      NOME_PROJETO: "${NOME_PROJETO}"
+
+# 3. Encontra o projeto na Home e vai para a tela de detalhes
+- scrollUntilVisible:
+    element:
+        text: "${NOME_PROJETO}"
+
+- assertVisible: "${NOME_PROJETO}"
+- tapOn:
+    text: "${NOME_PROJETO}"
+- assertVisible: "Informações do projeto"
+
+# 4. Favorita o projeto
+- assertVisible: "" # Ícone de favorito (vazio)
+- tapOn: ""
+- assertVisible: "" # Ícone de favorito (preenchido)
+
+# 5. Verifica se o projeto aparece na tela de Favoritos
+- tapOn: "" # Ícone da aba de Favoritos na barra de navegação
+- assertVisible: "Meus favoritos:"
+- assertVisible: "${NOME_PROJETO}"
+
+# 6. Desfavorita o projeto e verifica
+# A forma mais fácil é voltar para a tela de detalhes onde o botão já está
+- back
+- assertVisible: "Informações do projeto"
+- tapOn: "" # Ícone de favorito (preenchido) para desfavoritar
+- assertVisible: "" # Ícone de favorito (vazio)
+
+# 7. Verifica se o projeto desapareceu da tela de Favoritos
+- tapOn: "" # Ícone da aba de Favoritos
+- assertNotVisible: "${NOME_PROJETO}"
+- assertVisible: "Nenhuma informação encontrada nesta seção."
+
+# 8. Navega de volta para a tela inicial
+- tapOn: "" # Ícone de Casa
+- tapOn: "" # Ícone de Casa
+
+- scrollUntilVisible:
+    element:
+        text: "Mais recentes:"
+    direction: "up"
+

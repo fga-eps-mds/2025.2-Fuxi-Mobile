@@ -1,0 +1,7 @@
+appId: com.fuxi.vitra
+---
+# Logout
+# Este fluxo começa na tela Home
+- tapOn: "" # Clica diretamente no caractere Unicode do ícone de perfil
+- tapOn: "Sair da minha conta"
+- assertVisible: "Entrar"

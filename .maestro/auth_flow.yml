@@ -1,0 +1,70 @@
+appId: com.fuxi.vitra
+name: Fluxo de Autenticação
+env:
+  EMAIL_PESQUISADOR: "auth.pesquisador.${Math.random().toString(36).substring(2, 10)}@unb.br"
+  SENHA: "Password123"
+  EMAIL_EMPRESA: "auth.empresa.${Math.random().toString(36).substring(2, 10)}@business.com"
+  EMAIL_COLABORADOR: "auth.colaborador.${Math.random().toString(36).substring(2, 10)}@email.br"
+---
+# Este é o fluxo de teste principal para autenticação.
+# Ele testa o cadastro, login e logout para cada tipo de usuário: Pesquisador, Empresa e Colaborador.
+
+# NOTA: Este teste assume que o aplicativo começa em um estado deslogado
+# onde os botões "Entrar" e "Cadastrar" estão visíveis.
+
+# --- Fluxo para PESQUISADOR ---
+- runFlow:
+    file: ./utils/setup.yml # Garante que o app esteja deslogado
+- runFlow:
+    file: ./utils/cadastro-pesquisador.yml
+    env:
+        USER_TYPE: "Sou um pesquisador."
+        NOME: "AuthTest"
+        SOBRENOME: "Pesquisador"
+        EMAIL_PESQUISADOR: "${EMAIL_PESQUISADOR}"
+        SENHA: "${SENHA}"
+- runFlow:
+    file: ./utils/login.yml
+    env:
+        LOGIN_EMAIL: "${EMAIL_PESQUISADOR}"
+        SENHA: "${SENHA}"
+- runFlow:
+    file: ./utils/logout.yml
+
+# --- Fluxo para EMPRESA ---
+- runFlow:
+    file: ./utils/setup.yml # Garante que o app esteja deslogado
+- runFlow:
+    file: ./utils/cadastro-empresa.yml
+    env:
+        USER_TYPE: "Represento uma empresa."
+        NOME_EMPRESA: "AuthTestEmpresa"
+        CNPJ: "40.432.544/0001-47" # Usando CNPJ fixo para o teste
+        EMAIL_EMPRESA: "${EMAIL_EMPRESA}"
+        SENHA: "${SENHA}"
+- runFlow:
+    file: ./utils/login.yml
+    env:
+        LOGIN_EMAIL: "${EMAIL_EMPRESA}"
+        SENHA: "${SENHA}"
+- runFlow:
+    file: ./utils/logout.yml
+
+# --- Fluxo para COLABORADOR ---
+- runFlow:
+    file: ./utils/setup.yml # Garante que o app esteja deslogado
+- runFlow:
+    file: ./utils/cadastro-colaborador.yml
+    env:
+        USER_TYPE: "Sou um colaborador."
+        NOME: "AuthTest"
+        SOBRENOME: "Colaborador"
+        EMAIL_COLABORADOR: "${EMAIL_COLABORADOR}"
+        SENHA: "${SENHA}"
+- runFlow:
+    file: ./utils/login.yml
+    env:
+        LOGIN_EMAIL: "${EMAIL_COLABORADOR}"
+        SENHA: "${SENHA}"
+- runFlow:
+    file: ./utils/logout.yml

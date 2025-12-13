@@ -1,0 +1,68 @@
+appId: com.fuxi.vitra
+name: Fluxo de Navegação do Convidado
+env:
+  EMAIL_PESQUISADOR: "guest.search.setup.${Math.random().toString(36).substring(2, 10)}@unb.br"
+  SENHA: "Password123"
+  NOME_PROJETO: "Analise de Tecnologia Quantum ${Math.random().toString(36).substring(2, 8)}"
+---
+# Este é um teste E2E completo que verifica a navegação de um usuário convidado
+# e a funcionalidade de busca, garantindo que os dados sejam encontrados.
+
+# --- ETAPA DE SETUP ---
+
+# 1. Garante que o app esteja deslogado no início
+- runFlow: ./utils/setup.yml
+
+# 2. Cadastra e loga com um novo pesquisador para criar dados de teste
+- runFlow:
+    file: ./utils/register_and_login_researcher.yml
+    env:
+      NOME: "Setup"
+      SOBRENOME: "Pesquisador"
+      EMAIL_PESQUISADOR: "${EMAIL_PESQUISADOR}"
+      SENHA: "${SENHA}"
+
+# 3. Cria um projeto com 'Tecnologia' no nome
+- runFlow:
+    file: ./utils/create_project.yml
+    env:
+      NOME_PROJETO: "${NOME_PROJETO}"
+
+# 4. Faz logout para voltar ao estado de convidado
+- runFlow: ./utils/logout.yml
+- assertVisible: "Entrar" # Confirma que o logout foi feito e está na tela de login/registro
+
+# --- ETAPA DE TESTE (como Convidado) ---
+- tapOn: "Apenas visualizar"
+
+# 5. Verifica se a tela Home é exibida com conteúdo público
+- assertVisible: "Mais recentes:"
+
+# 6. Navega para a tela de detalhes de um projeto (clicando no primeiro icone de detalhes)
+- tapOn:
+    text: ""
+    index: 0
+- assertVisible: "Informações do projeto" # Confirma que a tela de detalhes abriu
+
+# 7. Voltar para a tela Home
+- back
+
+# 8. Navega para a busca e realiza a pesquisa pelo projeto criado
+- tapOn: "" # Clica no ícone de busca na barra de navegação
+- assertVisible: "Explore projetos existentes..." # Confirma o placeholder do campo de busca
+- tapOn:
+    text: "Explore projetos existentes..."
+- inputText: "Tecnologia" # Busca pelo termo chave do nosso projeto
+- pressKey: "Enter" # Submete a busca
+
+- scrollUntilVisible:
+    element: "${NOME_PROJETO}"
+    direction: "down"
+
+# 9. Verifica se o projeto criado na etapa de setup aparece nos resultados
+- assertVisible: "${NOME_PROJETO}"
+
+# 10. Navega para a tela de perfil e verifica as opções de convidado
+- tapOn: "" # Clica no ícone de perfil na barra de navegação
+- assertVisible: "Entrar"
+- assertVisible: "Cadastrar"

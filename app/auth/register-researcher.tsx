@@ -2,6 +2,7 @@ import { DropdownSelect } from "@/components/DropdownSelect";
 import { InputContainer } from "@/components/InputContainer";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { TextInputField } from "@/components/TextInputField";
+import { PasswordInputField } from "@/components/PasswordInputField";
 import { ViewContainer } from "@/components/ViewContainer";
 import { registerUser } from "@/services/authService";
 import { formatDate } from "@/utils/formatDate";
@@ -106,11 +107,9 @@ export default function RegisterResearcher() {
           </InputContainer>
 
           <InputContainer label="Senha">
-              <TextInputField
-                placeholder="Mínimo 8 caracteres"
-                secureTextEntry
-                value={form.senha}
-                onChangeText={(text) => setForm({ ...form, senha: text })}
+              <PasswordInputField
+                  value={form.senha}
+                  onChangeText={(text) => setForm({ ...form, senha: text })}                
               />
           </InputContainer>
 

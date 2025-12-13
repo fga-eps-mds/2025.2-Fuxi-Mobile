@@ -1,0 +1,21 @@
+appId: com.fuxi.vitra
+name: Fluxo de Criação de Projeto (Pesquisador)
+env:
+  NOME_PROJETO: "Projeto de Teste Automatizado ${Math.random().toString(36).substring(2, 8)}"
+  EMAIL_PESQUISADOR: "pesquisador.${Math.random().toString(36).substring(2, 10)}@unb.br"
+  SENHA: "Password123"
+---
+# 1. Cadastra e loga com um novo pesquisador
+- runFlow:
+    file: ./utils/register_and_login_researcher.yml
+    env:
+      NOME: "Tester"
+      SOBRENOME: "Maestro"
+      EMAIL_PESQUISADOR: "${EMAIL_PESQUISADOR}"
+      SENHA: "${SENHA}"
+
+# 2. Cria o projeto
+- runFlow:
+    file: ./utils/create_project.yml
+    env:
+      NOME_PROJETO: "${NOME_PROJETO}"

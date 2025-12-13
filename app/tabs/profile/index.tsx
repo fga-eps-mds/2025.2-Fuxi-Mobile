@@ -8,6 +8,7 @@ import { getProfile, logoutUser } from "@/services/authService";
 import { useRouter } from "expo-router";
 import { ViewContainer } from "@/components/ViewContainer";
 import { ProfileActionCard } from "@/components/ProfileActionCard"; 
+import { STORAGE_NATURE } from "../search/filters";
 
 interface UserData {
   id: number;
@@ -22,6 +23,8 @@ interface UserData {
     size?: string;
   };
 }
+
+const STORAGE_KEY_FILTERS = "searchFilters";
 
 export default function Profile() {
   const router = useRouter();
@@ -58,7 +61,7 @@ export default function Profile() {
         return userData.profile.fantasyName;
       case "collaborator":
       case "researcher":
-        return userData.profile.firstName;
+        return `${userData.profile.firstName ?? ""} ${userData.profile.surname ?? ""}`.trim();
       default:
         return "Convidado";
     }
@@ -83,6 +86,8 @@ export default function Profile() {
   };
 
   const handleLogout = async () => {
+    await AsyncStorage.removeItem(STORAGE_NATURE)
+    await AsyncStorage.removeItem(STORAGE_KEY_FILTERS);
     await logoutUser();
     router.replace("/");
   };
@@ -129,7 +134,17 @@ export default function Profile() {
                     onPress={() => router.push("/tabs/profile/researcher-projects")}
                   />
                 )}
-
+              
+                {/* alteração aqui */}
+                {userData?.user_type === "company" && (
+                  <ProfileActionCard
+                    title="Minhas Demandas"
+                    description="Veja e gerencie as demandas da sua empresa"
+                    onPress={() => router.push("/tabs/profile/company-demands")}
+                  />
+                )}
+                {/* alteração aqui */}
+              
                 <ProfileActionCard
                   title="Meu Perfil"
                   description="Atualize seus dados pessoais"

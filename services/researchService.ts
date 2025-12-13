@@ -89,7 +89,8 @@ export async function searchResearches({
   keywords,
   researcherName,
   campus,
-  status
+  status,
+  companyName
 }: {
   title?: string;
   knowledgeArea?: string;
@@ -97,6 +98,7 @@ export async function searchResearches({
   researcherName?: string;
   campus?: string;
   status?: string;
+  companyName?: string;
 }) {
   const params = new URLSearchParams();
 
@@ -105,6 +107,7 @@ export async function searchResearches({
   if (researcherName) params.append("researcher", researcherName);
   if (campus) params.append("campus", campus);
   if (status) params.append("status", status);
+  if (companyName) params.append("company", companyName);
 
   if (keywords && keywords.length > 0) {
       keywords.forEach(kw => params.append("keyword", kw));

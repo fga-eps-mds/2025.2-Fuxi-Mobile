@@ -23,6 +23,10 @@ export default function TabsLayout () {
         options={{ headerShown: false }}
       />
       <Tabs.Screen
+        name="create-demand"
+        options={{ headerShown: false }}
+      />
+      <Tabs.Screen
         name="search"
         options={{ headerShown: false }}
       />

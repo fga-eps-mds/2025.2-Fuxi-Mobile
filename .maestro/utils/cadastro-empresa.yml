@@ -1,0 +1,32 @@
+appId: com.fuxi.vitra
+---
+# Cadastro
+# Este fluxo começa na tela de login/cadastro
+- tapOn: "Cadastrar"
+- tapOn: ${USER_TYPE}
+
+# Preenche o formulário clicando em cada campo
+- tapOn:
+    text: "Nome da empresa"
+- inputText: "${NOME_EMPRESA}"
+
+- tapOn: "00.000.000/0000-00"
+- inputText: "${CNPJ}"
+
+- tapOn:
+    text: "contato@empresa.com"
+- inputText: "${EMAIL_EMPRESA}"
+
+- tapOn: "Minimo 8 caracteres"
+- inputText: "${SENHA}"
+
+- hideKeyboard # Esconde o teclado
+
+- tapOn: "Selecione o porte"
+
+- tapOn: "MICROEMPREENDEDOR INDIVIDUAL"
+- tapOn: "Confirmar"
+
+- tapOn: "OK"
+# Verifica se voltou para a tela de login
+- assertVisible: "Comece agora!"
