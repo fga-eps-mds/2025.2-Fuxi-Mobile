@@ -32,6 +32,8 @@ yarn-error.*
 
 # local env files
 .env*.local
+.env
+.env.*.local
 
 # typescript
 *.tsbuildinfo
@@ -43,3 +45,7 @@ app-example
 /android
 
 /.vscode
+
+
+# Jest
+coverage/
