@@ -61,7 +61,7 @@ export default function Profile() {
         return userData.profile.fantasyName;
       case "collaborator":
       case "researcher":
-        return userData.profile.firstName;
+        return `${userData.profile.firstName ?? ""} ${userData.profile.surname ?? ""}`.trim();
       default:
         return "Convidado";
     }
