@@ -29,10 +29,44 @@ cd 2025.2-Fuxi-Mobile
 npm install
 ```
 
-### 3. Inicializar projeto no repositório local
+### 3. Configurar variáveis de ambiente
+
+Este projeto utiliza variáveis de ambiente para configuração de URL da API.
+
+🔒 **Importante:** o arquivo `.env` **não é versionado** por motivos de segurança.
+
+#### Passo a passo:
+
+#### Copie o arquivo de exemplo:
+
+```bash
+cp .env.example .env
+```
+#### Preencha as variáveis conforme seu ambiente local.
+
+```bash
+EXPO_PUBLIC_API_URL="http://[IP DA API AQUI]:8000"
+```
+
+
+### 4. Inicializar projeto no repositório local
 
 ```bash
 npx expo start
+```
+
+## 🧪 Executar Testes...
+
+### 1. Executar testes unitários
+
+```bash
+npm run test
+```
+
+### 2. Verificar cobertura dos testes unitários
+
+```bash
+npm run test:coverage
 ```
 
 ## 📱 Criar BUILD para Android
